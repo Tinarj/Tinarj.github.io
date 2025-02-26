@@ -1,0 +1,66 @@
+---
+title: "Tina"
+image: "images/Tina.jpg"
+about: 
+  template: trestles
+  image-shape: round
+  links:
+    - icon: envelope
+      href: "mailto:tina.rashidjafari@monash.edu"
+    - icon: github
+      url: "https://github.com/Tinarj"
+    - icon: linkedin
+      href: "https://www.linkedin.com/in/tina-jafari-215387131/"
+    - text: "Bluesky"
+      href: "https://bsky.app/profile/tina-rj.bsky.social"
+  
+    
+---
+
+:::{#hero-heading}
+
+:::{.column-body-outset}
+
+## Hi!
+
+I'm Tina and I am a PhD student in the Department of Econometrics and Business Statistics at [Monash University, Australia](https://www.monash.edu/business/ebs) supervised by Professor [Dianne Cook](http://www.dicook.org/), Professor [Farshid Vahid-Araghi](https://research.monash.edu/en/persons/farshid-vahid-araghi) and Dr. [Jessica Leung](https://sites.google.com/view/jessica-leung/home?authuser=0). 
+
+I am a member of [Monash NUMBATs](https://numbat.space/). I am currently working as a tutor in the Department of Econometrics and Business Statistics at [Monash University, Australia](https://www.monash.edu/business/ebs).
+
+-----------------------------------------------------------------------------
+
+## Education
+
+##### **PhD student in Statistics** |  present
+
+###### Monash University, Australia {style="color: gray"}
+
+
+##### **M.Sc in Mathematical Statistics** | 2018 - 2021
+
+###### University of Tabriz, Iran {style="color: gray"}
+
+##### Thesis: *A Powerful Test in High Dimensional Data Using Random Projection Methodology and its Applications* 
+
+
+##### **B.Sc in Statistics and its applications** | 2014 - 2018
+
+######  University of Tabriz, Iran {style="color: gray"}
+
+
+
+-----------------------------------------------------------------------------
+
+## Research Interests
+
+
+-   Data Analysis
+
+-   High-dimensional data visualization
+
+-   Dimension reduction
+
+-   Data Visualization
+:::
+
+:::

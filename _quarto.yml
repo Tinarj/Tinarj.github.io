@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Tina Rashid Jafari"
+  navbar:
+    search: true
+  google-analytics: "G-85GWJNB5L8"
+
+format:
+  html:
+    theme: sandstone
+    css: styles.css
+    toc: true
+
+editor: 
+  mode: source
+  drafts:
+    draft-mode: visible
+    
+date-format: DD MMM YYYY
+
