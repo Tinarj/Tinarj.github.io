@@ -13,9 +13,18 @@ about:
       href: "https://www.linkedin.com/in/tina-jafari-215387131/"
     - text: "Bluesky"
       href: "https://bsky.app/profile/tina-rj.bsky.social"
-  
-    
+
+
 ---
+
+<div style="
+  position: fixed;
+  bottom: 100px;
+  left: 150px;
+  z-index: 999;
+">
+  <img src="images/qr-code.png" alt="QR Code" width="300" style="border-radius: 8px;">
+</div> 
 
 :::{#hero-heading}
 
