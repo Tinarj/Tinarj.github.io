@@ -5,13 +5,9 @@ format:
     theme: dracula
 ---
 
-## 👋 Welcome to ETC1010
+## 👋 Scan to see the material
 
-- Welcome to your first semester at **Monash University** (if you're new)!
-- [I’m your tutor](https://tinarj.github.io/), and I'm very excited to learn R with you this semester. 
-
-<iframe src="https://tinarj.github.io" width="100%" height="500px" style="border:none;"></iframe>
-
+![](images/qr-code.png)
 ---
 
 ## 🧑‍🏫 About Me

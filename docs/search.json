@@ -4,7 +4,7 @@
     "href": "tutorials/tutorial1.html#welcome-to-etc1010",
     "title": "ETC1010 Tutorial 1",
     "section": "👋 Welcome to ETC1010",
-    "text": "👋 Welcome to ETC1010\n\nWelcome to your first semester at Monash University (if you’re new)!\nI’m your tutor, and I’m very excited to learn R with you this semester."
+    "text": "👋 Welcome to ETC1010"
   },
   {
     "objectID": "tutorials/tutorial1.html#about-me",
@@ -101,15 +101,15 @@
     "objectID": "index.html#hi",
     "href": "index.html#hi",
     "title": "Tina",
-    "section": "Hi!",
-    "text": "Hi!\nI’m Tina and I am a PhD student in the Department of Econometrics and Business Statistics at Monash University, Australia supervised by Professor Dianne Cook, Professor Farshid Vahid-Araghi and Dr. Jessica Leung.\nI am a member of Monash NUMBATs. I am currently working as a tutor in the Department of Econometrics and Business Statistics at Monash University, Australia."
+    "section": "",
+    "text": "I’m Tina and I am a PhD student in the Department of Econometrics and Business Statistics at Monash University, Australia supervised by Professor Dianne Cook, Professor Farshid Vahid-Araghi and Dr. Jessica Leung.\nI am a member of Monash NUMBATs. I am currently working as a tutor in the Department of Econometrics and Business Statistics at Monash University, Australia."
   },
   {
     "objectID": "index.html#research-interests",
     "href": "index.html#research-interests",
     "title": "Tina",
-    "section": "Research Interests",
-    "text": "Research Interests\n\nData Analysis\nHigh-dimensional data visualization\nDimension reduction\nData Visualization"
+    "section": "",
+    "text": "Data Analysis\nHigh-dimensional data visualization\nDimension reduction\nData Visualization"
   },
   {
     "objectID": "index.html#education",
@@ -117,5 +117,12 @@
     "title": "Tina",
     "section": "Education",
     "text": "Education\n\nPhD student in Statistics | present\n\nMonash University, Australia\n\n\n\nM.Sc in Mathematical Statistics | 2018 - 2021\n\nUniversity of Tabriz, Iran\n\n\n\nThesis: A Powerful Test in High Dimensional Data Using Random Projection Methodology and its Applications\n\n\nB.Sc in Statistics and its applications | 2014 - 2018\n\nUniversity of Tabriz, Iran"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#scan-to-see-the-material",
+    "href": "tutorials/tutorial1.html#scan-to-see-the-material",
+    "title": "ETC1010 Tutorial 1",
+    "section": "👋 Scan to see the material",
+    "text": "👋 Scan to see the material"
   }
 ]
