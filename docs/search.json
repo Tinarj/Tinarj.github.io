@@ -115,8 +115,8 @@
     "objectID": "tutorials/tutorial1.html#welcome-to-etc1010",
     "href": "tutorials/tutorial1.html#welcome-to-etc1010",
     "title": "ETC1010 Tutorial 1",
-    "section": "👋 Welcome to ETC1010",
-    "text": "👋 Welcome to ETC1010\n\nWelcome to your first semester at Monash University (if you’re new)!\nI’m your tutor, and I’m very excited to learn R with you this semester."
+    "section": "",
+    "text": "Welcome to your first semester at Monash University (if you’re new)!\nI’m your tutor, and I’m very excited to learn R with you this semester."
   },
   {
     "objectID": "tutorials/tutorial1.html#about-me",
@@ -172,7 +172,7 @@
     "href": "tutorials/tutorial1.html#installing-r-and-rstudio-1",
     "title": "ETC1010 Tutorial 1",
     "section": "💾 Installing R and RStudio",
-    "text": "💾 Installing R and RStudio\n\nOr go directly to: posit.co/download/rstudio-desktop\nStep 1: Install R\nStep 2: Then install RStudio"
+    "text": "💾 Installing R and RStudio\n\nOr go directly to: posit.co/download/rstudio-desktop\nStep 1: Install R\nStep 2: Then install RStudio\n\n\n\n🔍 Which version to choose?\n\nIf you’re using Mac:\n\nIf your chip is M1, M2, M3, or M4 → use the first link (arm64)\nOtherwise → use the second link (Intel, x86_64)\n\nIf you’re using Windows:\n\nClick on the first one labeled ‘base’\n\n\n⏳ You have 15 minutes to try installing both tools."
   },
   {
     "objectID": "tutorials/tutorial1.html#if-you-cant-install-use-rstudio-cloud",
@@ -201,5 +201,12 @@
     "title": "ETC1010 Tutorial 1",
     "section": "⌨️ Running Code in RStudio",
     "text": "⌨️ Running Code in RStudio\n\nTo run a line of code from the script:\n\nMac: Command + Enter\nWindows: Ctrl + Enter\n\n\nLet’s try writing some code together now!"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html",
+    "href": "tutorials/tutorial1.html",
+    "title": "ETC1010 Tutorial 1",
+    "section": "",
+    "text": "Welcome to your first semester at Monash University (if you’re new)!\nI’m your tutor, and I’m very excited to learn R with you this semester."
   }
 ]
