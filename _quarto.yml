@@ -10,7 +10,7 @@ website:
       - text: "Home"
         href: index.qmd
       - text: "Tutorial"
-        href: tutorials/tutorial_1/index.qmd
+        href: tutorials/tutorial_1/index.html
 
   google-analytics: "G-85GWJNB5L8"
 
