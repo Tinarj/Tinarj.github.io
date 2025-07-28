@@ -1,0 +1,140 @@
+---
+title: "ETC1010 Tutorial 1"
+format: 
+  revealjs:
+    theme: dracula
+---
+
+## 👋 Welcome to ETC1010
+
+- Welcome to your first semester at **Monash University** (if you're new)!
+- [I’m your tutor](https://tinarj.github.io/), and I'm very excited to learn R with you this semester. 
+
+<iframe src="https://tinarj.github.io" width="100%" height="500px" style="border:none;"></iframe>
+
+---
+
+## 🧑‍🏫 About Me
+
+- 📸 I love **taking pictures**.
+- 🎬 I enjoy **watching movies**.
+- 🛍️ I also like **shopping**.
+- 🐱 I **LOVE cats**.
+- 🎵 And one **lie**: “I’m a professional music player.” 😉
+
+---
+
+## 🎲 Two Truths and a Lie
+
+- Get into **groups of 3 or 4**.
+- Take turns sharing **2 truths and 1 lie** about yourself.
+- Your group will try to guess which one is the lie.
+- You’ll have **10 minutes** to chat.
+
+---
+
+## 🧑‍🤝‍🧑 Now Let’s Get to Know You
+
+- I’m going to open the student list with names and photos.
+- **Presence is not recorded**, this is just to connect with each other.
+
+---
+
+## 🌐 Moodle and Course Info
+
+- Go to: [Moodle Link](https://monashuni.okta.com/app/monashuni_learningmanagementsystemsmoodle_1/exk2tj3winDJbq2jn3l7/sso/saml)
+- In **Unit Information**, you can find:
+  - Unit details
+  - My **consultation hours**:
+    - 🕛 Thursdays **12:00 PM – 2:15 PM** (hybrid)
+    - 📍 Room 232, Building 6 (Clayton) or [Zoom link](https://monash.zoom.us/s/81533251374)
+
+---
+
+## 📝 Assessments
+
+- You can earn **10% easily** by mini quizzes:
+  -  Record a video 
+  - Peer grading
+ 
+- Stay updated and use the **forums** to ask questions
+
+
+---
+
+## 💻 Installing R and RStudio
+
+- Go to **Learning Section > Week 1**
+- Click on **Installing R and R Studio**
+
+🔗 Link to tutorial: [learnr.numbat.space/chapter1](https://learnr.numbat.space/chapter1)
+
+
+---
+
+## 📊 Why R and RStudio?
+
+- This semester we’ll analyze and visualize **real-world data**
+- We use **R**, a powerful tool for data analysis
+- And **RStudio**, a user-friendly interface to run R
+
+Let’s get them installed together now!
+
+---
+
+
+## 💾 Installing R and RStudio
+
+- Or go directly to: [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop)
+- **Step 1**: Install **R**
+- **Step 2**: Then install **RStudio**
+
+---
+ 
+### 🔍 Which version to choose?
+
+- If you're using **Mac**:
+  - If your chip is **M1, M2, M3, or M4** → use the **first link** (arm64)
+  - Otherwise → use the **second link** (Intel, x86_64)
+- If you're using **Windows**:
+  - Click on the **first one labeled ‘base’**
+
+⏳ **You have 15 minutes** to try installing both tools.
+
+---
+
+## ☁️ If You Can't Install: Use RStudio Cloud
+
+- Go to [posit.cloud](https://posit.cloud)
+- You can login with your Google account
+- Click **New Project → RStudio Project**
+- RStudio will open in your web browser, no installation needed!
+
+---
+
+## 🎨 Customising RStudio Appearance
+
+- I personally love the **dark theme**!
+- You can change the look of RStudio:
+  - Go to **Tools > Global Options > Appearance**
+  - Pick a theme you like
+  - Click **Apply**
+
+---
+
+## 🪟 RStudio Panes Overview
+
+1. **Console (Bottom Left)** → Run and test code
+2. **Script Editor (Top Left)** → Write and save your code
+3. **Environment/History (Top Right)** → See stored variables and past commands
+4. **Files/Plots/Packages/Help (Bottom Right)** → View plots, install packages, get help
+
+---
+
+## ⌨️ Running Code in RStudio
+
+- To run a line of code from the script:
+  - **Mac**: `Command + Enter`
+  - **Windows**: `Ctrl + Enter`
+
+Let's try writing some code together now!
