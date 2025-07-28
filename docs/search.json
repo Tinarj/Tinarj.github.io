@@ -110,5 +110,96 @@
     "title": "Tina",
     "section": "",
     "text": "Data Analysis\nHigh-dimensional data visualization\nDimension reduction\nData Visualization"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#welcome-to-etc1010",
+    "href": "tutorials/tutorial1.html#welcome-to-etc1010",
+    "title": "ETC1010 Tutorial 1",
+    "section": "👋 Welcome to ETC1010",
+    "text": "👋 Welcome to ETC1010\n\nWelcome to your first semester at Monash University (if you’re new)!\nI’m your tutor, and I’m very excited to learn R with you this semester."
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#about-me",
+    "href": "tutorials/tutorial1.html#about-me",
+    "title": "ETC1010 Tutorial 1",
+    "section": "🧑‍🏫 About Me",
+    "text": "🧑‍🏫 About Me\n\n📸 I love taking pictures.\n🎬 I enjoy watching movies.\n🛍️ I also like shopping.\n🐱 I LOVE cats.\n🎵 And one lie: “I’m a professional music player.” 😉"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#two-truths-and-a-lie",
+    "href": "tutorials/tutorial1.html#two-truths-and-a-lie",
+    "title": "ETC1010 Tutorial 1",
+    "section": "🎲 Two Truths and a Lie",
+    "text": "🎲 Two Truths and a Lie\n\nGet into groups of 3 or 4.\nTake turns sharing 2 truths and 1 lie about yourself.\nYour group will try to guess which one is the lie.\nYou’ll have 10 minutes to chat."
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#now-lets-get-to-know-you",
+    "href": "tutorials/tutorial1.html#now-lets-get-to-know-you",
+    "title": "ETC1010 Tutorial 1",
+    "section": "🧑‍🤝‍🧑 Now Let’s Get to Know You",
+    "text": "🧑‍🤝‍🧑 Now Let’s Get to Know You\n\nI’m going to open the student list with names and photos.\nPresence is not recorded, this is just to connect with each other."
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#moodle-and-course-info",
+    "href": "tutorials/tutorial1.html#moodle-and-course-info",
+    "title": "ETC1010 Tutorial 1",
+    "section": "🌐 Moodle and Course Info",
+    "text": "🌐 Moodle and Course Info\n\nGo to: Moodle Link\nIn Unit Information, you can find:\n\nUnit details\nMy consultation hours:\n\n🕛 Thursdays 12:00 PM – 2:15 PM (hybrid)\n📍 Room 232, Building 6 (Clayton) or Zoom link"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#assessments",
+    "href": "tutorials/tutorial1.html#assessments",
+    "title": "ETC1010 Tutorial 1",
+    "section": "📝 Assessments",
+    "text": "📝 Assessments\n\nYou can earn 10% easily by mini quizzes:\n\nRecord a video\nPeer grading\n\nStay updated and use the forums to ask questions"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#installing-r-and-rstudio",
+    "href": "tutorials/tutorial1.html#installing-r-and-rstudio",
+    "title": "ETC1010 Tutorial 1",
+    "section": "💻 Installing R and RStudio",
+    "text": "💻 Installing R and RStudio\n\nGo to Learning Section &gt; Week 1\nClick on Installing R and R Studio\n\n🔗 Link to tutorial: learnr.numbat.space/chapter1"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#why-r-and-rstudio",
+    "href": "tutorials/tutorial1.html#why-r-and-rstudio",
+    "title": "ETC1010 Tutorial 1",
+    "section": "📊 Why R and RStudio?",
+    "text": "📊 Why R and RStudio?\n\nThis semester we’ll analyze and visualize real-world data\nWe use R, a powerful tool for data analysis\nAnd RStudio, a user-friendly interface to run R\n\nLet’s get them installed together now!"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#installing-r-and-rstudio-1",
+    "href": "tutorials/tutorial1.html#installing-r-and-rstudio-1",
+    "title": "ETC1010 Tutorial 1",
+    "section": "💾 Installing R and RStudio",
+    "text": "💾 Installing R and RStudio\n\nOr go directly to: posit.co/download/rstudio-desktop\nStep 1: Install R\nStep 2: Then install RStudio"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#if-you-cant-install-use-rstudio-cloud",
+    "href": "tutorials/tutorial1.html#if-you-cant-install-use-rstudio-cloud",
+    "title": "ETC1010 Tutorial 1",
+    "section": "☁️ If You Can’t Install: Use RStudio Cloud",
+    "text": "☁️ If You Can’t Install: Use RStudio Cloud\n\nGo to posit.cloud\nYou can login with your Google account\nClick New Project → RStudio Project\nRStudio will open in your web browser, no installation needed!"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#customising-rstudio-appearance",
+    "href": "tutorials/tutorial1.html#customising-rstudio-appearance",
+    "title": "ETC1010 Tutorial 1",
+    "section": "🎨 Customising RStudio Appearance",
+    "text": "🎨 Customising RStudio Appearance\n\nI personally love the dark theme!\nYou can change the look of RStudio:\n\nGo to Tools &gt; Global Options &gt; Appearance\nPick a theme you like\nClick Apply"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#rstudio-panes-overview",
+    "href": "tutorials/tutorial1.html#rstudio-panes-overview",
+    "title": "ETC1010 Tutorial 1",
+    "section": "🪟 RStudio Panes Overview",
+    "text": "🪟 RStudio Panes Overview\n\nConsole (Bottom Left) → Run and test code\nScript Editor (Top Left) → Write and save your code\nEnvironment/History (Top Right) → See stored variables and past commands\nFiles/Plots/Packages/Help (Bottom Right) → View plots, install packages, get help"
+  },
+  {
+    "objectID": "tutorials/tutorial1.html#running-code-in-rstudio",
+    "href": "tutorials/tutorial1.html#running-code-in-rstudio",
+    "title": "ETC1010 Tutorial 1",
+    "section": "⌨️ Running Code in RStudio",
+    "text": "⌨️ Running Code in RStudio\n\nTo run a line of code from the script:\n\nMac: Command + Enter\nWindows: Ctrl + Enter\n\n\nLet’s try writing some code together now!"
   }
 ]

@@ -6,12 +6,9 @@ website:
   title: "Tina Rashid Jafari"
   navbar:
     search: true
-    left:
-      - text: "Home"
-        href: index.qmd
-      - text: "Tutorial"
-        href: tutorials/tutorial_1/index.html
-
+    right:
+      - href: tutorials/tutorial1.qmd
+        text: "Tutorial"
   google-analytics: "G-85GWJNB5L8"
 
 format:
