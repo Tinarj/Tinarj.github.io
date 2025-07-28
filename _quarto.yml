@@ -8,7 +8,7 @@ website:
     search: true
     right:
       - href: tutorials/tutorial1.qmd
-        text: "Tutorial"
+        text: Tutorial
   google-analytics: "G-85GWJNB5L8"
 
 format:
@@ -23,4 +23,3 @@ editor:
     draft-mode: visible
     
 date-format: DD MMM YYYY
-
