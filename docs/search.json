@@ -1,10 +1,10 @@
 [
   {
-    "objectID": "tutorials/tutorial1.html#welcome-to-etc1010",
-    "href": "tutorials/tutorial1.html#welcome-to-etc1010",
+    "objectID": "tutorials/tutorial1.html#scan-to-see-the-material",
+    "href": "tutorials/tutorial1.html#scan-to-see-the-material",
     "title": "ETC1010 Tutorial 1",
-    "section": "👋 Welcome to ETC1010",
-    "text": "👋 Welcome to ETC1010"
+    "section": "👋 Scan to see the material",
+    "text": "👋 Scan to see the material"
   },
   {
     "objectID": "tutorials/tutorial1.html#about-me",
@@ -91,6 +91,55 @@
     "text": "⌨️ Running Code in RStudio\n\nTo run a line of code from the script:\n\nMac: Command + Enter\nWindows: Ctrl + Enter\n\n\nLet’s try writing some code together now!"
   },
   {
+    "objectID": "blog/alpha_parameter/debug_alpha.html",
+    "href": "blog/alpha_parameter/debug_alpha.html",
+    "title": "Debugging Alpha Parameter in cassowaryr package",
+    "section": "",
+    "text": "Example scatterplots and their scagnostics measures"
+  },
+  {
+    "objectID": "blog/alpha_parameter/debug_alpha.html#how-it-started",
+    "href": "blog/alpha_parameter/debug_alpha.html#how-it-started",
+    "title": "Debugging Alpha Parameter in cassowaryr package",
+    "section": "How It Started",
+    "text": "How It Started\nI’ve been working on shape analysis, trying to better understand patterns in multivariate data. I’m especially interested in patterns that are weird, thin, curvy, or unexpected, rather than just “normal” or random.\nThat curiosity led me to scagnostics (scatterplot diagnostics), a powerful set of metrics that help you quantify the shape and structure of scatterplots. Scagnostics go far beyond linear regression fits or clustering, they look for clumps, holes, loops, skew, and in particular, skinny (which is where this story really begins).\nTo compute these, I used the cassowaryr package in R, which implements scagnostics measures using geometry. I ran some simulations, tried adding noise, and explored how the indices responded."
+  },
+  {
+    "objectID": "blog/alpha_parameter/debug_alpha.html#wait-that-doesnt-look-right",
+    "href": "blog/alpha_parameter/debug_alpha.html#wait-that-doesnt-look-right",
+    "title": "Debugging Alpha Parameter in cassowaryr package",
+    "section": "😕 Wait… That Doesn’t Look Right",
+    "text": "😕 Wait… That Doesn’t Look Right\nAfter exploring many features with and without noise, I noticed something unexpected with the skinny index.\nScagnostics are supposed to give values between 0 and 1. For skinny, the idea is:\n\nIf a pattern is very thin and elongated, it should be close to 1.\nIf it’s round and compact, it should be closer to 0.\n\nSo I tested it on a U-shaped pattern:\n\nA degree-1 polynomial on the x-axis,\nA degree-2 polynomial on the y-axis.\n\n\n\n\n\n\n\n\n\n\nIt looked very skinny, and in fact, in Wilkinson’s scagnostics paper, a pattern just like this one is shown as a clear example of something that’s highly skinny.\nBut when I checked the skinny index, it gave me… 0.17-0.20. 🤨\n\n\n[1] \"The skinny value from cassowaryr is: 0.181707044829051\"\n\n\nThat didn’t feel right at all. So naturally, I started to wonder: what’s going wrong here?"
+  },
+  {
+    "objectID": "blog/alpha_parameter/debug_alpha.html#time-to-dig-in",
+    "href": "blog/alpha_parameter/debug_alpha.html#time-to-dig-in",
+    "title": "Debugging Alpha Parameter in cassowaryr package",
+    "section": "Time to Dig In",
+    "text": "Time to Dig In\nI figured maybe there was something off in how the measure was being calculated. So I began debugging. I read the documentation and looked into how the skinny index was defined how the skinny index was defined. I found that it’s computed as:\n\\[\n\\text{Skinny} = 1 - \\frac{\\sqrt{4 \\pi \\cdot \\text{Area}(A)}}{\\text{Perimeter}(A)}\n\\]\nWhere ( A ) is the alpha shape (also called alpha hull), a geometric boundary that wraps around the data more tightly than a convex hull depending on the alpha parameter. If the shape is long and narrow, this formula should give a value close to 1. If it’s more round or bulky, the result will be closer to 0.\nI visualized the alpha shape using cassowaryr. That’s when I saw it: The alpha hull was overly convex, it had connected the two tips of the U shape, effectively turning it into a bowl. So from the geometry’s point of view, it wasn’t skinny anymore, and the formula reflected that.\n\n\n\n\n\n\n\n\n\nIt looked much rounder than it really was, so of course the skinny value was low!\nThe shape detection wasn’t wrong, exactly, it was just being too aggressive in how it wrapped the points. And that’s when I realized: this had to do with the alpha parameter.\nI opened the source code and looked at how alpha was being calculated.\nThere, I saw that the alpha parameter was being computed using a boxplot-based outlier rule, the one where you take the interquartile range and multiply it by 1.5 to find upper thresholds. It was using this to define alpha.\nThis didn’t align with my understanding of scagnostics. So I returned to the original Wilkinson paper, which describes scagnostics in detail.\nAnd there it was, it says: &gt; Alpha is recommended to be the 90th percentile of the Minimum Spanning Tree (MST) edge lengths.\nThe boxplot rule is supposed to be used to detect and remove outliers, not to determine the alpha shape parameter. This was a mix-up."
+  },
+  {
+    "objectID": "blog/alpha_parameter/debug_alpha.html#what-i-changed",
+    "href": "blog/alpha_parameter/debug_alpha.html#what-i-changed",
+    "title": "Debugging Alpha Parameter in cassowaryr package",
+    "section": "What I Changed",
+    "text": "What I Changed\nSo here’s what I did:\n\nThe boxplot rule is now used solely to remove outliers from the data before geometry is computed.\nThe alpha parameter is calculated as the 90th percentile of MST edge lengths:\n\nalpha &lt;- quantile(mst_weights, 0.9)"
+  },
+  {
+    "objectID": "blog/alpha_parameter/debug_alpha.html#the-original-scree-function-and-how-it-was-working-before",
+    "href": "blog/alpha_parameter/debug_alpha.html#the-original-scree-function-and-how-it-was-working-before",
+    "title": "Debugging Alpha Parameter in cassowaryr package",
+    "section": "The Original scree() Function and How It Was Working Before",
+    "text": "The Original scree() Function and How It Was Working Before\n\n#' Pre-processing to generate scagnostic measures\n#'\n#' @param x,y numeric vectors\n#' @param binner an optional function that bins the x and y vectors prior\n#' to triangulation\n#' @param ...  other args\n#'\n#' @return An object of class \"scree\" that consists of three elements:\n#'  - `del`: the Delauney-Voronoi tesselation from [alphahull::delvor()]\n#'  - `weights`: the lengths of each edge in the Delauney triangulation\n#'  - `alpha`: the radius or `alpha` value that will be used to generate the\n#'  alphahull\n#'\n#' @examples\n#'\n#' x &lt;- runif(100)\n#' y &lt;- runif(100)\n#' scree(x,y)\n#'\n#' @export\nscree &lt;- function(x, y, binner = NULL, ...) {\n  # checks on x,y\n  stopifnot(\n    is.numeric(x), is.numeric(y), length(x) == length(y)\n  )\n  # Check if data is a straight line\n  if (any(abs(stats::cor(x,y))&gt;1-1*10^-15, !stats::sd(x)&gt;0, !stats::sd(y)&gt;0))\n    stop(\"Data is a perfectly straight line and cannot be analysed\")\n\n  # Binner must be a function\n  if (!(is.null(binner) | is.function(binner)))\n    stop(\"binner must be a function\")\n\n  # cast to a matrix\n  xy &lt;- cbind(unitize(x), unitize(y))\n\n  # Check for duplicates and remove\n  # (had to cut off at 15 digits otherwise shull spits error)\n  xrnd &lt;- round(unitize(x), digits = 10)\n  yrnd &lt;- round(unitize(y), digits = 10)\n  dupes &lt;- paste(xrnd, yrnd, sep =\",\")\n  xy &lt;- xy[!duplicated(dupes),]\n\n  # Binner function\n  if (is.function(binner)) {\n    xy &lt;- binner(xy)\n  }\n\n  # compute delauney triangulation\n  del &lt;- alphahull::delvor(xy)\n\n  # edge weights from the triangulation\n  weights &lt;- gen_edge_lengths(del)\n\n  # alpha estimator\n  alpha &lt;- psi(weights)\n\n  structure(\n    list(\n      del = del,\n      weights  = weights,\n      alpha = alpha\n    ),\n    class = \"scree\"\n  )\n}\n\ngen_edge_lengths &lt;- function(del) {\n  from_cols &lt;- c(\"x1\", \"y1\")\n  to_cols &lt;- c(\"x2\", \"y2\")\n  sqrt(rowSums((del$mesh[, from_cols] - del$mesh[, to_cols])^2))\n}\n\n# rescale input to lie in unit interval\nunitize &lt;- function(x, na.rm = TRUE) {\n  rng &lt;- range(x, na.rm = na.rm)\n  (x - rng[1]) / diff(rng)\n}\n\n# This is the edge filter from Wilkinson 05\npsi &lt;- function(w, q = c(0.25, 0.75)) {\n  q &lt;- stats::quantile(w, probs = q)\n  unname(q[2] + 1.5 * diff(q))\n}"
+  },
+  {
+    "objectID": "blog/alpha_parameter/debug_alpha.html#the-updated-scree-how-i-fixed-the-alpha-problem",
+    "href": "blog/alpha_parameter/debug_alpha.html#the-updated-scree-how-i-fixed-the-alpha-problem",
+    "title": "Debugging Alpha Parameter in cassowaryr package",
+    "section": "The Updated scree(), How I Fixed the Alpha Problem",
+    "text": "The Updated scree(), How I Fixed the Alpha Problem\n\nscree &lt;- function(x, y, binner = NULL, alpha_param = NULL, ...) {\n  # checks on x,y\n  stopifnot(\n    is.numeric(x), is.numeric(y), length(x) == length(y)\n  )\n\n  # Check if data is a straight line\n  if (any(abs(stats::cor(x, y)) &gt; 1 - 1e-15, !stats::sd(x) &gt; 0, !stats::sd(y) &gt; 0))\n    stop(\"Data is a perfectly straight line and cannot be analysed\")\n\n  # Binner must be a function\n  if (!(is.null(binner) | is.function(binner)))\n    stop(\"binner must be a function\")\n\n  # cast to a matrix\n  xy &lt;- cbind(unitize(x), unitize(y))\n\n  # Check for duplicates and remove\n  xrnd &lt;- round(unitize(x), digits = 10)\n  yrnd &lt;- round(unitize(y), digits = 10)\n  dupes &lt;- paste(xrnd, yrnd, sep = \",\")\n  xy &lt;- xy[!duplicated(dupes), ]\n\n  # Binner function\n  if (is.function(binner)) {\n    xy &lt;- binner(xy)\n  }\n\n  # Compute Delaunay triangulation\n  del &lt;- alphahull::delvor(xy)\n\n  # edge weights from the triangulation\n  weights &lt;- gen_edge_lengths(del)\n\n  # Compute outlier removal threshold (Wilkinson’s boxplot rule)\n  outlier_threshold &lt;- outlier_rm(weights)\n\n  # Compute alpha radius if not provided (Wilkinson’s suggestion: 90th percentile of MST edge lengths)\n  \n  if (is.null(alpha_param)) {\n    alpha &lt;- stats::quantile(mst_weights, 0.9)\n  } else {\n    alpha &lt;- alpha_param\n  }\n\n  structure(\n    list(\n      del = del,\n      weights = weights,\n      alpha = alpha,\n      outlier_threshold = outlier_threshold\n    ),\n    class = \"scree\"\n  )\n}\n\n# renamed from psi()\noutlier_rm &lt;- function(w, q = c(0.25, 0.75)) {\n  q &lt;- stats::quantile(w, probs = q)\n  unname(q[2] + 1.5 * diff(q))\n}\n\ngen_edge_lengths &lt;- function(del) {\n  from_cols &lt;- c(\"x1\", \"y1\")\n  to_cols &lt;- c(\"x2\", \"y2\")\n  sqrt(rowSums((del$mesh[, from_cols] - del$mesh[, to_cols])^2))\n}\n\n# rescale input to lie in unit interval\nunitize &lt;- function(x, na.rm = TRUE) {\n  rng &lt;- range(x, na.rm = na.rm)\n  (x - rng[1]) / diff(rng)\n}"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Tina",
@@ -112,17 +161,10 @@
     "text": "Data Analysis\nHigh-dimensional data visualization\nDimension reduction\nData Visualization"
   },
   {
-    "objectID": "index.html#education",
-    "href": "index.html#education",
-    "title": "Tina",
-    "section": "Education",
-    "text": "Education\n\nPhD student in Statistics | present\n\nMonash University, Australia\n\n\n\nM.Sc in Mathematical Statistics | 2018 - 2021\n\nUniversity of Tabriz, Iran\n\n\n\nThesis: A Powerful Test in High Dimensional Data Using Random Projection Methodology and its Applications\n\n\nB.Sc in Statistics and its applications | 2014 - 2018\n\nUniversity of Tabriz, Iran"
-  },
-  {
-    "objectID": "tutorials/tutorial1.html#scan-to-see-the-material",
-    "href": "tutorials/tutorial1.html#scan-to-see-the-material",
-    "title": "ETC1010 Tutorial 1",
-    "section": "👋 Scan to see the material",
-    "text": "👋 Scan to see the material"
+    "objectID": "blog/index.html",
+    "href": "blog/index.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Debugging Alpha Parameter in cassowaryr package\n\n\n\n\n\n\nR\n\n\nScagnostics\n\n\ndata-viz\n\n\n\nIn this blog, I’m going to tell you how I came across a problem with the alpha parameter in the cassowaryr package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it. \n\n\n\n\n\n04 Aug 2025\n\n\n\n\n\n\nNo matching items"
   }
 ]

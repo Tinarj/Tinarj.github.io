@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Tina – Tina Rashid Jafari</title>
+<title>Blog – Tina Rashid Jafari</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,21 +23,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7ad6542725e80d1433b1f8ee26c2a1fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-7ad6542725e80d1433b1f8ee26c2a1fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -65,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-85GWJNB5L8"></script>
 
 <script type="text/javascript">
@@ -75,18 +107,47 @@ gtag('js', new Date());
 gtag('config', 'G-85GWJNB5L8', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Tina Rashid Jafari</span>
     </a>
   </div>
@@ -97,11 +158,11 @@ gtag('config', 'G-85GWJNB5L8', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./blog/index.html"> 
+    <a class="nav-link active" href="../blog/index.html" aria-current="page"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./tutorials/tutorial1.html"> 
+    <a class="nav-link" href="../tutorials/tutorial1.html"> 
 <span class="menu-text">Tutorial</span></a>
   </li>  
 </ul>
@@ -115,87 +176,78 @@ gtag('config', 'G-85GWJNB5L8', { 'anonymize_ip': true});
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2NhZ25vc3RpY3M=">Scagnostics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ZGF0YS12aXo=">data-viz <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
-<div class="quarto-about-trestles page-columns page-full">
-  <div class="about-entity">
-    <img src="images/Tina.jpg" class="about-image
-  round " style="height: 20em; width: 20em;">
+<main class="content" id="quarto-document-content">
+
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Tina</h1>
+<h1 class="title">Blog</h1>
 </div>
+
+
+
 <div class="quarto-title-meta">
+
+    
+  
+    
   </div>
+  
+
+
 </header>
-    <div class="about-links">
-  <a href="mailto:tina.rashidjafari@monash.edu" class="about-link" rel="" target="">
-    <i class="bi bi-envelope"></i>
-     <span class="about-link-text"></span>
-  </a>
-  <a href="https://github.com/Tinarj" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text"></span>
-  </a>
-  <a href="https://www.linkedin.com/in/tina-jafari-215387131/" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text"></span>
-  </a>
-  <a href="https://bsky.app/profile/tina-rj.bsky.social" class="about-link" rel="" target="">
-     <span class="about-link-text">Bluesky</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents page-columns page-full"><main class="content page-columns page-full" id="quarto-document-content">
-<div id="hero-heading" class="page-columns page-full">
-<div class="column-body-outset">
-<section id="hi" class="level2">
-<h2 data-anchor-id="hi">Hi!</h2>
-<p>I’m Tina and I am a PhD student in the Department of Econometrics and Business Statistics at <a href="https://www.monash.edu/business/ebs">Monash University, Australia</a> supervised by Professor <a href="http://www.dicook.org/">Dianne Cook</a>, Professor <a href="https://research.monash.edu/en/persons/farshid-vahid-araghi">Farshid Vahid-Araghi</a> and Dr.&nbsp;<a href="https://sites.google.com/view/jessica-leung/home?authuser=0">Jessica Leung</a>.</p>
-<p>I am a member of <a href="https://numbat.space/">Monash NUMBATs</a>. I am currently working as a tutor in the Department of Econometrics and Business Statistics at <a href="https://www.monash.edu/business/ebs">Monash University, Australia</a>.</p>
-<hr>
-</section>
-<section id="education" class="level2">
-<h2 data-anchor-id="education">Education</h2>
-<section id="phd-student-in-statistics-present" class="level5">
-<h5 data-anchor-id="phd-student-in-statistics-present"><strong>PhD student in Statistics</strong> | present</h5>
-<section id="monash-university-australia" class="level6" style="color: gray">
-<h6 style="color: gray" data-anchor-id="monash-university-australia">Monash University, Australia</h6>
-</section>
-</section>
-<section id="m.sc-in-mathematical-statistics-2018---2021" class="level5">
-<h5 data-anchor-id="m.sc-in-mathematical-statistics-2018---2021"><strong>M.Sc in Mathematical Statistics</strong> | 2018 - 2021</h5>
-<section id="university-of-tabriz-iran" class="level6" style="color: gray">
-<h6 style="color: gray" data-anchor-id="university-of-tabriz-iran">University of Tabriz, Iran</h6>
-</section>
-</section>
-<section id="thesis-a-powerful-test-in-high-dimensional-data-using-random-projection-methodology-and-its-applications" class="level5">
-<h5 data-anchor-id="thesis-a-powerful-test-in-high-dimensional-data-using-random-projection-methodology-and-its-applications">Thesis: <em>A Powerful Test in High Dimensional Data Using Random Projection Methodology and its Applications</em></h5>
-</section>
-<section id="b.sc-in-statistics-and-its-applications-2014---2018" class="level5">
-<h5 data-anchor-id="b.sc-in-statistics-and-its-applications-2014---2018"><strong>B.Sc in Statistics and its applications</strong> | 2014 - 2018</h5>
-<section id="university-of-tabriz-iran-1" class="level6" style="color: gray">
-<h6 style="color: gray" data-anchor-id="university-of-tabriz-iran-1">University of Tabriz, Iran</h6>
-<hr>
-</section>
-</section>
-</section>
-<section id="research-interests" class="level2">
-<h2 data-anchor-id="research-interests">Research Interests</h2>
-<ul>
-<li><p>Data Analysis</p></li>
-<li><p>High-dimensional data visualization</p></li>
-<li><p>Dimension reduction</p></li>
-<li><p>Data Visualization</p></li>
-</ul>
-</section>
-</div>
-</div>
 
 
-</main></div>
+
+
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="UiUyQ1NjYWdub3N0aWNzJTJDZGF0YS12aXo=" data-listing-date-sort="1754229600000" data-listing-file-modified-sort="1754263869089" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1385">
+<div class="thumbnail">
+<p><a href="../blog/alpha_parameter/debug_alpha.html" class="no-external"></a></p><a href="../blog/alpha_parameter/debug_alpha.html" class="no-external">
+<p class="card-img-top"><img src="alpha_parameter/scagnostics.png"  class="thumbnail-image card-img"/></p>
+</a><p><a href="../blog/alpha_parameter/debug_alpha.html" class="no-external"></a></p>
 </div>
- <!-- /main -->
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../blog/alpha_parameter/debug_alpha.html" class="no-external">Debugging Alpha Parameter in cassowaryr package</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../blog/alpha_parameter/debug_alpha.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">
+R
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('U2NhZ25vc3RpY3M='); return false;">
+Scagnostics
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS12aXo='); return false;">
+data-viz
+</div>
+</div>
+<div class="listing-description">
+<a href="../blog/alpha_parameter/debug_alpha.html" class="no-external">In this blog, I’m going to tell you how I came across a problem with the alpha parameter in the <code>cassowaryr</code> package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it. </a>
+</div>
+</div>
+<div class="metadata">
+<a href="../blog/alpha_parameter/debug_alpha.html" class="no-external">
+<div class="listing-date">
+04 Aug 2025
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -216,6 +268,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

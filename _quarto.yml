@@ -7,6 +7,8 @@ website:
   navbar:
     search: true
     right:
+      - href: blog/index.qmd
+        text: Blog
       - href: tutorials/tutorial1.qmd
         text: Tutorial
   google-analytics: "G-85GWJNB5L8"
