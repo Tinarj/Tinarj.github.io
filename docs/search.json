@@ -91,50 +91,50 @@
     "text": "⌨️ Running Code in RStudio\n\nTo run a line of code from the script:\n\nMac: Command + Enter\nWindows: Ctrl + Enter\n\n\nLet’s try writing some code together now!"
   },
   {
-    "objectID": "blog/alpha_parameter/debug_alpha.html",
-    "href": "blog/alpha_parameter/debug_alpha.html",
+    "objectID": "blog/alpha_parameter_cassowaryr/debug_alpha.html",
+    "href": "blog/alpha_parameter_cassowaryr/debug_alpha.html",
     "title": "Debugging Alpha Parameter in cassowaryr package",
     "section": "",
     "text": "Example scatterplots and their scagnostics measures"
   },
   {
-    "objectID": "blog/alpha_parameter/debug_alpha.html#how-it-started",
-    "href": "blog/alpha_parameter/debug_alpha.html#how-it-started",
+    "objectID": "blog/alpha_parameter_cassowaryr/debug_alpha.html#how-it-started",
+    "href": "blog/alpha_parameter_cassowaryr/debug_alpha.html#how-it-started",
     "title": "Debugging Alpha Parameter in cassowaryr package",
     "section": "How It Started",
     "text": "How It Started\nI’ve been working on shape analysis, trying to better understand patterns in multivariate data. I’m especially interested in patterns that are weird, thin, curvy, or unexpected, rather than just “normal” or random.\nThat curiosity led me to scagnostics (scatterplot diagnostics), a powerful set of metrics that help you quantify the shape and structure of scatterplots. Scagnostics go far beyond linear regression fits or clustering, they look for clumps, holes, loops, skew, and in particular, skinny (which is where this story really begins).\nTo compute these, I used the cassowaryr package in R, which implements scagnostics measures using geometry. I ran some simulations, tried adding noise, and explored how the indices responded."
   },
   {
-    "objectID": "blog/alpha_parameter/debug_alpha.html#wait-that-doesnt-look-right",
-    "href": "blog/alpha_parameter/debug_alpha.html#wait-that-doesnt-look-right",
+    "objectID": "blog/alpha_parameter_cassowaryr/debug_alpha.html#wait-that-doesnt-look-right",
+    "href": "blog/alpha_parameter_cassowaryr/debug_alpha.html#wait-that-doesnt-look-right",
     "title": "Debugging Alpha Parameter in cassowaryr package",
     "section": "😕 Wait… That Doesn’t Look Right",
-    "text": "😕 Wait… That Doesn’t Look Right\nAfter exploring many features with and without noise, I noticed something unexpected with the skinny index.\nScagnostics are supposed to give values between 0 and 1. For skinny, the idea is:\n\nIf a pattern is very thin and elongated, it should be close to 1.\nIf it’s round and compact, it should be closer to 0.\n\nSo I tested it on a U-shaped pattern:\n\nA degree-1 polynomial on the x-axis,\nA degree-2 polynomial on the y-axis.\n\n\n\n\n\n\n\n\n\n\nIt looked very skinny, and in fact, in Wilkinson’s scagnostics paper, a pattern just like this one is shown as a clear example of something that’s highly skinny.\nBut when I checked the skinny index, it gave me… 0.17-0.20. 🤨\n\n\n[1] \"The skinny value from cassowaryr is: 0.181707044829051\"\n\n\nThat didn’t feel right at all. So naturally, I started to wonder: what’s going wrong here?"
+    "text": "😕 Wait… That Doesn’t Look Right\nAfter exploring many features with and without noise, I noticed something unexpected with the skinny index.\nScagnostics are supposed to give values between 0 and 1. For skinny, the idea is:\n\nIf a pattern is very thin and elongated, it should be close to 1.\nIf it’s round and compact, it should be closer to 0.\n\nSo I tested it on a U-shaped pattern:\n\nA degree-1 polynomial on the x-axis,\nA degree-2 polynomial on the y-axis.\n\n\n\n\n\n\n\n\n\n\nIt looked very skinny, and in fact, in Wilkinson’s scagnostics paper, a pattern just like this one is shown as a clear example of something that’s highly skinny.\nBut when I checked the skinny index, it gave me… 0.17-0.20. 🤨\n\n\n[1] \"The skinny value from cassowaryr is: 0.192861989330782\"\n\n\nThat didn’t feel right at all. So naturally, I started to wonder: what’s going wrong here?"
   },
   {
-    "objectID": "blog/alpha_parameter/debug_alpha.html#time-to-dig-in",
-    "href": "blog/alpha_parameter/debug_alpha.html#time-to-dig-in",
+    "objectID": "blog/alpha_parameter_cassowaryr/debug_alpha.html#time-to-dig-in",
+    "href": "blog/alpha_parameter_cassowaryr/debug_alpha.html#time-to-dig-in",
     "title": "Debugging Alpha Parameter in cassowaryr package",
     "section": "Time to Dig In",
-    "text": "Time to Dig In\nI figured maybe there was something off in how the measure was being calculated. So I began debugging. I read the documentation and looked into how the skinny index was defined how the skinny index was defined. I found that it’s computed as:\n\\[\n\\text{Skinny} = 1 - \\frac{\\sqrt{4 \\pi \\cdot \\text{Area}(A)}}{\\text{Perimeter}(A)}\n\\]\nWhere ( A ) is the alpha shape (also called alpha hull), a geometric boundary that wraps around the data more tightly than a convex hull depending on the alpha parameter. If the shape is long and narrow, this formula should give a value close to 1. If it’s more round or bulky, the result will be closer to 0.\nI visualized the alpha shape using cassowaryr. That’s when I saw it: The alpha hull was overly convex, it had connected the two tips of the U shape, effectively turning it into a bowl. So from the geometry’s point of view, it wasn’t skinny anymore, and the formula reflected that.\n\n\n\n\n\n\n\n\n\nIt looked much rounder than it really was, so of course the skinny value was low!\nThe shape detection wasn’t wrong, exactly, it was just being too aggressive in how it wrapped the points. And that’s when I realized: this had to do with the alpha parameter.\nI opened the source code and looked at how alpha was being calculated.\nThere, I saw that the alpha parameter was being computed using a boxplot-based outlier rule, the one where you take the interquartile range and multiply it by 1.5 to find upper thresholds. It was using this to define alpha.\nThis didn’t align with my understanding of scagnostics. So I returned to the original Wilkinson paper, which describes scagnostics in detail.\nAnd there it was, it says: &gt; Alpha is recommended to be the 90th percentile of the Minimum Spanning Tree (MST) edge lengths.\nThe boxplot rule is supposed to be used to detect and remove outliers, not to determine the alpha shape parameter. This was a mix-up."
+    "text": "Time to Dig In\nI figured maybe there was something off in how the measure was being calculated. So I began debugging. I read the documentation and looked into how the skinny index was defined how the skinny index was defined. I found that it’s computed as:\n\\[\n\\text{Skinny} = 1 - \\frac{\\sqrt{4 \\pi \\cdot \\text{Area}(A)}}{\\text{Perimeter}(A)}\n\\]\nWhere ( A ) is the alpha shape (also called alpha hull), a geometric boundary that wraps around the data more tightly than a convex hull depending on the alpha parameter. If the shape is long and narrow, this formula should give a value close to 1. If it’s more round or bulky, the result will be closer to 0.\nI visualized the alpha shape using cassowaryr. That’s when I saw it: The alpha hull was overly convex, it had connected the two tips of the U shape, effectively turning it into a bowl. So from the geometry’s point of view, it wasn’t skinny anymore, and the formula reflected that.\n\n\n\n\n\n\n\n\n\nIt looked much rounder than it really was, so of course the skinny value was low!\nThe shape detection wasn’t wrong, exactly, it was just being too aggressive in how it wrapped the points. And that’s when I realized: this had to do with the alpha parameter.\nI opened the source code and looked at how alpha was being calculated.\nThere, I saw that the alpha parameter was being computed using a boxplot-based outlier rule, the one where you take the interquartile range and multiply it by 1.5 to find upper thresholds. It was using this to define alpha.\nThis didn’t align with my understanding of scagnostics. So I returned to the Wilkinson’s paper, which describes scagnostics in detail.\nAnd there it was, it says: &gt; Alpha is recommended to be the 90th percentile of the Minimum Spanning Tree (MST) edge lengths.\nThe boxplot rule is supposed to be used to detect and remove outliers, not to determine the alpha shape parameter. This was a mix-up."
   },
   {
-    "objectID": "blog/alpha_parameter/debug_alpha.html#what-i-changed",
-    "href": "blog/alpha_parameter/debug_alpha.html#what-i-changed",
+    "objectID": "blog/alpha_parameter_cassowaryr/debug_alpha.html#what-i-changed",
+    "href": "blog/alpha_parameter_cassowaryr/debug_alpha.html#what-i-changed",
     "title": "Debugging Alpha Parameter in cassowaryr package",
     "section": "What I Changed",
     "text": "What I Changed\nSo here’s what I did:\n\nThe boxplot rule is now used solely to remove outliers from the data before geometry is computed.\nThe alpha parameter is calculated as the 90th percentile of MST edge lengths:\n\nalpha &lt;- quantile(mst_weights, 0.9)"
   },
   {
-    "objectID": "blog/alpha_parameter/debug_alpha.html#the-original-scree-function-and-how-it-was-working-before",
-    "href": "blog/alpha_parameter/debug_alpha.html#the-original-scree-function-and-how-it-was-working-before",
+    "objectID": "blog/alpha_parameter_cassowaryr/debug_alpha.html#the-original-scree-function-and-how-it-was-working-before",
+    "href": "blog/alpha_parameter_cassowaryr/debug_alpha.html#the-original-scree-function-and-how-it-was-working-before",
     "title": "Debugging Alpha Parameter in cassowaryr package",
     "section": "The Original scree() Function and How It Was Working Before",
     "text": "The Original scree() Function and How It Was Working Before\n\n#' Pre-processing to generate scagnostic measures\n#'\n#' @param x,y numeric vectors\n#' @param binner an optional function that bins the x and y vectors prior\n#' to triangulation\n#' @param ...  other args\n#'\n#' @return An object of class \"scree\" that consists of three elements:\n#'  - `del`: the Delauney-Voronoi tesselation from [alphahull::delvor()]\n#'  - `weights`: the lengths of each edge in the Delauney triangulation\n#'  - `alpha`: the radius or `alpha` value that will be used to generate the\n#'  alphahull\n#'\n#' @examples\n#'\n#' x &lt;- runif(100)\n#' y &lt;- runif(100)\n#' scree(x,y)\n#'\n#' @export\nscree &lt;- function(x, y, binner = NULL, ...) {\n  # checks on x,y\n  stopifnot(\n    is.numeric(x), is.numeric(y), length(x) == length(y)\n  )\n  # Check if data is a straight line\n  if (any(abs(stats::cor(x,y))&gt;1-1*10^-15, !stats::sd(x)&gt;0, !stats::sd(y)&gt;0))\n    stop(\"Data is a perfectly straight line and cannot be analysed\")\n\n  # Binner must be a function\n  if (!(is.null(binner) | is.function(binner)))\n    stop(\"binner must be a function\")\n\n  # cast to a matrix\n  xy &lt;- cbind(unitize(x), unitize(y))\n\n  # Check for duplicates and remove\n  # (had to cut off at 15 digits otherwise shull spits error)\n  xrnd &lt;- round(unitize(x), digits = 10)\n  yrnd &lt;- round(unitize(y), digits = 10)\n  dupes &lt;- paste(xrnd, yrnd, sep =\",\")\n  xy &lt;- xy[!duplicated(dupes),]\n\n  # Binner function\n  if (is.function(binner)) {\n    xy &lt;- binner(xy)\n  }\n\n  # compute delauney triangulation\n  del &lt;- alphahull::delvor(xy)\n\n  # edge weights from the triangulation\n  weights &lt;- gen_edge_lengths(del)\n\n  # alpha estimator\n  alpha &lt;- psi(weights)\n\n  structure(\n    list(\n      del = del,\n      weights  = weights,\n      alpha = alpha\n    ),\n    class = \"scree\"\n  )\n}\n\ngen_edge_lengths &lt;- function(del) {\n  from_cols &lt;- c(\"x1\", \"y1\")\n  to_cols &lt;- c(\"x2\", \"y2\")\n  sqrt(rowSums((del$mesh[, from_cols] - del$mesh[, to_cols])^2))\n}\n\n# rescale input to lie in unit interval\nunitize &lt;- function(x, na.rm = TRUE) {\n  rng &lt;- range(x, na.rm = na.rm)\n  (x - rng[1]) / diff(rng)\n}\n\n# This is the edge filter from Wilkinson 05\npsi &lt;- function(w, q = c(0.25, 0.75)) {\n  q &lt;- stats::quantile(w, probs = q)\n  unname(q[2] + 1.5 * diff(q))\n}"
   },
   {
-    "objectID": "blog/alpha_parameter/debug_alpha.html#the-updated-scree-how-i-fixed-the-alpha-problem",
-    "href": "blog/alpha_parameter/debug_alpha.html#the-updated-scree-how-i-fixed-the-alpha-problem",
+    "objectID": "blog/alpha_parameter_cassowaryr/debug_alpha.html#the-updated-scree-how-i-fixed-the-alpha-problem",
+    "href": "blog/alpha_parameter_cassowaryr/debug_alpha.html#the-updated-scree-how-i-fixed-the-alpha-problem",
     "title": "Debugging Alpha Parameter in cassowaryr package",
     "section": "The Updated scree(), How I Fixed the Alpha Problem",
     "text": "The Updated scree(), How I Fixed the Alpha Problem\n\nscree &lt;- function(x, y, binner = NULL, alpha_param = NULL, ...) {\n  # checks on x,y\n  stopifnot(\n    is.numeric(x), is.numeric(y), length(x) == length(y)\n  )\n\n  # Check if data is a straight line\n  if (any(abs(stats::cor(x, y)) &gt; 1 - 1e-15, !stats::sd(x) &gt; 0, !stats::sd(y) &gt; 0))\n    stop(\"Data is a perfectly straight line and cannot be analysed\")\n\n  # Binner must be a function\n  if (!(is.null(binner) | is.function(binner)))\n    stop(\"binner must be a function\")\n\n  # cast to a matrix\n  xy &lt;- cbind(unitize(x), unitize(y))\n\n  # Check for duplicates and remove\n  xrnd &lt;- round(unitize(x), digits = 10)\n  yrnd &lt;- round(unitize(y), digits = 10)\n  dupes &lt;- paste(xrnd, yrnd, sep = \",\")\n  xy &lt;- xy[!duplicated(dupes), ]\n\n  # Binner function\n  if (is.function(binner)) {\n    xy &lt;- binner(xy)\n  }\n\n  # Compute Delaunay triangulation\n  del &lt;- alphahull::delvor(xy)\n\n  # edge weights from the triangulation\n  weights &lt;- gen_edge_lengths(del)\n\n  # Compute outlier removal threshold (Wilkinson’s boxplot rule)\n  outlier_threshold &lt;- outlier_rm(weights)\n\n  # Compute alpha radius if not provided (Wilkinson’s suggestion: 90th percentile of MST edge lengths)\n  \n  if (is.null(alpha_param)) {\n    alpha &lt;- stats::quantile(mst_weights, 0.9)\n  } else {\n    alpha &lt;- alpha_param\n  }\n\n  structure(\n    list(\n      del = del,\n      weights = weights,\n      alpha = alpha,\n      outlier_threshold = outlier_threshold\n    ),\n    class = \"scree\"\n  )\n}\n\n# renamed from psi()\noutlier_rm &lt;- function(w, q = c(0.25, 0.75)) {\n  q &lt;- stats::quantile(w, probs = q)\n  unname(q[2] + 1.5 * diff(q))\n}\n\ngen_edge_lengths &lt;- function(del) {\n  from_cols &lt;- c(\"x1\", \"y1\")\n  to_cols &lt;- c(\"x2\", \"y2\")\n  sqrt(rowSums((del$mesh[, from_cols] - del$mesh[, to_cols])^2))\n}\n\n# rescale input to lie in unit interval\nunitize &lt;- function(x, na.rm = TRUE) {\n  rng &lt;- range(x, na.rm = na.rm)\n  (x - rng[1]) / diff(rng)\n}"
@@ -161,10 +161,52 @@
     "text": "Data Analysis\nHigh-dimensional data visualization\nDimension reduction\nData Visualization"
   },
   {
+    "objectID": "blog/alpha_parameter/alpha_parameter_issues.html",
+    "href": "blog/alpha_parameter/alpha_parameter_issues.html",
+    "title": "Fixing Alpha Shapes: What I Learned About the Alpha Parameter",
+    "section": "",
+    "text": "Lately, I’ve been exploring shape analysis in multivariate data. But instead of focusing on neat, normal, or random-looking patterns, I’ve been drawn to the weird ones, the non-normal, odd, and often more interesting shapes that pop up in scatterplots.\nThat curiosity brought me to scagnostics, short for scatterplot diagnostics. These measures go way beyond linear trends or correlations. They were originally inspired by ideas from John Tukey and later developed more formally by Leland Wilkinson, who gave them a solid foundation in graph theory.\nScagnostics can reveal different kinds of patterns: skewed distributions, outliers, clumpy regions, stringy or skinny shapes, convexity, and more.\nOne of these metrics, the skinny index, is meant to detect thin and elongated structures in the data. But when I tried to use it, I ran into something… strange."
+  },
+  {
+    "objectID": "blog/alpha_parameter/alpha_parameter_issues.html#scagnostics",
+    "href": "blog/alpha_parameter/alpha_parameter_issues.html#scagnostics",
+    "title": "Fixing Alpha Shapes: What I Learned About the Alpha Parameter",
+    "section": "",
+    "text": "Lately, I’ve been exploring shape analysis in multivariate data. But instead of focusing on neat, normal, or random-looking patterns, I’ve been drawn to the weird ones, the non-normal, odd, and often more interesting shapes that pop up in scatterplots.\nThat curiosity brought me to scagnostics, short for scatterplot diagnostics. These measures go way beyond linear trends or correlations. They were originally inspired by ideas from John Tukey and later developed more formally by Leland Wilkinson, who gave them a solid foundation in graph theory.\nScagnostics can reveal different kinds of patterns: skewed distributions, outliers, clumpy regions, stringy or skinny shapes, convexity, and more.\nOne of these metrics, the skinny index, is meant to detect thin and elongated structures in the data. But when I tried to use it, I ran into something… strange."
+  },
+  {
+    "objectID": "blog/alpha_parameter/alpha_parameter_issues.html#when-skinny-didnt-seem-skinny-enough",
+    "href": "blog/alpha_parameter/alpha_parameter_issues.html#when-skinny-didnt-seem-skinny-enough",
+    "title": "Fixing Alpha Shapes: What I Learned About the Alpha Parameter",
+    "section": "When “Skinny” Didn’t Seem Skinny Enough",
+    "text": "When “Skinny” Didn’t Seem Skinny Enough\nThe formula for the skinny index looks like this:\n\\[\n\\text{Skinny} = 1 - \\frac{\\sqrt{4 \\pi \\cdot \\text{Area}(A)}}{\\text{Perimeter}(A)}\n\\]\nHere, ( A ) is the alpha shape (or alpha hull) of the point cloud, a flexible shape that wraps around the data, more precisely than a convex hull. If the shape is thin and long, the result should be close to 1. If it’s round, the score drops toward 0.\nI ran simulations using different data structures. One of the simplest ones I tried was a U-shape, built from a polynomial of degree 1 on the x-axis and degree 2 on the y-axis.\n\n\n\n\n\n\n\n\n\nThis shape was clearly long and skinny. In fact, Wilkinson’s paper even shows a nearly identical example as a high-skinny pattern.\n\n\n\nExample scatterplots and their scagnostics measures\n\n\nBut when I ran this through the cassowaryr package in R, I was shocked to get a skinny score of around 0.18.\n\n\n[1] \"The skinny value from cassowaryr is: 0.184893805878199\""
+  },
+  {
+    "objectID": "blog/alpha_parameter/alpha_parameter_issues.html#something-was-wrong",
+    "href": "blog/alpha_parameter/alpha_parameter_issues.html#something-was-wrong",
+    "title": "Fixing Alpha Shapes: What I Learned About the Alpha Parameter",
+    "section": "Something Was Wrong",
+    "text": "Something Was Wrong\nAt first, I thought maybe I messed up the structure. So I tried other shapes. Same problem.\nThat’s when I decided to look deeper into the alpha parameter that powers the alpha shape."
+  },
+  {
+    "objectID": "blog/alpha_parameter/alpha_parameter_issues.html#understanding-alpha-and-why-its-tricky",
+    "href": "blog/alpha_parameter/alpha_parameter_issues.html#understanding-alpha-and-why-its-tricky",
+    "title": "Fixing Alpha Shapes: What I Learned About the Alpha Parameter",
+    "section": "Understanding Alpha (and Why It’s Tricky)",
+    "text": "Understanding Alpha (and Why It’s Tricky)\nThe alpha parameter controls how tightly the alpha shape wraps around the data:\n\nIf alpha is small, the shape becomes more detailed, it captures indentations, curves, and fine structure.\nIf alpha is large, it behaves more like a convex hull, creating a looser, oversimplified boundary.\n\n\n\n\n\n\n\n\n\n\nSo I thought: maybe the default alpha is too high? I changed it by lowering the alpha, trying various values manually, hoping to get the shape to match the U-structure more accurately.\nBut no matter what, I ran into new problems:\n\nWhen the alpha value was very small, the alpha shape couldn’t be constructed at all. As I increased it slightly, it started connecting only the dense regions, but again, it just formed small bowls instead of capturing the full shape.\nWhen alpha was too large, it would just connect the tips and form a big bowl, losing the skinny structure entirely.\n\nEven worse: using a small alpha sometimes gave me a skinny score close to 1, but visually, the shape wasn’t even capturing the whole structure, it was just hugging the middle, throwing away the rest.\nThat’s when I realized: the problem isn’t just the alpha value, it’s how the alpha shape fails to connect sparse or tail regions when the points are far apart.\n\n\n\n\n\nalpha = 0.01\n\n\n\n\n\n\n\nalpha = 0.09\n\n\n\n\n\n\n\nalpha = 0.1\n\n\n\n\n\n\n\nalpha = 0.14\n\n\n\n\n\n\n\nalpha = 0.15\n\n\n\n\n\n\n\nalpha = 0.2\n\n\n\n\n\n\n\nalpha = 0.3\n\n\n\n\n\n\n\nalpha = 0.35\n\n\n\n\n\n\n\nalpha = 0.4\n\n\n\n\n\n\n\nalpha = 0.5\n\n\n\n\n\n\n\nalpha = 0.6"
+  },
+  {
+    "objectID": "blog/alpha_parameter/alpha_parameter_issues.html#a-new-idea-bring-in-the-mst",
+    "href": "blog/alpha_parameter/alpha_parameter_issues.html#a-new-idea-bring-in-the-mst",
+    "title": "Fixing Alpha Shapes: What I Learned About the Alpha Parameter",
+    "section": "A New Idea: Bring in the MST",
+    "text": "A New Idea: Bring in the MST\nI started thinking: what if I combine alpha shapes with another graph that’s guaranteed to connect everything?\nThat led me to the Minimum Spanning Tree (MST), a graph that connects all points with the shortest total distance, without any loops. It’s a staple in graph theory and used in other scagnostics too.\nThe MST doesn’t care about density, it connects all points, even sparse ones.\nSo here’s the plan I came up with:\n\nUse the 90th percentile of MST edge lengths to compute the alpha parameter (as suggested by Wilkinson).\nThen, draw both the MST and the alpha shape.\nFinally, combine them, take the union of the alpha shape and the MST.\n\nThat way:\n\nThe alpha shape captures the dense, detailed parts of the structure.\nThe MST fills in the missing connections, especially in the tails or sparse zones.\n\nAlpha shapes alone can miss key structure when the data is too sparse or oddly shaped.\nMSTs, on the other hand, never miss, but they’re too simple to describe detailed boundaries."
+  },
+  {
     "objectID": "blog/index.html",
     "href": "blog/index.html",
     "title": "Blog",
     "section": "",
-    "text": "Debugging Alpha Parameter in cassowaryr package\n\n\n\n\n\n\nR\n\n\nScagnostics\n\n\ndata-viz\n\n\n\nIn this blog, I’m going to tell you how I came across a problem with the alpha parameter in the cassowaryr package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it. \n\n\n\n\n\n04 Aug 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Fixing Alpha Shapes: What I Learned About the Alpha Parameter\n\n\n\n\n\n\nscagnostics\n\n\ncassowaryr\n\n\nshape-analysis\n\n\nR\n\n\n\nIn this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.\n\n\n\n\n\n05 Aug 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDebugging Alpha Parameter in cassowaryr package\n\n\n\n\n\n\nR\n\n\nScagnostics\n\n\ndata-viz\n\n\n\nIn this blog, I’m going to tell you how I came across a problem with the alpha parameter in the cassowaryr package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it. \n\n\n\n\n\n05 Aug 2025\n\n\n\n\n\n\nNo matching items"
   }
 ]

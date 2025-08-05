@@ -92,7 +92,7 @@ I opened the source code and looked at how `alpha` was being calculated.
 
 There, I saw that the **alpha parameter** was being computed using a **boxplot-based outlier rule**, the one where you take the interquartile range and multiply it by 1.5 to find upper thresholds. It was using this to define alpha.
 
-This didn't align with my understanding of scagnostics. So I returned to the [original Wilkinson paper](https://doi.org/10.1198/106186008X320465), which describes scagnostics in detail.
+This didn't align with my understanding of scagnostics. So I returned to the [Wilkinson's paper](https://doi.org/10.1198/106186008X320465), which describes scagnostics in detail.
 
 And there it was, it says:
 > *Alpha is recommended to be the 90th percentile of the Minimum Spanning Tree (MST) edge lengths.*

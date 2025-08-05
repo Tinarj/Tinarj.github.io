@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2025-08-05">
+<meta name="description" content="In this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.">
 
-<title>Blog – Tina Rashid Jafari</title>
+<title>Fixing Alpha Shapes: What I Learned About the Alpha Parameter – Tina Rashid Jafari</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-listing/list.min.js"></script>
-<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7ad6542725e80d1433b1f8ee26c2a1fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-7ad6542725e80d1433b1f8ee26c2a1fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-85GWJNB5L8"></script>
 
 <script type="text/javascript">
@@ -137,7 +108,7 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -147,7 +118,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Tina Rashid Jafari</span>
     </a>
   </div>
@@ -158,11 +129,11 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../blog/index.html" aria-current="page"> 
+    <a class="nav-link" href="../../blog/index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/tutorial1.html"> 
+    <a class="nav-link" href="../../tutorials/tutorial1.html"> 
 <span class="menu-text">Tutorial</span></a>
   </li>  
 </ul>
@@ -177,21 +148,48 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(2)</span></div><div class="category" data-category="U2NhZ25vc3RpY3M=">Scagnostics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Y2Fzc293YXJ5cg==">cassowaryr <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ZGF0YS12aXo=">data-viz <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c2NhZ25vc3RpY3M=">scagnostics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c2hhcGUtYW5hbHlzaXM=">shape-analysis <span class="quarto-category-count">(1)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#scagnostics" id="toc-scagnostics" class="nav-link active" data-scroll-target="#scagnostics">Scagnostics</a></li>
+  <li><a href="#when-skinny-didnt-seem-skinny-enough" id="toc-when-skinny-didnt-seem-skinny-enough" class="nav-link" data-scroll-target="#when-skinny-didnt-seem-skinny-enough">When “Skinny” Didn’t Seem Skinny Enough</a></li>
+  <li><a href="#something-was-wrong" id="toc-something-was-wrong" class="nav-link" data-scroll-target="#something-was-wrong">Something Was Wrong</a></li>
+  <li><a href="#understanding-alpha-and-why-its-tricky" id="toc-understanding-alpha-and-why-its-tricky" class="nav-link" data-scroll-target="#understanding-alpha-and-why-its-tricky">Understanding Alpha (and Why It’s Tricky)</a></li>
+  <li><a href="#a-new-idea-bring-in-the-mst" id="toc-a-new-idea-bring-in-the-mst" class="nav-link" data-scroll-target="#a-new-idea-bring-in-the-mst">A New Idea: Bring in the MST</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blog</h1>
-</div>
+<h1 class="title">Fixing Alpha Shapes: What I Learned About the Alpha Parameter</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">scagnostics</div>
+    <div class="quarto-category">cassowaryr</div>
+    <div class="quarto-category">shape-analysis</div>
+    <div class="quarto-category">R</div>
+  </div>
+  </div>
 
+<div>
+  <div class="description">
+    In this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">05 Aug 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -201,92 +199,188 @@ window.Quarto = {
 </header>
 
 
+<section id="scagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="scagnostics">Scagnostics</h2>
+<p>Lately, I’ve been exploring shape analysis in multivariate data. But instead of focusing on neat, normal, or random-looking patterns, I’ve been drawn to the weird ones, the <strong>non-normal</strong>, <strong>odd</strong>, and often more <strong>interesting</strong> shapes that pop up in scatterplots.</p>
+<p>That curiosity brought me to <strong>scagnostics</strong>, short for <em>scatterplot diagnostics</em>. These measures go way beyond linear trends or correlations. They were originally inspired by ideas from John Tukey and later developed more formally by Leland Wilkinson, who gave them a solid foundation in graph theory.</p>
+<p>Scagnostics can reveal different kinds of patterns: <strong>skewed</strong> distributions, <strong>outliers</strong>, <strong>clumpy</strong> regions, <strong>stringy</strong> or <strong>skinny</strong> shapes, <strong>convexity</strong>, and more.</p>
+<p>One of these metrics, the <strong>skinny index</strong>, is meant to detect <strong>thin and elongated structures</strong> in the data. But when I tried to use it, I ran into something… strange.</p>
+<hr>
+</section>
+<section id="when-skinny-didnt-seem-skinny-enough" class="level2">
+<h2 class="anchored" data-anchor-id="when-skinny-didnt-seem-skinny-enough">When “Skinny” Didn’t Seem Skinny Enough</h2>
+<p>The formula for the <a href="https://doi.org/10.1198/106186008X320465">skinny index</a> looks like this:</p>
+<p><span class="math display">\[
+\text{Skinny} = 1 - \frac{\sqrt{4 \pi \cdot \text{Area}(A)}}{\text{Perimeter}(A)}
+\]</span></p>
+<p>Here, ( A ) is the alpha shape (or alpha hull) of the point cloud, a flexible shape that wraps around the data, more precisely than a convex hull. If the shape is thin and long, the result should be close to 1. If it’s round, the score drops toward 0.</p>
+<p>I ran simulations using different data structures. One of the simplest ones I tried was a <strong>U-shape</strong>, built from a <strong>polynomial of degree 1</strong> on the x-axis and <strong>degree 2</strong> on the y-axis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="alpha_parameter_issues_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This shape was clearly long and skinny. In fact, <a href="https://doi.org/10.1198/106186008X320465">Wilkinson’s paper</a> even shows a nearly identical example as a high-skinny pattern.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="scagnostics.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Example scatterplots and their scagnostics measures</figcaption>
+</figure>
+</div>
+<p>But when I ran this through the <code>cassowaryr</code> package in R, I was shocked to get a skinny score of around <strong>0.18</strong>.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "The skinny value from cassowaryr is: 0.184893805878199"</code></pre>
+</div>
+</div>
+</section>
+<section id="something-was-wrong" class="level2">
+<h2 class="anchored" data-anchor-id="something-was-wrong">Something Was Wrong</h2>
+<p>At first, I thought maybe I messed up the structure. So I tried other shapes. Same problem.</p>
+<p>That’s when I decided to look deeper into the <strong>alpha parameter</strong> that powers the alpha shape.</p>
+</section>
+<section id="understanding-alpha-and-why-its-tricky" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-alpha-and-why-its-tricky">Understanding Alpha (and Why It’s Tricky)</h2>
+<p>The <strong>alpha parameter</strong> controls how tightly the alpha shape wraps around the data:</p>
+<ul>
+<li>If <strong>alpha is small</strong>, the shape becomes more detailed, it captures indentations, curves, and fine structure.</li>
+<li>If <strong>alpha is large</strong>, it behaves more like a <strong>convex hull</strong>, creating a looser, oversimplified boundary.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="alpha_parameter_issues_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So I thought: maybe the default alpha is too high? I changed it by lowering the alpha, trying various values manually, hoping to get the shape to match the U-structure more accurately.</p>
+<p>But no matter what, I ran into new problems:</p>
+<ul>
+<li>When the alpha value was very small, the alpha shape couldn’t be constructed at all. As I increased it slightly, it started connecting only the dense regions, but again, it just formed small bowls instead of capturing the full shape.</li>
+<li>When alpha was too large, it would just connect the tips and form a big bowl, losing the skinny structure entirely.</li>
+</ul>
+<p>Even worse: using a <strong>small alpha</strong> sometimes gave me a <strong>skinny score close to 1</strong>, but visually, the shape wasn’t even capturing the whole structure, it was just hugging the middle, throwing away the rest.</p>
+<p>That’s when I realized: the problem isn’t just the alpha value, it’s how the alpha shape <strong>fails to connect</strong> sparse or tail regions when the points are far apart.</p>
+<div class="grid">
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.01).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.01</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.09).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.09</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.1).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.1</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.14).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.14</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.15).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.15</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.2).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.2</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.3).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.3</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.35).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.35</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.4).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.4</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.5).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.5</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.6).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.6</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="a-new-idea-bring-in-the-mst" class="level2">
+<h2 class="anchored" data-anchor-id="a-new-idea-bring-in-the-mst">A New Idea: Bring in the MST</h2>
+<p>I started thinking: what if I <strong>combine alpha shapes with another graph</strong> that’s guaranteed to connect everything?</p>
+<p>That led me to the <strong>Minimum Spanning Tree (MST)</strong>, a graph that connects all points with the <strong>shortest total distance</strong>, without any loops. It’s a staple in graph theory and used in other scagnostics too.</p>
+<p>The MST doesn’t care about density, it <strong>connects all points</strong>, even sparse ones.</p>
+<p>So here’s the plan I came up with:</p>
+<ul>
+<li>Use the <strong>90th percentile of MST edge lengths</strong> to compute the alpha parameter (as suggested by Wilkinson).</li>
+<li>Then, <strong>draw both</strong> the MST and the alpha shape.</li>
+<li>Finally, <strong>combine them</strong>, take the <strong>union of the alpha shape and the MST</strong>.</li>
+</ul>
+<p>That way:</p>
+<ul>
+<li>The <strong>alpha shape</strong> captures the dense, detailed parts of the structure.</li>
+<li>The <strong>MST</strong> fills in the missing connections, especially in the tails or sparse zones.</li>
+</ul>
+<p>Alpha shapes alone can miss key structure when the data is too sparse or oddly shaped.</p>
+<p>MSTs, on the other hand, <strong>never miss</strong>, but they’re too simple to describe detailed boundaries.</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="c2NhZ25vc3RpY3MlMkNjYXNzb3dhcnlyJTJDc2hhcGUtYW5hbHlzaXMlMkNS" data-listing-date-sort="1754316000000" data-listing-file-modified-sort="1754363257334" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="764">
-<div class="thumbnail">
-<p><a href="../blog/alpha_parameter/alpha_parameter_issues.html" class="no-external"></a></p><a href="../blog/alpha_parameter/alpha_parameter_issues.html" class="no-external">
-<p class="card-img-top"><img src="alpha_parameter/alpha_parameter_issues_files/figure-html/unnamed-chunk-1-1.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="../blog/alpha_parameter/alpha_parameter_issues.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/alpha_parameter/alpha_parameter_issues.html" class="no-external">Fixing Alpha Shapes: What I Learned About the Alpha Parameter</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/alpha_parameter/alpha_parameter_issues.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('c2NhZ25vc3RpY3M='); return false;">
-scagnostics
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Y2Fzc293YXJ5cg=='); return false;">
-cassowaryr
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('c2hhcGUtYW5hbHlzaXM='); return false;">
-shape-analysis
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">
-R
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/alpha_parameter/alpha_parameter_issues.html" class="no-external">In this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/alpha_parameter/alpha_parameter_issues.html" class="no-external">
-<div class="listing-date">
-05 Aug 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="UiUyQ1NjYWdub3N0aWNzJTJDZGF0YS12aXo=" data-listing-date-sort="1754316000000" data-listing-file-modified-sort="1754355217962" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1384">
-<div class="thumbnail">
-<p><a href="../blog/alpha_parameter_cassowaryr/debug_alpha.html" class="no-external"></a></p><a href="../blog/alpha_parameter_cassowaryr/debug_alpha.html" class="no-external">
-<p class="card-img-top"><img src="alpha_parameter_cassowaryr/scagnostics.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="../blog/alpha_parameter_cassowaryr/debug_alpha.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../blog/alpha_parameter_cassowaryr/debug_alpha.html" class="no-external">Debugging Alpha Parameter in cassowaryr package</a>
-</h3>
-<div class="listing-subtitle">
-<a href="../blog/alpha_parameter_cassowaryr/debug_alpha.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">
-R
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('U2NhZ25vc3RpY3M='); return false;">
-Scagnostics
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS12aXo='); return false;">
-data-viz
-</div>
-</div>
-<div class="listing-description">
-<a href="../blog/alpha_parameter_cassowaryr/debug_alpha.html" class="no-external">In this blog, I’m going to tell you how I came across a problem with the alpha parameter in the <code>cassowaryr</code> package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it. </a>
-</div>
-</div>
-<div class="metadata">
-<a href="../blog/alpha_parameter_cassowaryr/debug_alpha.html" class="no-external">
-<div class="listing-date">
-05 Aug 2025
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
