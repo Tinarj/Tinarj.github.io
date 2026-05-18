@@ -4,3 +4,4 @@
 .Ruserdata
 ignore/
 /.quarto/
+**/*.quarto_ipynb
