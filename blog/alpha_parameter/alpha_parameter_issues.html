@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-05-18">
+<meta name="description" content="In this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.">
+
+<title>Fixing Alpha Shapes: What I Learned About the Alpha Parameter – Tina Rashid Jafari</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-80f6653e4bad1240590acd7234152a3f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-85GWJNB5L8"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-85GWJNB5L8', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Tina Rashid Jafari</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../tutorials/tutorial1.html"> 
+<span class="menu-text">Tutorial</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#scagnostics" id="toc-scagnostics" class="nav-link active" data-scroll-target="#scagnostics">Scagnostics</a></li>
+  <li><a href="#when-skinny-didnt-seem-skinny-enough" id="toc-when-skinny-didnt-seem-skinny-enough" class="nav-link" data-scroll-target="#when-skinny-didnt-seem-skinny-enough">When “Skinny” Didn’t Seem Skinny Enough</a></li>
+  <li><a href="#something-was-wrong" id="toc-something-was-wrong" class="nav-link" data-scroll-target="#something-was-wrong">Something Was Wrong</a></li>
+  <li><a href="#understanding-alpha-and-why-its-tricky" id="toc-understanding-alpha-and-why-its-tricky" class="nav-link" data-scroll-target="#understanding-alpha-and-why-its-tricky">Understanding Alpha (and Why It’s Tricky)</a></li>
+  <li><a href="#a-new-idea-bring-in-the-mst" id="toc-a-new-idea-bring-in-the-mst" class="nav-link" data-scroll-target="#a-new-idea-bring-in-the-mst">A New Idea: Bring in the MST</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Fixing Alpha Shapes: What I Learned About the Alpha Parameter</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">scagnostics</div>
+    <div class="quarto-category">cassowaryr</div>
+    <div class="quarto-category">shape-analysis</div>
+    <div class="quarto-category">R</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    In this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">18 May 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="scagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="scagnostics">Scagnostics</h2>
+<p>Lately, I’ve been exploring shape analysis in multivariate data. But instead of focusing on neat, normal, or random-looking patterns, I’ve been drawn to the weird ones, the <strong>non-normal</strong>, <strong>odd</strong>, and often more <strong>interesting</strong> shapes that pop up in scatterplots.</p>
+<p>That curiosity brought me to <strong>scagnostics</strong>, short for <em>scatterplot diagnostics</em>. These measures go way beyond linear trends or correlations. They were originally inspired by ideas from John Tukey and later developed more formally by Leland Wilkinson, who gave them a solid foundation in graph theory.</p>
+<p>Scagnostics can reveal different kinds of patterns: <strong>skewed</strong> distributions, <strong>outliers</strong>, <strong>clumpy</strong> regions, <strong>stringy</strong> or <strong>skinny</strong> shapes, <strong>convexity</strong>, and more.</p>
+<p>One of these metrics, the <strong>skinny index</strong>, is meant to detect <strong>thin and elongated structures</strong> in the data. But when I tried to use it, I ran into something… strange.</p>
+<hr>
+</section>
+<section id="when-skinny-didnt-seem-skinny-enough" class="level2">
+<h2 class="anchored" data-anchor-id="when-skinny-didnt-seem-skinny-enough">When “Skinny” Didn’t Seem Skinny Enough</h2>
+<p>The formula for the <a href="https://doi.org/10.1198/106186008X320465">skinny index</a> looks like this:</p>
+<p><span class="math display">\[
+\text{Skinny} = 1 - \frac{\sqrt{4 \pi \cdot \text{Area}(A)}}{\text{Perimeter}(A)}
+\]</span></p>
+<p>Here, ( A ) is the alpha shape (or alpha hull) of the point cloud, a flexible shape that wraps around the data, more precisely than a convex hull. If the shape is thin and long, the result should be close to 1. If it’s round, the score drops toward 0.</p>
+<p>I ran simulations using different data structures. One of the simplest ones I tried was a <strong>U-shape</strong>, built from a <strong>polynomial of degree 1</strong> on the x-axis and <strong>degree 2</strong> on the y-axis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="alpha_parameter_issues_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This shape was clearly long and skinny. In fact, <a href="https://doi.org/10.1198/106186008X320465">Wilkinson’s paper</a> even shows a nearly identical example as a high-skinny pattern.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="scagnostics.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Example scatterplots and their scagnostics measures</figcaption>
+</figure>
+</div>
+<p>But when I ran this through the <code>cassowaryr</code> package in R, I was shocked to get a skinny score of around <strong>0.18</strong>.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "The skinny value from cassowaryr is: 0.877685166103504"</code></pre>
+</div>
+</div>
+</section>
+<section id="something-was-wrong" class="level2">
+<h2 class="anchored" data-anchor-id="something-was-wrong">Something Was Wrong</h2>
+<p>At first, I thought maybe I messed up the structure. So I tried other shapes. Same problem.</p>
+<p>That’s when I decided to look deeper into the <strong>alpha parameter</strong> that powers the alpha shape.</p>
+</section>
+<section id="understanding-alpha-and-why-its-tricky" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-alpha-and-why-its-tricky">Understanding Alpha (and Why It’s Tricky)</h2>
+<p>The <strong>alpha parameter</strong> controls how tightly the alpha shape wraps around the data:</p>
+<ul>
+<li>If <strong>alpha is small</strong>, the shape becomes more detailed, it captures indentations, curves, and fine structure.</li>
+<li>If <strong>alpha is large</strong>, it behaves more like a <strong>convex hull</strong>, creating a looser, oversimplified boundary.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="alpha_parameter_issues_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So I thought: maybe the default alpha is too high? I changed it by lowering the alpha, trying various values manually, hoping to get the shape to match the U-structure more accurately.</p>
+<p>But no matter what, I ran into new problems:</p>
+<ul>
+<li>When the alpha value was very small, the alpha shape couldn’t be constructed at all. As I increased it slightly, it started connecting only the dense regions, but again, it just formed small bowls instead of capturing the full shape.</li>
+<li>When alpha was too large, it would just connect the tips and form a big bowl, losing the skinny structure entirely.</li>
+</ul>
+<p>Even worse: using a <strong>small alpha</strong> sometimes gave me a <strong>skinny score close to 1</strong>, but visually, the shape wasn’t even capturing the whole structure, it was just hugging the middle, throwing away the rest.</p>
+<p>That’s when I realized: the problem isn’t just the alpha value, it’s how the alpha shape <strong>fails to connect</strong> sparse or tail regions when the points are far apart.</p>
+<div class="grid">
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.01).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.01</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.09).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.09</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.1).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.1</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.14).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.14</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.15).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.15</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.2).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.2</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.3).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.3</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.35).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.35</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.4).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.4</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.5).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.5</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="alpha(0.6).jpeg" class="img-fluid figure-img"></p>
+<figcaption>alpha = 0.6</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="a-new-idea-bring-in-the-mst" class="level2">
+<h2 class="anchored" data-anchor-id="a-new-idea-bring-in-the-mst">A New Idea: Bring in the MST</h2>
+<p>I started thinking: what if I <strong>combine alpha shapes with another graph</strong> that’s guaranteed to connect everything?</p>
+<p>That led me to the <strong>Minimum Spanning Tree (MST)</strong>, a graph that connects all points with the <strong>shortest total distance</strong>, without any loops. It’s a staple in graph theory and used in other scagnostics too.</p>
+<p>The MST doesn’t care about density, it <strong>connects all points</strong>, even sparse ones.</p>
+<p>So here’s the plan I came up with:</p>
+<ul>
+<li>Use the <strong>90th percentile of MST edge lengths</strong> to compute the alpha parameter (as suggested by Wilkinson).</li>
+<li>Then, <strong>draw both</strong> the MST and the alpha shape.</li>
+<li>Finally, <strong>combine them</strong>, take the <strong>union of the alpha shape and the MST</strong>.</li>
+</ul>
+<p>That way:</p>
+<ul>
+<li>The <strong>alpha shape</strong> captures the dense, detailed parts of the structure.</li>
+<li>The <strong>MST</strong> fills in the missing connections, especially in the tails or sparse zones.</li>
+</ul>
+<p>Alpha shapes alone can miss key structure when the data is too sparse or oddly shaped.</p>
+<p>MSTs, on the other hand, <strong>never miss</strong>, but they’re too simple to describe detailed boundaries.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Tinarj\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
