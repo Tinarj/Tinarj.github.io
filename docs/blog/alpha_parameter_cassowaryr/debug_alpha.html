@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-18">
+<meta name="dcterms.date" content="2025-05-18">
 <meta name="description" content="In this blog, I’m going to tell you how I came across a problem with the alpha parameter in the cassowaryr package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it.">
 
 <title>Debugging Alpha Parameter in cassowaryr package – Tina Rashid Jafari</title>
@@ -227,7 +227,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">18 May 2026</p>
+      <p class="date">18 May 2025</p>
     </div>
   </div>
   
@@ -277,7 +277,7 @@ window.Quarto = {
 <p>But when I checked the skinny index, it gave me… <strong>0.17-0.20</strong>. 🤨</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "The skinny value from cassowaryr is: 0.872269504394344"</code></pre>
+<pre><code>[1] "The skinny value from cassowaryr is: 0.878605970890705"</code></pre>
 </div>
 </div>
 <p>That didn’t feel right at all. So naturally, I started to wonder: what’s going wrong here?</p>
@@ -560,7 +560,7 @@ window.Quarto = {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/Tinarj\.github\.io\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

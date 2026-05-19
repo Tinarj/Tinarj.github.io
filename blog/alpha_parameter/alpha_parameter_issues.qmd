@@ -1,7 +1,7 @@
 ---
 title: "Fixing Alpha Shapes: What I Learned About the Alpha Parameter"
 format: html
-date: today
+date: 2025-05-19
 categories: [scagnostics, cassowaryr, shape-analysis, R]
 description: "In this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data."
 ---

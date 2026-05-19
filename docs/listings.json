@@ -2,9 +2,10 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/Testing_fitted_model/Testing_fitted_model.html",
+      "/blog/stringy05_scagnostic/stringy05.html",
       "/blog/alpha_parameter/alpha_parameter_issues.html",
-      "/blog/alpha_parameter_cassowaryr/debug_alpha.html",
-      "/blog/stringy05_scagnostic/stringy05.html"
+      "/blog/alpha_parameter_cassowaryr/debug_alpha.html"
     ]
   }
 ]

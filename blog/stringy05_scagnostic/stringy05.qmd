@@ -1,7 +1,7 @@
 ---
 title: "Debugging and Testing the Corrected stringy05 Scagnostic Index"
 format: html
-date: today
+date: 2026-05-18
 categories: [scagnostics, cassowaryr, shape-analysis, R]
 description: "A simulation-based walkthrough of debugging the stringy05 index, correcting its MST-based definition, and testing whether the modified version stays within the expected 0 to 1 range."
 execute:

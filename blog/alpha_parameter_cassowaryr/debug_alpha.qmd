@@ -9,7 +9,7 @@ categories:
 format:
   html:
     css: style.css
-date: today
+date: 2025-05-18
 ---
 
 ![Example scatterplots and their scagnostics measures](scagnostics.png){fig-align="center" width="50%"}

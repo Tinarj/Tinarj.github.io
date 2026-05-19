@@ -1,0 +1,9 @@
+sample_size,hex,out_rm,n_final,index,p95,n_sim
+900,no,no,900,stringy05,0.17163597320167448,100000
+900,no,no,900,stringy06,0.7492997198879552,100000
+900,no,yes,850.84302,stringy05,0.18346793654393095,100000
+900,no,yes,850.84302,stringy06,0.7533834586466165,100000
+900,yes,no,NA,stringy05,NA,100000
+900,yes,no,NA,stringy06,NA,100000
+900,yes,yes,NA,stringy05,NA,100000
+900,yes,yes,NA,stringy06,NA,100000
