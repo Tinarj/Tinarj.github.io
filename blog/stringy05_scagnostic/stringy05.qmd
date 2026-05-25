@@ -4,6 +4,8 @@ format: html
 date: 2026-05-18
 categories: [scagnostics, cassowaryr, shape-analysis, R]
 description: "A simulation-based walkthrough of debugging the stringy05 index, correcting its MST-based definition, and testing whether the modified version stays within the expected 0 to 1 range."
+license: "All Rights Reserved"
+copyright: "Copyright © 2026 Tina Rashid Jafari. All rights reserved."
 execute:
   echo: true
 code-fold: true
@@ -389,6 +391,78 @@ This plot is useful because it shows not only the average behaviour of the index
 > For strongly stringy polynomial patterns, the modified index frequently gives values close to 1, not exceeding 1.
 
 
+## Testing the stringy index on a stringy like pattern and Gaussian noise
+
+To check whether the stringy index behaves intuitively, I compare two simple examples. The first dataset is a curve-like pattern with only a small amount of Gaussian noise added. This should have a high stringy value. The second dataset is bivariate Gaussian noise, which does not contain a string-like structure and should therefore have a lower stringy value.
+
+```{r}
+set.seed(1057)
+
+n <- 500
+
+# Stringy curve-like pattern
+stringy_data <- tibble(
+  x = seq(-2, 2, length.out = n),
+  y = sin(2 * x) + rnorm(n, mean = 0, sd = 0.03),
+  pattern = "Stringy curve"
+)
+
+# Non-stringy bivariate Gaussian noise
+gaussian_data <- tibble(
+  x = rnorm(n),
+  y = rnorm(n),
+  pattern = "Bivariate Gaussian"
+)
+
+example_data <- bind_rows(
+  stringy_data,
+  gaussian_data
+)
+```
+
+Now I calculate the stringy index for each dataset.
+
+```{r}
+stringy_values <- example_data |>
+  group_by(pattern) |>
+  summarise(
+    stringy_value = cassowaryr::sc_stringy05(
+      x,
+      y
+    ),
+    .groups = "drop"
+  )
+
+knitr::kable(stringy_values)
+```
+
+```{r}
+plot_data <- example_data |>
+  left_join(stringy_values, by = "pattern") |>
+  mutate(
+    label = paste0(
+      pattern,
+      "\nstringy05 = ",
+      round(stringy_value, 3)
+    )
+  )
+
+ggplot(plot_data, aes(x = x, y = y)) +
+  geom_point(alpha = 0.6, size = 1) +
+  facet_wrap(~ label, nrow = 1, scales = "free") +
+  theme(
+    aspect.ratio = 1,
+    strip.text = element_text(face = "bold"),
+    axis.ticks = element_blank(),
+    axis.text = element_blank()
+  ) +
+  labs(
+    title = "Stringy pattern versus bivariate Gaussian noise",
+    x = NULL,
+    y = NULL
+  )
+```
+
 ## Conclusion
 
 The original implementation of `stringy05` occasionally produced values slightly larger than 1 because the numerator and denominator were not both based on weighted MST lengths. The numerator used the number of vertices returned by `get_diameter()`, while the denominator did not represent the total weighted length of the MST.
@@ -410,3 +484,4 @@ This version is consistent with the intended definition. In the simulations, the
 1. Dr. Cesar Ducruet and Dr. Jean-Paul Rodrigue, *Graph Theory: Measures and Indices*.
 2. L. Wilkinson, A. Anand and R. Grossman, "Graph-theoretic scagnostics," IEEE Symposium on Information Visualization, 2005. INFOVIS 2005., Minneapolis, MN, USA, 2005, pp. 157-164, doi: 10.1109/INFVIS.2005.1532142.
 3. Mason H, Lee S, Laa U, Cook D (2022). cassowaryr: Compute Scagnostics on Pairs of Numeric Variables in a Data Set. R package version 2.0.0
+

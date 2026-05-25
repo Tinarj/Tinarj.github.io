@@ -4,6 +4,8 @@ format: html
 date: 2026-05-19
 categories: [scagnostics, cassowaryr, shape-analysis, simulation, R]
 description: "Exploring whether fitted 95th percentile noise models for scagnostic indices remain valid when cassowaryr preprocessing choices change."
+license: "All Rights Reserved"
+copyright: "Copyright © 2026 Tina Rashid Jafari. All rights reserved."
 execute:
   echo: true
 code-fold: true

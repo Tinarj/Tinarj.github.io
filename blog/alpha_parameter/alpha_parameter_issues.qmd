@@ -4,6 +4,8 @@ format: html
 date: 2025-05-19
 categories: [scagnostics, cassowaryr, shape-analysis, R]
 description: "In this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data."
+license: "All Rights Reserved"
+copyright: "Copyright © 2026 Tina Rashid Jafari. All rights reserved."
 ---
 
 ## Scagnostics

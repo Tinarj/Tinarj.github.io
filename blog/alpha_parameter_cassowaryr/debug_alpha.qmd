@@ -6,6 +6,8 @@ categories:
   - R
   - Scagnostics
   - data-viz
+license: "All Rights Reserved"
+copyright: "Copyright © 2026 Tina Rashid Jafari. All rights reserved."
 format:
   html:
     css: style.css
