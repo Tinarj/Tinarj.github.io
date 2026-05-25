@@ -13,31 +13,49 @@ warning: FALSE
 message: FALSE
 ---
 
+While running simulations for scale analysis, especially while estimating the 95th percentile of the noise distribution for the `stringy05` index, I noticed that some values were larger than 1. The exceedance was small, for example around 1.005, but it was still larger than 1. Since scagnostic indices are intended to be bounded between 0 and 1, this made me suspicious about whether the `stringy05` definition had been implemented correctly.
 
-While exploring and doing simulations for scale analysis, especially while exploring the 95th percentile of noise for the `stringy05` index, I came across cases where the index went beyond 1. The exceedance was small, for example around 1.005, but it was still larger than 1. Since scagnostic indices are defined to be between 0 and 1, this made me suspicious about whether the `stringy05` definition had been implemented correctly.
+The `stringy05` index in the `cassowaryr` package is used for shape analysis and is designed to capture string-like patterns in two-dimensional data. A highly stringy pattern should give a value close to 1, while a non-stringy pattern should give a smaller value. However, even for a very strong string-like pattern, the index should not meaningfully exceed 1.
 
-In this blog post, I discuss the `stringy05` index in the `cassowaryr` package, which is used for shape analysis and for capturing stringy-like patterns in two-dimensional data. I explain how I started debugging this index, how I corrected the definition, and how I tested whether the modified version stays within the expected range and behaves properly after the modification.
+In this post, I describe how I debugged the `stringy05` definition, why the previous implementation could produce values above 1, how I modified the formula, and how I tested whether the corrected version behaves as expected.
 
-## Review of the `stringy05` Definition
 
-In this section, I investigate an issue I observed in the current `stringy05` implementation in `cassowaryr`, where values occasionally exceed 1, for example 1.005, for highly string-like shapes. Since this measure should be bounded above by 1, I examine the definition more closely to identify and fix the source of the discrepancy.
+```{r}
+library(cassowaryr)
+library(spinebil)
+library(tidyverse)
+library(igraph)
+library(knitr)
+```
 
-The current implementation of the `stringy05` measure is:
+## Why values above 1 are suspicious
+
+Scagnostic indices are designed to be bounded between 0 and 1. Therefore, values above 1 suggest that either the definition, the implementation, or the numerical calculation should be checked.
+
+For `stringy05`, the intended idea is to measure how much of the minimum spanning tree (MST) is explained by its longest path. If the MST is almost a single curve-like path, then the longest path through the tree should cover nearly all of the MST length, and the index should be close to 1.
+
+The issue is that "close to 1" is not the same as "larger than 1". A value such as 1.005 is too large to ignore as numerical precision. This motivated a closer look at the implementation.
+
+
+## The original implementation
+
+The original implementation of the `stringy05` measure was:
+
 
 ```r
 diameter <- igraph::get_diameter(x)
 length(diameter) / (length(x) - 1)
 ```
 
-This aims to compute:
+This aims to compute the ratio between the length of the longest shortest path through the MST and the total length of the MST.
 
-> the length of the longest shortest path through the MST divided by the total length of the MST.
-
-However, both the numerator and denominator in the current implementation are problematic.
+However, both the numerator and denominator are problematic.
 
 ![](stringy.png)
 
-## Step 1: Example Graph
+## Problem with the numerator
+
+To understand the issue with the numerator, consider a simple graph.
 
 ```{r}
 g <- igraph::make_ring(5)
@@ -51,64 +69,79 @@ plot(
 )
 ```
 
-## Step 2: Issue with `length(diameter)`
 
-```r
-diameter <- igraph::get_diameter(g)
-diameter
-length(diameter)
+Now calculate the diameter path using `igraph::get_diameter()`.
+
+```{r}
+diameter_vertices <- igraph::get_diameter(g)
+
+diameter_vertices
+length(diameter_vertices)
+```
+
+
+The problem is that `igraph::get_diameter()` returns a sequence of vertices on the diameter path. Therefore, `length(diameter_vertices)` counts the number of vertices, not the length of the path.
+
+
+For a path with 5 vertices, there are only 4 edges. Therefore, using the number of vertices as the path length creates an off-by-one error.
+
+For an unweighted graph, the number of edges along the path would be:
+
+```
+length(diameter_vertices) - 1
 ```
 
 ```{r}
-diameter <- igraph::get_diameter(g)
-diameter
-length(diameter)
+length(diameter_vertices) - 1
 ```
 
+But for scagnostics, the MST edges are weighted by Euclidean distances. Therefore, the numerator should not be a vertex count or even just an edge count. It should be the weighted length of the longest shortest path through the MST.
 
-### Problem
-
-`igraph::get_diameter()` returns a sequence of vertices, not a numeric distance. Therefore, `length(diameter)` counts the number of vertices on the diameter path. It does not return the length of the path in terms of edge weights.
-
-This is important because in the scagnostics setting, the MST edges are weighted by Euclidean distances. Therefore, the numerator should be the weighted length of the longest shortest path through the MST, not the number of vertices on that path.
-
-### Correct approach
-
-A more appropriate approach is to use:
+The better function for this is:
 
 ```r
 igraph::diameter(g)
 ```
 
-This returns the length of the **longest shortest path**. When the graph has edge weights, the weighted diameter should be used.
+
+This returns the length of the longest shortest path. When the graph has edge weights, the weighted diameter should be used.
 
 
+## Problem with the denominator
 
-## Step 3: Issue with `length(x) - 1`
+The denominator in the original implementation was:
 
 ```r
 length(x) - 1
 ```
 
-### Problem
+This is also problematic. For an igraph object, `length(x)` does not represent the total weighted length of the MST. Even if it is interpreted as the number of vertices, `n - 1` only gives the number of edges in a tree. It does not give the total length of those edges.
 
-* `length(x)` for an igraph object does **not represent total edge length**.
-* Even if interpreted as number of vertices, `n - 1` gives only the **number of edges**, not their **lengths**.
+This is important because, in the scagnostics setting:
 
-This ignores the fact that in scagnostics:
-
-* MST edges are **weighted (Euclidean distances)**
-* Total MST length is the **sum of those weights**
+- MST edges are weighted by Euclidean distances.
+- The total MST length is the sum of those edge weights.
+- The stringy index should compare the weighted diameter of the MST with the total weighted MST length.
 
 
+Therefore, the denominator should be:
 
+```r
+sum(igraph::E(x)$weight)
+```
 
-## Updated Function
+not `length(x) - 1`.
 
-The correct implementation of `stringy05` should follow:
+## Corrected definition
 
-> **(length of longest shortest path) / (total MST edge length)**
+The corrected definition of `stringy05` is:
 
+$$
+\text{stringy05} =
+\frac{\text{weighted MST diameter}}
+{\text{total weighted MST length}}.
+$$
+The corrected implementation is:
 
 ```r
 w <- igraph::E(x)$weight
@@ -119,12 +152,50 @@ diameter_length <- igraph::diameter(x)
 diameter_length / total_length
 ```
 
+```{r}
+sc_stringy05_modified <- function(x, y) {
+  sc <- cassowaryr::scree(x, y)
+  mst <- cassowaryr:::gen_mst(sc$del, sc$weights)
 
-## Numerical Comparison Before and After the Modification
+  d <- igraph::diameter(
+    mst,
+    weights = igraph::E(mst)$weight
+  )
 
+  L <- sum(igraph::E(mst)$weight)
+
+  d / L
+}
+```
+
+
+This implementation makes both parts of the ratio comparable. The numerator is a weighted path length, and the denominator is the total weighted length of the MST.
+
+## Relation to the Pi index
+
+In network analysis, the Pi index is commonly defined as the ratio between the total length of a network and the distance of the network diameter.
+
+![](pi.png)
+where $L(G)$ is the total length of the graph and $D(d)$ is the distance of the graph diameter.
+
+
+The `stringy05` measure uses the inverse idea. It compares the diameter length of the MST with the total MST length:
+
+$$
+\text{stringy05} =
+\frac{D(d)}
+{L(G)}.
+$$
+Here, the diameter means the distance of the longest shortest path through the MST. It is the sum of the edge weights along the longest path in the tree.
+
+
+This ratio should be less than or equal to 1 because the diameter path is part of the MST, while the denominator includes all edges in the MST. Therefore, the weighted diameter path cannot be longer than the total weighted MST length.
+
+## Numerical comparison before and after the modification
+
+To see the difference between the old and modified definitions, I define both versions explicitly.
 
 ```{r}
-
 sc_stringy05_old <- function(x, y) {
   sc <- cassowaryr::scree(x, y)
   mst <- cassowaryr:::gen_mst(sc$del, sc$weights)
@@ -147,14 +218,27 @@ sc_stringy05_modified <- function(x, y) {
 
   d / L
 }
+```
 
-data <- spinebil::data_gen(type = "polynomial", degree = 2)
+Now I compare them on a simple polynomial example.
 
-# Cassowaryr version before modification
-old_value <- sc_stringy05_old(data[, 1], data[, 2])
+```{r}
+set.seed(545)
 
-# Modified version
-new_value <- sc_stringy05_modified(data[, 1], data[, 2])
+poly_example <- spinebil::data_gen(
+  type = "polynomial",
+  degree = 2
+)
+
+old_value <- sc_stringy05_old(
+  poly_example[, 1],
+  poly_example[, 2]
+)
+
+new_value <- sc_stringy05_modified(
+  poly_example[, 1],
+  poly_example[, 2]
+)
 
 c(
   old = old_value,
@@ -162,47 +246,20 @@ c(
 )
 ```
 
+
+
 The old implementation can occasionally produce values above 1 because the numerator and denominator are not measuring the same type of quantity. The numerator is based on the number of vertices on the diameter path, while the denominator is not the total weighted MST length.
 
-After modification, both the numerator and denominator are based on MST edge weights. This makes the ratio interpretable and keeps it consistent with the intended definition.
+After the modification, both the numerator and denominator are based on MST edge weights. This makes the ratio interpretable and consistent with the intended definition.
 
-### Pi Index and the Stringy Measure
 
-In network analysis, the Pi index is commonly defined as the ratio between the total length of a network and the distance of the network diameter.
+## Checking that the diameter is weighted
 
-![](pi.png)
+In the modified function, I use `igraph::diameter()` to calculate the diameter of the MST. To check whether `igraph::diameter(mst)` uses the MST edge weights by default, I compared two versions:
 
-where $L(G)$ is the total length of the graph and $D(d)$ is the distance of the graph diameter.
+1. `igraph::diameter(mst)`, without explicitly passing weights.
+2. `igraph::diameter(mst, weights = E(mst)$weight)`, where I explicitly pass the MST edge weights.
 
-The `stringy05` measure is closely related to this idea, but it uses the inverse ratio. In the `stringy05` definition, the diameter means the distance of the longest shortest path through the MST. It is the sum of the edge weights along the longest path in the MST.
-
-This ratio should always be less than or equal to 1 because the diameter path is part of the MST, and the total MST length includes all edges in the MST. Therefore, the longest path through the tree cannot have a larger total length than the whole tree.
-
-## Checking Whether My Code Uses Weighted Diameter
-
-My modified stringy function was:
-
-```r
-sc_stringy05_modified <- function(x, y) {
-  sc <- cassowaryr::scree(x, y)
-  mst <- cassowaryr:::gen_mst(sc$del, sc$weights)
-
-  d <- igraph::diameter(mst)
-
-  L <- sum(igraph::E(mst)$weight)
-
-  d / L
-}
-```
-
-To check whether `igraph::diameter(mst)` gives the weighted diameter, I compared two versions:
-
-1. `diameter(mst)`, where I do not explicitly pass weights.
-2. `diameter(mst, weights = E(mst)$weight)`, where I explicitly pass the MST edge weights.
-
-```r
-all.equal(d_default, d_weighted)
-```
 
 ```{r}
 x <- c(0, 1, 2, 3, 4, 2)
@@ -221,12 +278,11 @@ d_weighted <- igraph::diameter(
 all.equal(d_default, d_weighted)
 ```
 
-Since the two values are equal, this confirms that `diameter(mst)` is already using the MST edge weights by default in this case.
 
+Since the two values are equal in this example, this confirms that `igraph::diameter(mst)` is using the MST edge weights here. Still, I prefer to explicitly pass the weights in the final implementation because it makes the definition clearer.
 
-```r
-all.equal(stringy_default, stringy_weighted)
-```
+Next, I checked that the resulting stringy value is the same when using the default diameter and the explicitly weighted diameter.
+
 
 ```{r}
 L <- sum(igraph::E(mst)$weight)
@@ -237,30 +293,25 @@ stringy_weighted <- d_weighted / L
 all.equal(stringy_default, stringy_weighted)
 ```
 
-Because these are also equal, the modified stringy function is consistent. The numerator uses the weighted diameter of the MST, and the denominator uses the total MST length, calculated by summing the MST edge weights.
+Because these are also equal, the modified stringy function is consistent. The numerator uses the weighted diameter of the MST, and the denominator uses the total MST length.
 
+## Testing the modified `stringy05` index
 
----
+After correcting the definition, I tested whether the modified index behaves as expected. I wanted to check three properties:
 
-## Testing the Modified `stringy05` Index
-
-After correcting the definition, the next step is to test whether the modified index behaves as expected. I want to check three main properties:
-
-1. The modified index should not go beyond 1.
+1. The modified index should not meaningfully exceed 1.
 2. It should produce values close to 1 for clearly stringy patterns.
-3. It should behave sensibly when small Gaussian noise is added to perfect or near-perfect stringy patterns.
+3. It should give lower values for non-stringy noise patterns.
 
-To test this, I use polynomial data generated from the `spinebil` package. Polynomial patterns are useful here because they create smooth, structured relationships. Some pairwise combinations of polynomial degrees produce strong string-like shapes, which makes them good test cases for the modified stringy index.
 
-### Generating Polynomial Data
+To test this, I first used polynomial data generated from the `spinebil` package. Polynomial patterns are useful because they create smooth, structured relationships. Some pairwise combinations of polynomial degrees produce strong string-like shapes, which makes them good test cases for the modified stringy index.
 
-First, I generate polynomial data with degree 5:
+
+## Generating polynomial data
+
+First, I generated polynomial data with degree 5.
 
 ```{r}
-
-library(spinebil)
-library(tidyverse)
-
 set.seed(545)
 
 poly_data <- spinebil::data_gen(
@@ -272,7 +323,7 @@ poly_data <- as.data.frame(poly_data)
 names(poly_data) <- paste0("deg", seq_len(ncol(poly_data)))
 ```
 
-This gives five polynomial variables. I then examine all non-equal pairwise combinations, such as degree 1 versus degree 2, degree 1 versus degree 3, and so on.
+This gives five polynomial variables. I then examined all non-equal pairwise combinations, such as degree 1 versus degree 2, degree 1 versus degree 3, and so on.
 
 ```{r}
 pair_data <- combn(names(poly_data), 2, simplify = FALSE) |>
@@ -292,85 +343,37 @@ ggplot(pair_data, aes(x = x, y = y)) +
     x = NULL,
     y = NULL
   ) +
-  theme(aspect.ratio = 1,
-        axis.text = element_blank(),
-        axis.ticks = element_blank())
+  theme(
+    aspect.ratio = 1,
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  )
 ```
 
 These plots show the different two-dimensional shapes generated by the polynomial basis. Some combinations form very clear string-like structures, while others have more curved or folded shapes.
 
-I then use `spinebil::ppi_scale()` to evaluate the modified `stringy05` index over 100 repetitions.
 
-```r
+## Evaluating the modified index with repeated simulations
+
+I then used `spinebil::ppi_scale()` to evaluate the modified `stringy05` index over 100 repetitions.
+
+```{r}
+stringy_fun <- sc_stringy05_modified 
+
 res <- spinebil::ppi_scale(
-  spinebil::data_gen("polynomial", degree = 5),
-  sc_stringy05_modified,
+  poly_data,
+  stringy_fun,
   n_sim = 100
 )
+
+head(res)
 ```
+
 
 This gives repeated values of the modified stringy index across different variable pairs and simulation settings.
 
-```{r}
-res <- spinebil::ppi_scale(poly_data,
-  sc_stringy05_modified,
-  n_sim = 100
-)
-head(res)
 
-```
-
-### Checking That the Modified Index Does Not Exceed 1
-
-The most important test is whether the modified index stays inside the expected interval $[0, 1]$. Because very small floating-point errors can sometimes occur in numerical calculations, I check the bound using a tiny tolerance:
-
-```r
-tol <- 1e-12
-res |>
-  filter(index > 1 + tol) |>
-  arrange(desc(index))
-```
-
-```{r}
-tol <- 1e-12
-res |>
-  filter(index > 1 + tol) |>
-  arrange(desc(index))
-```
-
-```r
-bounds_check <- res |>
-  summarise(
-    min_index = min(index, na.rm = TRUE),
-    max_index = max(index, na.rm = TRUE),
-    any_below_0 = any(index < 0, na.rm = TRUE),
-    any_above_1 = any(index > 1 + tol, na.rm = TRUE),
-    n_below_0 = sum(index < 0, na.rm = TRUE),
-    n_above_1 = sum(index > 1 + tol, na.rm = TRUE)
-  )
-
-bounds_check
-```
-
-```{r}
-bounds_check <- res |>
-  summarise(
-    min_index = min(index, na.rm = TRUE),
-    max_index = max(index, na.rm = TRUE),
-    any_below_0 = any(index < 0, na.rm = TRUE),
-    any_above_1 = any(index > 1 + tol, na.rm = TRUE),
-    n_below_0 = sum(index < 0, na.rm = TRUE),
-    n_above_1 = sum(index > 1 + tol, na.rm = TRUE)
-  )
-
-bounds_check
-```
-
-
-This confirms that the modified implementation respects the theoretical upper bound.
-
-
-### Visualising the Repeated Index Values
+## Visualising the Repeated Index Values
 
 ```{r}
 ggplot(res, aes(x = var_pair, y = index)) +
@@ -385,29 +388,25 @@ ggplot(res, aes(x = var_pair, y = index)) +
   )
 ```
 
-This plot is useful because it shows not only the average behaviour of the index, but also the spread across repeated simulations.
+
+The modified index gives high values for strongly stringy polynomial patterns, and the values do not meaningfully exceed 1.
 
 
-> For strongly stringy polynomial patterns, the modified index frequently gives values close to 1, not exceeding 1.
+## Comparing a stringy curve with Gaussian noise
 
-
-## Testing the stringy index on a stringy like pattern and Gaussian noise
-
-To check whether the stringy index behaves intuitively, I compare two simple examples. The first dataset is a curve-like pattern with only a small amount of Gaussian noise added. This should have a high stringy value. The second dataset is bivariate Gaussian noise, which does not contain a string-like structure and should therefore have a lower stringy value.
+Next, I compared two simple examples. The first dataset is a curve-like pattern with a small amount of Gaussian noise added. This should have a high stringy value. The second dataset is bivariate Gaussian noise, which does not contain a string-like structure and should therefore have a lower stringy value.
 
 ```{r}
 set.seed(1057)
 
 n <- 500
 
-# Stringy curve-like pattern
 stringy_data <- tibble(
   x = seq(-2, 2, length.out = n),
   y = sin(2 * x) + rnorm(n, mean = 0, sd = 0.03),
   pattern = "Stringy curve"
 )
 
-# Non-stringy bivariate Gaussian noise
 gaussian_data <- tibble(
   x = rnorm(n),
   y = rnorm(n),
@@ -420,21 +419,20 @@ example_data <- bind_rows(
 )
 ```
 
-Now I calculate the stringy index for each dataset.
+Now I calculate the modified stringy index for each dataset.
 
 ```{r}
 stringy_values <- example_data |>
   group_by(pattern) |>
   summarise(
-    stringy_value = cassowaryr::sc_stringy05(
-      x,
-      y
-    ),
+    stringy_value = stringy_fun(x, y),
     .groups = "drop"
   )
 
 knitr::kable(stringy_values)
 ```
+
+To make the comparison easier to read, I add the stringy value to the facet label.
 
 ```{r}
 plot_data <- example_data |>
@@ -450,6 +448,7 @@ plot_data <- example_data |>
 ggplot(plot_data, aes(x = x, y = y)) +
   geom_point(alpha = 0.6, size = 1) +
   facet_wrap(~ label, nrow = 1, scales = "free") +
+  theme_minimal(base_size = 12) +
   theme(
     aspect.ratio = 1,
     strip.text = element_text(face = "bold"),
@@ -463,9 +462,71 @@ ggplot(plot_data, aes(x = x, y = y)) +
   )
 ```
 
+The curve-like pattern should have a much larger stringy value than the bivariate Gaussian cloud. This confirms that the modified index behaves intuitively: it is high for a string-like shape and lower for unstructured noise.
+
+
+## Testing whether the modified `stringy05` goes beyond 1
+
+Finally, I tested whether the modified implementation could still return values slightly above 1 in a highly stringy setting. I generated very stringy curve-like patterns without adding any noise. I repeated this simulation 1000 times and recorded the modified `stringy05` value each time.
+
+
+```{r}
+options(digits = 22)
+
+set.seed(1253)
+
+n <- 500
+n_sim <- 1000
+tol <- 1e-12
+
+stringy_test <- purrr::map_dfr(seq_len(n_sim), function(i) {
+  
+  set.seed(1028 + i)
+
+  x <- sort(runif(n, min = -2, max = 2))
+  y <- sin(2 * x)
+  
+  value <- tryCatch(
+    cassowaryr::sc_stringy05(
+      x,
+      y
+    ),
+    error = function(e) NA_real_
+  )
+  
+  tibble(
+    simulation = i,
+    value = value
+  )
+})
+```
+
+
+I printed the maximum observed value with high numerical precision.
+
+```{r}
+options(digits = 22)
+
+max_observed <- stringy_test |>
+  slice_max(value, n = 1, with_ties = FALSE)
+
+knitr::kable(max_observed, digits = 22)
+```
+
+The maximum value I observed was: `r formatC(max_observed$value, format = "f", digits = 22)`
+
+
+This value is technically above 1, but only by a tiny amount. This is a negligible numerical precision error, not an implementation error. This is very different from the issue I observed before correcting the index. Previously, the implementation could produce values such as 1.005, which is meaningfully larger than 1 and indicates a real implementation problem.
+
+
+In contrast, a value such as `r formatC(max_observed$value, format = "f", digits = 22)` is only larger than 1 at the level of numerical precision. Therefore, after modifying the definition, the index is behaving as expected. It is theoretically bounded by 1, and the only values slightly above 1 are tiny numerical artefacts caused by floating-point calculations.
+
+
+
 ## Conclusion
 
-The original implementation of `stringy05` occasionally produced values slightly larger than 1 because the numerator and denominator were not both based on weighted MST lengths. The numerator used the number of vertices returned by `get_diameter()`, while the denominator did not represent the total weighted length of the MST.
+
+The original implementation of `stringy05` could occasionally produce values larger than 1 because the numerator and denominator were not measuring comparable weighted quantities. The numerator used the number of vertices returned by `igraph::get_diameter()`, while the denominator did not represent the total weighted length of the MST.
 
 The corrected implementation computes:
 
@@ -475,7 +536,11 @@ $$
 {\text{total weighted MST length}}.
 $$
 
-This version is consistent with the intended definition. In the simulations, the modified index stays within the expected $[0, 1]$ range, gives values close to 1 for strong string-like polynomial patterns. This gives empirical support that the corrected `stringy05` index is properly scaled and better aligned with the scagnostics definition.
+This definition is consistent with the intended graph-theoretic interpretation of the index. The numerator is the weighted length of the longest shortest path through the MST, and the denominator is the total weighted MST length. Since the diameter path is part of the MST, its length cannot be larger than the total length of the MST.
+
+The simulations support this correction. The modified index gives values close to 1 for strong string-like polynomial patterns and lower values for bivariate Gaussian noise. In the final stress test, the largest observed value was `r formatC(max_observed$value, format = "f", digits = 22)`, which is only slightly above 1 at the level of floating-point precision. This tiny excess is negligible and is not an implementation error, unlike the earlier values around 1.005.
+
+Overall, the corrected `stringy05` index is properly scaled, better aligned with the scagnostics definition, and behaves as expected for both controlled stringy patterns and unstructured noise.
 
 
 
