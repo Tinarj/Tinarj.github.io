@@ -1,6 +1,6 @@
 ---
 title: "Exploring the Growth Rate of the stringy05 Index"
-date: 2026-05-22
+date: 2026-05-26
 categories: [scagnostics, minimum spanning tree, stringy05, asymptotic analysis, R]
 description: "A theoretical and empirical exploration of the stringy05 scagnostic index."
 license: "All Rights Reserved"
@@ -41,4 +41,529 @@ D_n
 = {diameter}(T_n)
 = \max_{u,v\in T_n} d_{T_n}(u,v),
 $$
+where $d_{T_n}(u,v)$ is the length of the unique path in the tree from $u$ to $v$, using Euclidean edge lengths as weights.
 
+Thus,
+
+$$
+R_n
+=
+\text{stringy05}(T_n)
+=
+\frac{D_n}{L_n}.
+$$
+
+The main question is whether
+
+$$
+R_n \to 0,
+$$
+
+or whether
+
+$$
+R_n \to \rho > 0.
+$$
+
+Empirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near $n=900$, the estimated 95th percentile of the noise distribution appeared to stabilize near $0.1$. This motivates a more detailed investigation of the numerator and denominator separately.
+
+
+## Denominator: theoretical growth rate of total MST length
+
+The denominator $L_n$ is the part of the problem for which we do have strong theoretical guidance.
+
+Steele studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points $x_1,\dots,x_n$, the MST functional is
+
+$$
+M(x_1,\dots,x_n)
+=
+\min_T \sum_{e\in T}\psi(|e|),
+$$
+
+where the minimum is over spanning trees $T$, and $\psi$ is an edge-weighting function [Steele, 1988].
+
+For the ordinary Euclidean MST length, we take
+
+$$
+\psi(t)=t.
+$$
+
+Then
+
+$$
+M(X_1,\dots,X_n)
+=
+\sum_{e\in T_n}|e|
+=
+L_n.
+$$
+
+So Steele's $M_n$ is exactly the denominator of the stringy05 index.
+
+## Steele's growth theorem
+
+Steele considers weight functions satisfying
+
+$$
+\psi(t)\sim t^\alpha
+\quad\text{as } t\to 0,
+$$
+
+with
+
+$$
+0<\alpha<d.
+$$
+
+
+His main theorem states that, for iid observations in $\mathbb R^d$ from a compactly supported distribution, if $f$ is the density of the absolutely continuous part of the distribution, then
+
+$$
+n^{-(d-\alpha)/d}
+M(X_1,\dots,X_n)
+\to
+c(\alpha,d)
+\int f(x)^{(d-\alpha)/d}\,dx
+$$
+
+almost surely.
+
+
+In the ordinary MST length case,
+
+$$
+\alpha=1.
+$$
+
+For bivariate data,
+
+$$
+d=2.
+$$
+
+Therefore,
+
+$$
+n^{-1/2}L_n
+\to
+c(1,2)
+\int f(x)^{1/2}\,dx.
+$$
+
+Equivalently,
+
+$$
+L_n
+\sim
+C_f\sqrt n,
+$$
+
+where
+
+$$
+C_f
+=
+c(1,2)
+\int f(x)^{1/2}\,dx.
+$$
+
+Thus, for two-dimensional data, the denominator has theoretical growth rate
+
+$$
+\boxed{
+L_n= O(\sqrt n).
+}
+$$
+
+Steele first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. Steele then extends the result beyond the uniform case by adding a density correction. For a more general distribution with density $f$, the limiting constant is modified by a factor of the form
+
+$$
+\int f(x)^{(d-\alpha)/d}\,dx.
+$$
+
+In the ordinary bivariate MST-length case, this becomes
+
+$$
+\int f(x)^{1/2}\,dx.
+$$
+
+This extension is important for my project because the simulations are based on bivariate noise distributions rather than only uniform samples.
+
+However, there is one important technical caveat. Steele's theorem is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use Steele's$\sqrt n$ scaling as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work. 
+
+
+## Numerator: what is known about the MST diameter?
+
+The numerator is
+
+$$
+D_n
+=
+\max_{u,v}d_{T_n}(u,v).
+$$
+
+This is the weighted longest shortest path in the MST. It is a global path functional: it depends on how many edges lie along the longest path and how their lengths accumulate.
+
+This is different from the total MST length $L_n$, which is a sum over all edges. It is also different from the longest single edge of the MST.
+
+At this point, the exact theoretical growth rate of $D_n$ is not given by the Steele MST length theorem.
+
+
+## Penrose's longest-edge theorem and its limitation
+
+Penrose studies the longest edge of the random Euclidean MST. Let
+
+$$
+E_n
+=
+\max_{e\in T_n}|e|.
+$$
+
+For uniform random points in the unit square, Penrose shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension $2$, the result implies that
+
+$$
+n\pi E_n^2-\log n
+$$
+
+converges in distribution to a double-exponential limiting law [Penrose, 1997].
+
+
+Penrose also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.
+
+This matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So Penrose's result suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.
+
+
+The longest edge scale is therefore approximately
+
+$$
+E_n
+\asymp
+\sqrt{\frac{\log n}{n}}.
+$$
+However, this is not the same as the stringy05 numerator.
+
+The stringy05 numerator is
+
+$$
+D_n =
+\max_{u,v} d_{T_n}(u,v),
+$$
+
+which is the length of an entire path. This path may contain many MST edges. Therefore, Penrose's theorem does not give the growth rate of $D_n$. It only gives the scale of the largest individual edge.
+
+
+## A simple example: longest edge versus MST diameter
+
+Let's imagine the MST is a path with five vertices:
+
+$$
+A \;-\; B \;-\; C \;-\; D \;-\; E
+$$
+
+and the edge weights are
+
+$$
+|AB|=0.10,\quad |BC|=0.12,\quad |CD|=0.09,\quad |DE|=0.11.
+$$
+
+Penrose's longest-edge quantity looks only for the single largest edge in the MST:
+
+$$
+E_n=\max_{e\in T_n}|e|=0.12.
+$$
+
+So in this example, Penrose's quantity is the edge $BC$.
+
+But the stringy05 numerator is the weighted MST diameter. It looks for the longest path in the tree and adds all edge weights along that path. Here the longest path is from $A$) to $E$:
+
+$$
+D_n = |AB|+|BC|+|CD|+|DE| =
+0.10+0.12+0.09+0.11 =
+0.42.
+$$
+
+So in this example,
+
+$$
+\text{Penrose longest edge}=0.12,
+$$
+
+while
+
+$$
+\text{stringy05 diameter}=0.42.
+$$
+
+This shows why Penrose's result is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:
+
+$$
+E_n\le D_n.
+$$
+
+
+## Upper and lower bound for the MST diameter
+
+Even though Penrose's longest-edge theorem does not solve the diameter problem, it provides a weak lower bound.
+
+For every weighted tree,
+
+$$
+\boxed{
+E_n\le D_n\le L_n.
+}
+$$
+
+The first inequality holds because the longest edge is itself the path between its endpoints in the tree. The second inequality holds because any path in the tree uses only a subset of the edges of the tree. 
+
+
+Combining Penrose's longest-edge scale with Steele's total-length scale gives
+
+$$
+\sqrt{\frac{\log n}{n}}
+\lesssim
+D_n
+\le
+O(\sqrt n).
+$$
+
+Dividing by $L_n$ gives the weak theoretical ratio bound
+
+$$
+\frac{\sqrt{\log n}}{n}
+\lesssim
+R_n
+\le
+1.
+$$
+
+This lower bound is mathematically valid but very weak. For example, at $n=1000$,
+
+$$
+\frac{\sqrt{\log(1000)}}{1000}
+\approx
+0.00263.
+$$
+
+This is much smaller than the empirical values observed in simulation, which are closer to $0.2$. Therefore, the observed stringy05 behavior cannot be explained by the longest single MST edge alone. The diameter appears to be driven by the accumulation of many edges along a long path.
+
+
+
+## Next step: study numerator and denominator separately
+
+The next part of this analysis will study
+
+$$
+L_n=\operatorname{length}(T_n)
+$$
+
+and
+
+$$
+D_n=\operatorname{diameter}(T_n)
+$$
+
+separately.
+
+The plan is:
+
+1. Generate bivariate noise samples for a grid of sample sizes $n$.
+2. Record the total MST length $L_n$ .
+3. Record the weighted MST diameter $D_n$.
+4. Record the ratio
+
+$$
+R_n=\frac{D_n}{L_n}.
+$$
+
+For the denominator, Steele's theorem suggests checking whether
+
+$$
+\frac{L_n}{\sqrt n}
+$$
+
+stabilizes.
+
+For the numerator, the key empirical question is whether
+
+$$
+\frac{D_n}{\sqrt n}
+$$
+
+also stabilizes.
+
+If both normalized quantities stabilize, then the ratio should stabilize near a positive constant:
+
+$$
+R_n
+=
+\frac{D_n}{L_n}
+\approx
+\frac{C_D\sqrt n}{C_L\sqrt n}
+=
+\frac{C_D}{C_L}.
+$$
+
+This would support the empirical observation that stringy05 converges to a positive number, possibly near $0.1$, rather than to zero.
+
+## Empirical simulation study
+
+The theoretical discussion gives a clear benchmark for the denominator $L_n$, but the numerator $D_n$ is still unknown. Therefore, I now move to an empirical simulation study.
+
+For each sample size $n$, I will generate independent bivariate Gaussian noise data,
+
+$$
+X_i=(X_{i1},X_{i2}), \qquad X_{i1},X_{i2}\sim N(0,1),
+$$
+
+so both coordinates have mean $0$ and standard deviation $1$. For each generated dataset, I compute the Euclidean minimum spanning tree $T_n$, and then record three quantities:
+
+$$
+L_n=\operatorname{length}(T_n),
+$$
+
+$$
+D_n=\operatorname{diameter}(T_n),
+$$
+
+and
+
+$$
+R_n=\frac{D_n}{L_n}.
+$$
+
+For each sample size, I repeat this process 1000 times. This gives 1000 independent estimates of the MST length, MST diameter, and stringy05 ratio for each $n$. To understand what is happening, I need to check whether $L_n$ and $D_n$ are growing at the same rate.
+
+After the simulation results are saved, I will examine the following quantities:
+
+$$
+\frac{L_n}{\sqrt n},
+$$
+
+$$
+\frac{D_n}{\sqrt n},
+$$
+
+and
+
+$$
+R_n=\frac{D_n}{L_n}.
+$$
+
+If $L_n/\sqrt n$ stabilizes, this supports the expected $\sqrt n$ growth rate for the denominator. If $D_n/\sqrt n$ also stabilizes, then the numerator appears to grow at the same rate as the denominator. In that case, the ratio $R_n$ should stabilize near a positive value.
+
+On the other hand, if $D_n/\sqrt n$ decreases as $n$ increases, then the numerator is growing more slowly than the denominator, and the ratio may eventually converge to zero.
+
+```{r}
+library(readr)
+library(dplyr)
+library(purrr)
+library(ggplot2)
+
+
+csv_files <- c(
+  "stringy05_50_200.csv",
+  "stringy05_200_500.csv",
+  "stringy05_550_800.csv",
+  "stringy05_850_1000.csv",
+  "stringy05_1200_2000.csv",
+  "stringy05_2500_6000.csv"
+)
+
+combined_results <- map_dfr(
+  csv_files,
+  ~ read_csv(.x, show_col_types = FALSE),
+  .id = "file_id"
+) |> 
+  arrange(n, simulation_run) |> 
+  mutate(
+    length_sqrtn = length / sqrt(n),
+    diameter_sqrtn = diameter / sqrt(n),
+    penrose_lower_ratio = sqrt(log(n)) / n
+  )
+
+# Save combined results
+write_csv(combined_results, "stringy05_combined_results.csv")
+
+
+summary_results <- combined_results |> 
+  group_by(n) |>
+  summarise(
+    B = n(),
+    
+    mean_length = mean(length),
+    median_length = median(length),
+    sd_length = sd(length),
+    
+    mean_diameter = mean(diameter),
+    median_diameter = median(diameter),
+    sd_diameter = sd(diameter),
+    
+    mean_ratio = mean(ratio),
+    median_ratio = median(ratio),
+    sd_ratio = sd(ratio),
+    q05_ratio = quantile(ratio, 0.05),
+    q95_ratio = quantile(ratio, 0.95),
+    
+    mean_length_sqrtn = mean(length_sqrtn),
+    median_length_sqrtn = median(length_sqrtn),
+    
+    mean_diameter_sqrtn = mean(diameter_sqrtn),
+    median_diameter_sqrtn = median(diameter_sqrtn),
+    
+    mean_penrose_lower_ratio = mean(penrose_lower_ratio),
+    .groups = "drop"
+  ) |>
+  arrange(n)
+
+write_csv(summary_results, "stringy05_summary_results.csv")
+
+```
+## Length (Denominator)
+```{r}
+ggplot(combined_results, aes(x = n, y = length_sqrtn)) +
+  geom_point(alpha = 0.15, size = 0.8) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1) +
+  stat_summary(fun = mean, geom = "point", size = 2) +
+  labs(
+    x = "Sample size n",
+    y = expression(mean(L[n] / sqrt(n))),
+    title = "Checking denominator growth: MST length / sqrt(n)"
+  ) + 
+  theme_bw() +
+  theme(aspect.ratio = 1)
+```
+## Diameter (Numerator)
+```{r}
+ggplot(combined_results, aes(x = n, y = diameter_sqrtn)) +
+  geom_point(alpha = 0.15, size = 0.8) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1) +
+  stat_summary(fun = mean, geom = "point", size = 2) +
+  labs(
+    x = "Sample size n",
+    y = expression(mean(D[n] / sqrt(n))),
+    title = "Checking numerator growth: MST diameter / sqrt(n)"
+  ) +
+  theme_bw() +
+  theme(aspect.ratio = 1)
+```
+## Ratio 
+```{r}
+ggplot(combined_results, aes(x = n, y = ratio)) +
+  geom_point(alpha = 0.15, size = 0.8) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1) +
+  stat_summary(fun = mean, geom = "point", size = 2)  +
+  labs(
+    x = "Sample size n",
+    y = expression(mean(R[n])),
+    title = "stringy05 ratio across sample sizes"
+  ) +
+  theme_bw() +
+  theme(aspect.ratio = 1)
+```
+## I will Continue to Explore .....
+
+## References
+
+Steele, J. M. (1988). *Growth Rates of Euclidean Minimal Spanning Trees with Power Weighted Edges*. The Annals of Probability, 16(4), 1767--1787.
+
+Penrose, M. D. (1997). *The Longest Edge of the Random Minimal Spanning Tree*. The Annals of Applied Probability, 7(2), 340--361.

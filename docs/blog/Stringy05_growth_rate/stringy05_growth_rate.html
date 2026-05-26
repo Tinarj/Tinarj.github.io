@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-22">
+<meta name="dcterms.date" content="2026-05-26">
 <meta name="description" content="A theoretical and empirical exploration of the stringy05 scagnostic index.">
 
 <title>Exploring the Growth Rate of the stringy05 Index – Tina Rashid Jafari</title>
@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -157,6 +192,19 @@ window.Quarto = {
    
   <ul>
   <li><a href="#aim" id="toc-aim" class="nav-link active" data-scroll-target="#aim">Aim</a></li>
+  <li><a href="#denominator-theoretical-growth-rate-of-total-mst-length" id="toc-denominator-theoretical-growth-rate-of-total-mst-length" class="nav-link" data-scroll-target="#denominator-theoretical-growth-rate-of-total-mst-length">Denominator: theoretical growth rate of total MST length</a></li>
+  <li><a href="#steeles-growth-theorem" id="toc-steeles-growth-theorem" class="nav-link" data-scroll-target="#steeles-growth-theorem">Steele’s growth theorem</a></li>
+  <li><a href="#numerator-what-is-known-about-the-mst-diameter" id="toc-numerator-what-is-known-about-the-mst-diameter" class="nav-link" data-scroll-target="#numerator-what-is-known-about-the-mst-diameter">Numerator: what is known about the MST diameter?</a></li>
+  <li><a href="#penroses-longest-edge-theorem-and-its-limitation" id="toc-penroses-longest-edge-theorem-and-its-limitation" class="nav-link" data-scroll-target="#penroses-longest-edge-theorem-and-its-limitation">Penrose’s longest-edge theorem and its limitation</a></li>
+  <li><a href="#a-simple-example-longest-edge-versus-mst-diameter" id="toc-a-simple-example-longest-edge-versus-mst-diameter" class="nav-link" data-scroll-target="#a-simple-example-longest-edge-versus-mst-diameter">A simple example: longest edge versus MST diameter</a></li>
+  <li><a href="#upper-and-lower-bound-for-the-mst-diameter" id="toc-upper-and-lower-bound-for-the-mst-diameter" class="nav-link" data-scroll-target="#upper-and-lower-bound-for-the-mst-diameter">Upper and lower bound for the MST diameter</a></li>
+  <li><a href="#next-step-study-numerator-and-denominator-separately" id="toc-next-step-study-numerator-and-denominator-separately" class="nav-link" data-scroll-target="#next-step-study-numerator-and-denominator-separately">Next step: study numerator and denominator separately</a></li>
+  <li><a href="#empirical-simulation-study" id="toc-empirical-simulation-study" class="nav-link" data-scroll-target="#empirical-simulation-study">Empirical simulation study</a></li>
+  <li><a href="#length-denominator" id="toc-length-denominator" class="nav-link" data-scroll-target="#length-denominator">Length (Denominator)</a></li>
+  <li><a href="#diameter-numerator" id="toc-diameter-numerator" class="nav-link" data-scroll-target="#diameter-numerator">Diameter (Numerator)</a></li>
+  <li><a href="#ratio" id="toc-ratio" class="nav-link" data-scroll-target="#ratio">Ratio</a></li>
+  <li><a href="#i-will-continue-to-explore-.." id="toc-i-will-continue-to-explore-.." class="nav-link" data-scroll-target="#i-will-continue-to-explore-..">I will Continue to Explore …..</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -188,7 +236,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">22 May 2026</p>
+      <p class="date">26 May 2026</p>
     </div>
   </div>
   
@@ -218,7 +266,450 @@ L_n
 D_n
 = {diameter}(T_n)
 = \max_{u,v\in T_n} d_{T_n}(u,v),
+\]</span> where <span class="math inline">\(d_{T_n}(u,v)\)</span> is the length of the unique path in the tree from <span class="math inline">\(u\)</span> to <span class="math inline">\(v\)</span>, using Euclidean edge lengths as weights.</p>
+<p>Thus,</p>
+<p><span class="math display">\[
+R_n
+=
+\text{stringy05}(T_n)
+=
+\frac{D_n}{L_n}.
 \]</span></p>
+<p>The main question is whether</p>
+<p><span class="math display">\[
+R_n \to 0,
+\]</span></p>
+<p>or whether</p>
+<p><span class="math display">\[
+R_n \to \rho &gt; 0.
+\]</span></p>
+<p>Empirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near <span class="math inline">\(n=900\)</span>, the estimated 95th percentile of the noise distribution appeared to stabilize near <span class="math inline">\(0.1\)</span>. This motivates a more detailed investigation of the numerator and denominator separately.</p>
+</section>
+<section id="denominator-theoretical-growth-rate-of-total-mst-length" class="level2">
+<h2 class="anchored" data-anchor-id="denominator-theoretical-growth-rate-of-total-mst-length">Denominator: theoretical growth rate of total MST length</h2>
+<p>The denominator <span class="math inline">\(L_n\)</span> is the part of the problem for which we do have strong theoretical guidance.</p>
+<p>Steele studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points <span class="math inline">\(x_1,\dots,x_n\)</span>, the MST functional is</p>
+<p><span class="math display">\[
+M(x_1,\dots,x_n)
+=
+\min_T \sum_{e\in T}\psi(|e|),
+\]</span></p>
+<p>where the minimum is over spanning trees <span class="math inline">\(T\)</span>, and <span class="math inline">\(\psi\)</span> is an edge-weighting function [Steele, 1988].</p>
+<p>For the ordinary Euclidean MST length, we take</p>
+<p><span class="math display">\[
+\psi(t)=t.
+\]</span></p>
+<p>Then</p>
+<p><span class="math display">\[
+M(X_1,\dots,X_n)
+=
+\sum_{e\in T_n}|e|
+=
+L_n.
+\]</span></p>
+<p>So Steele’s <span class="math inline">\(M_n\)</span> is exactly the denominator of the stringy05 index.</p>
+</section>
+<section id="steeles-growth-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="steeles-growth-theorem">Steele’s growth theorem</h2>
+<p>Steele considers weight functions satisfying</p>
+<p><span class="math display">\[
+\psi(t)\sim t^\alpha
+\quad\text{as } t\to 0,
+\]</span></p>
+<p>with</p>
+<p><span class="math display">\[
+0&lt;\alpha&lt;d.
+\]</span></p>
+<p>His main theorem states that, for iid observations in <span class="math inline">\(\mathbb R^d\)</span> from a compactly supported distribution, if <span class="math inline">\(f\)</span> is the density of the absolutely continuous part of the distribution, then</p>
+<p><span class="math display">\[
+n^{-(d-\alpha)/d}
+M(X_1,\dots,X_n)
+\to
+c(\alpha,d)
+\int f(x)^{(d-\alpha)/d}\,dx
+\]</span></p>
+<p>almost surely.</p>
+<p>In the ordinary MST length case,</p>
+<p><span class="math display">\[
+\alpha=1.
+\]</span></p>
+<p>For bivariate data,</p>
+<p><span class="math display">\[
+d=2.
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+n^{-1/2}L_n
+\to
+c(1,2)
+\int f(x)^{1/2}\,dx.
+\]</span></p>
+<p>Equivalently,</p>
+<p><span class="math display">\[
+L_n
+\sim
+C_f\sqrt n,
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+C_f
+=
+c(1,2)
+\int f(x)^{1/2}\,dx.
+\]</span></p>
+<p>Thus, for two-dimensional data, the denominator has theoretical growth rate</p>
+<p><span class="math display">\[
+\boxed{
+L_n= O(\sqrt n).
+}
+\]</span></p>
+<p>Steele first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. Steele then extends the result beyond the uniform case by adding a density correction. For a more general distribution with density <span class="math inline">\(f\)</span>, the limiting constant is modified by a factor of the form</p>
+<p><span class="math display">\[
+\int f(x)^{(d-\alpha)/d}\,dx.
+\]</span></p>
+<p>In the ordinary bivariate MST-length case, this becomes</p>
+<p><span class="math display">\[
+\int f(x)^{1/2}\,dx.
+\]</span></p>
+<p>This extension is important for my project because the simulations are based on bivariate noise distributions rather than only uniform samples.</p>
+<p>However, there is one important technical caveat. Steele’s theorem is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use Steele’s<span class="math inline">\(\sqrt n\)</span> scaling as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work.</p>
+</section>
+<section id="numerator-what-is-known-about-the-mst-diameter" class="level2">
+<h2 class="anchored" data-anchor-id="numerator-what-is-known-about-the-mst-diameter">Numerator: what is known about the MST diameter?</h2>
+<p>The numerator is</p>
+<p><span class="math display">\[
+D_n
+=
+\max_{u,v}d_{T_n}(u,v).
+\]</span></p>
+<p>This is the weighted longest shortest path in the MST. It is a global path functional: it depends on how many edges lie along the longest path and how their lengths accumulate.</p>
+<p>This is different from the total MST length <span class="math inline">\(L_n\)</span>, which is a sum over all edges. It is also different from the longest single edge of the MST.</p>
+<p>At this point, the exact theoretical growth rate of <span class="math inline">\(D_n\)</span> is not given by the Steele MST length theorem.</p>
+</section>
+<section id="penroses-longest-edge-theorem-and-its-limitation" class="level2">
+<h2 class="anchored" data-anchor-id="penroses-longest-edge-theorem-and-its-limitation">Penrose’s longest-edge theorem and its limitation</h2>
+<p>Penrose studies the longest edge of the random Euclidean MST. Let</p>
+<p><span class="math display">\[
+E_n
+=
+\max_{e\in T_n}|e|.
+\]</span></p>
+<p>For uniform random points in the unit square, Penrose shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension <span class="math inline">\(2\)</span>, the result implies that</p>
+<p><span class="math display">\[
+n\pi E_n^2-\log n
+\]</span></p>
+<p>converges in distribution to a double-exponential limiting law [Penrose, 1997].</p>
+<p>Penrose also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.</p>
+<p>This matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So Penrose’s result suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.</p>
+<p>The longest edge scale is therefore approximately</p>
+<p><span class="math display">\[
+E_n
+\asymp
+\sqrt{\frac{\log n}{n}}.
+\]</span> However, this is not the same as the stringy05 numerator.</p>
+<p>The stringy05 numerator is</p>
+<p><span class="math display">\[
+D_n =
+\max_{u,v} d_{T_n}(u,v),
+\]</span></p>
+<p>which is the length of an entire path. This path may contain many MST edges. Therefore, Penrose’s theorem does not give the growth rate of <span class="math inline">\(D_n\)</span>. It only gives the scale of the largest individual edge.</p>
+</section>
+<section id="a-simple-example-longest-edge-versus-mst-diameter" class="level2">
+<h2 class="anchored" data-anchor-id="a-simple-example-longest-edge-versus-mst-diameter">A simple example: longest edge versus MST diameter</h2>
+<p>Let’s imagine the MST is a path with five vertices:</p>
+<p><span class="math display">\[
+A \;-\; B \;-\; C \;-\; D \;-\; E
+\]</span></p>
+<p>and the edge weights are</p>
+<p><span class="math display">\[
+|AB|=0.10,\quad |BC|=0.12,\quad |CD|=0.09,\quad |DE|=0.11.
+\]</span></p>
+<p>Penrose’s longest-edge quantity looks only for the single largest edge in the MST:</p>
+<p><span class="math display">\[
+E_n=\max_{e\in T_n}|e|=0.12.
+\]</span></p>
+<p>So in this example, Penrose’s quantity is the edge <span class="math inline">\(BC\)</span>.</p>
+<p>But the stringy05 numerator is the weighted MST diameter. It looks for the longest path in the tree and adds all edge weights along that path. Here the longest path is from <span class="math inline">\(A\)</span>) to <span class="math inline">\(E\)</span>:</p>
+<p><span class="math display">\[
+D_n = |AB|+|BC|+|CD|+|DE| =
+0.10+0.12+0.09+0.11 =
+0.42.
+\]</span></p>
+<p>So in this example,</p>
+<p><span class="math display">\[
+\text{Penrose longest edge}=0.12,
+\]</span></p>
+<p>while</p>
+<p><span class="math display">\[
+\text{stringy05 diameter}=0.42.
+\]</span></p>
+<p>This shows why Penrose’s result is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:</p>
+<p><span class="math display">\[
+E_n\le D_n.
+\]</span></p>
+</section>
+<section id="upper-and-lower-bound-for-the-mst-diameter" class="level2">
+<h2 class="anchored" data-anchor-id="upper-and-lower-bound-for-the-mst-diameter">Upper and lower bound for the MST diameter</h2>
+<p>Even though Penrose’s longest-edge theorem does not solve the diameter problem, it provides a weak lower bound.</p>
+<p>For every weighted tree,</p>
+<p><span class="math display">\[
+\boxed{
+E_n\le D_n\le L_n.
+}
+\]</span></p>
+<p>The first inequality holds because the longest edge is itself the path between its endpoints in the tree. The second inequality holds because any path in the tree uses only a subset of the edges of the tree.</p>
+<p>Combining Penrose’s longest-edge scale with Steele’s total-length scale gives</p>
+<p><span class="math display">\[
+\sqrt{\frac{\log n}{n}}
+\lesssim
+D_n
+\le
+O(\sqrt n).
+\]</span></p>
+<p>Dividing by <span class="math inline">\(L_n\)</span> gives the weak theoretical ratio bound</p>
+<p><span class="math display">\[
+\frac{\sqrt{\log n}}{n}
+\lesssim
+R_n
+\le
+1.
+\]</span></p>
+<p>This lower bound is mathematically valid but very weak. For example, at <span class="math inline">\(n=1000\)</span>,</p>
+<p><span class="math display">\[
+\frac{\sqrt{\log(1000)}}{1000}
+\approx
+0.00263.
+\]</span></p>
+<p>This is much smaller than the empirical values observed in simulation, which are closer to <span class="math inline">\(0.2\)</span>. Therefore, the observed stringy05 behavior cannot be explained by the longest single MST edge alone. The diameter appears to be driven by the accumulation of many edges along a long path.</p>
+</section>
+<section id="next-step-study-numerator-and-denominator-separately" class="level2">
+<h2 class="anchored" data-anchor-id="next-step-study-numerator-and-denominator-separately">Next step: study numerator and denominator separately</h2>
+<p>The next part of this analysis will study</p>
+<p><span class="math display">\[
+L_n=\operatorname{length}(T_n)
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+D_n=\operatorname{diameter}(T_n)
+\]</span></p>
+<p>separately.</p>
+<p>The plan is:</p>
+<ol type="1">
+<li>Generate bivariate noise samples for a grid of sample sizes <span class="math inline">\(n\)</span>.</li>
+<li>Record the total MST length <span class="math inline">\(L_n\)</span> .</li>
+<li>Record the weighted MST diameter <span class="math inline">\(D_n\)</span>.</li>
+<li>Record the ratio</li>
+</ol>
+<p><span class="math display">\[
+R_n=\frac{D_n}{L_n}.
+\]</span></p>
+<p>For the denominator, Steele’s theorem suggests checking whether</p>
+<p><span class="math display">\[
+\frac{L_n}{\sqrt n}
+\]</span></p>
+<p>stabilizes.</p>
+<p>For the numerator, the key empirical question is whether</p>
+<p><span class="math display">\[
+\frac{D_n}{\sqrt n}
+\]</span></p>
+<p>also stabilizes.</p>
+<p>If both normalized quantities stabilize, then the ratio should stabilize near a positive constant:</p>
+<p><span class="math display">\[
+R_n
+=
+\frac{D_n}{L_n}
+\approx
+\frac{C_D\sqrt n}{C_L\sqrt n}
+=
+\frac{C_D}{C_L}.
+\]</span></p>
+<p>This would support the empirical observation that stringy05 converges to a positive number, possibly near <span class="math inline">\(0.1\)</span>, rather than to zero.</p>
+</section>
+<section id="empirical-simulation-study" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-simulation-study">Empirical simulation study</h2>
+<p>The theoretical discussion gives a clear benchmark for the denominator <span class="math inline">\(L_n\)</span>, but the numerator <span class="math inline">\(D_n\)</span> is still unknown. Therefore, I now move to an empirical simulation study.</p>
+<p>For each sample size <span class="math inline">\(n\)</span>, I will generate independent bivariate Gaussian noise data,</p>
+<p><span class="math display">\[
+X_i=(X_{i1},X_{i2}), \qquad X_{i1},X_{i2}\sim N(0,1),
+\]</span></p>
+<p>so both coordinates have mean <span class="math inline">\(0\)</span> and standard deviation <span class="math inline">\(1\)</span>. For each generated dataset, I compute the Euclidean minimum spanning tree <span class="math inline">\(T_n\)</span>, and then record three quantities:</p>
+<p><span class="math display">\[
+L_n=\operatorname{length}(T_n),
+\]</span></p>
+<p><span class="math display">\[
+D_n=\operatorname{diameter}(T_n),
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+R_n=\frac{D_n}{L_n}.
+\]</span></p>
+<p>For each sample size, I repeat this process 1000 times. This gives 1000 independent estimates of the MST length, MST diameter, and stringy05 ratio for each <span class="math inline">\(n\)</span>. To understand what is happening, I need to check whether <span class="math inline">\(L_n\)</span> and <span class="math inline">\(D_n\)</span> are growing at the same rate.</p>
+<p>After the simulation results are saved, I will examine the following quantities:</p>
+<p><span class="math display">\[
+\frac{L_n}{\sqrt n},
+\]</span></p>
+<p><span class="math display">\[
+\frac{D_n}{\sqrt n},
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+R_n=\frac{D_n}{L_n}.
+\]</span></p>
+<p>If <span class="math inline">\(L_n/\sqrt n\)</span> stabilizes, this supports the expected <span class="math inline">\(\sqrt n\)</span> growth rate for the denominator. If <span class="math inline">\(D_n/\sqrt n\)</span> also stabilizes, then the numerator appears to grow at the same rate as the denominator. In that case, the ratio <span class="math inline">\(R_n\)</span> should stabilize near a positive value.</p>
+<p>On the other hand, if <span class="math inline">\(D_n/\sqrt n\)</span> decreases as <span class="math inline">\(n\)</span> increases, then the numerator is growing more slowly than the denominator, and the ratio may eventually converge to zero.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>csv_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_50_200.csv"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_200_500.csv"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_550_800.csv"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_850_1000.csv"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_1200_2000.csv"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_2500_6000.csv"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>combined_results <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  csv_files,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">read_csv</span>(.x, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"file_id"</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n, simulation_run) <span class="sc">|&gt;</span> </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">length_sqrtn =</span> length <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">diameter_sqrtn =</span> diameter <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">penrose_lower_ratio =</span> <span class="fu">sqrt</span>(<span class="fu">log</span>(n)) <span class="sc">/</span> n</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Save combined results</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(combined_results, <span class="st">"stringy05_combined_results.csv"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>summary_results <span class="ot">&lt;-</span> combined_results <span class="sc">|&gt;</span> </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">B =</span> <span class="fu">n</span>(),</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_length =</span> <span class="fu">mean</span>(length),</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_length =</span> <span class="fu">median</span>(length),</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_length =</span> <span class="fu">sd</span>(length),</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_diameter =</span> <span class="fu">mean</span>(diameter),</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_diameter =</span> <span class="fu">median</span>(diameter),</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_diameter =</span> <span class="fu">sd</span>(diameter),</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_ratio =</span> <span class="fu">mean</span>(ratio),</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_ratio =</span> <span class="fu">median</span>(ratio),</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_ratio =</span> <span class="fu">sd</span>(ratio),</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">q05_ratio =</span> <span class="fu">quantile</span>(ratio, <span class="fl">0.05</span>),</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95_ratio =</span> <span class="fu">quantile</span>(ratio, <span class="fl">0.95</span>),</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_length_sqrtn =</span> <span class="fu">mean</span>(length_sqrtn),</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_length_sqrtn =</span> <span class="fu">median</span>(length_sqrtn),</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_diameter_sqrtn =</span> <span class="fu">mean</span>(diameter_sqrtn),</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_diameter_sqrtn =</span> <span class="fu">median</span>(diameter_sqrtn),</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_penrose_lower_ratio =</span> <span class="fu">mean</span>(penrose_lower_ratio),</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(summary_results, <span class="st">"stringy05_summary_results.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="length-denominator" class="level2">
+<h2 class="anchored" data-anchor-id="length-denominator">Length (Denominator)</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_results, <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> length_sqrtn)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">mean</span>(L[n] <span class="sc">/</span> <span class="fu">sqrt</span>(n))),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Checking denominator growth: MST length / sqrt(n)"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="diameter-numerator" class="level2">
+<h2 class="anchored" data-anchor-id="diameter-numerator">Diameter (Numerator)</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_results, <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> diameter_sqrtn)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">mean</span>(D[n] <span class="sc">/</span> <span class="fu">sqrt</span>(n))),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Checking numerator growth: MST diameter / sqrt(n)"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ratio" class="level2">
+<h2 class="anchored" data-anchor-id="ratio">Ratio</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_results, <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> ratio)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">size =</span> <span class="dv">2</span>)  <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">mean</span>(R[n])),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"stringy05 ratio across sample sizes"</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="i-will-continue-to-explore-.." class="level2">
+<h2 class="anchored" data-anchor-id="i-will-continue-to-explore-..">I will Continue to Explore …..</h2>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Steele, J. M. (1988). <em>Growth Rates of Euclidean Minimal Spanning Trees with Power Weighted Edges</em>. The Annals of Probability, 16(4), 1767–1787.</p>
+<p>Penrose, M. D. (1997). <em>The Longest Edge of the Random Minimal Spanning Tree</em>. The Annals of Applied Probability, 7(2), 340–361.</p>
 
 
 </section>

@@ -567,7 +567,7 @@ ggplot(checked_by_size, aes(x = x, y = y, colour = status)) +
   )
 ```
 
-## Interpretation
+## My Understanding
 
 
 The number of removed points increases as the sample size increases. For example, only 1 point is removed when `n = 50`, while 57 points are removed when `n = 900`.

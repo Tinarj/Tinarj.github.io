@@ -340,14 +340,14 @@
     "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html",
     "title": "Exploring the Growth Rate of the stringy05 Index",
     "section": "",
-    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\]"
+    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\] where \\(d_{T_n}(u,v)\\) is the length of the unique path in the tree from \\(u\\) to \\(v\\), using Euclidean edge lengths as weights.\nThus,\n\\[\nR_n\n=\n\\text{stringy05}(T_n)\n=\n\\frac{D_n}{L_n}.\n\\]\nThe main question is whether\n\\[\nR_n \\to 0,\n\\]\nor whether\n\\[\nR_n \\to \\rho &gt; 0.\n\\]\nEmpirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near \\(n=900\\), the estimated 95th percentile of the noise distribution appeared to stabilize near \\(0.1\\). This motivates a more detailed investigation of the numerator and denominator separately."
   },
   {
     "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#steeles-growth-theorem",
     "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#steeles-growth-theorem",
     "title": "Exploring the Growth Rate of the stringy05 Index",
     "section": "Steele’s growth theorem",
-    "text": "Steele’s growth theorem\nSteele considers weight functions satisfying\n[ (t)t^ t, ]\nwith\n[ 0&lt;&lt;d. ]\nHis main theorem states that, for iid observations in (R^d) from a compactly supported distribution, if (f) is the density of the absolutely continuous part of the distribution, then\n[ n^{-(d-)/d} M(X_1,,X_n) c(,d) f(x)^{(d-)/d},dx ]\nalmost surely.\nIn the ordinary MST length case,\n[ . ]\nFor bivariate data,\n[ d=2. ]\nTherefore,\n[ n^{-1/2}L_n c(1,2) f(x)^{1/2},dx. ]\nEquivalently,\n[ L_n C_fn, ]\nwhere\n[ C_f = c(1,2) f(x)^{1/2},dx. ]\nThus, for two-dimensional data, the denominator has theoretical growth rate\n[ ]\nSteele first develops the result in the uniform setting and then extends the theory to more general compactly supported distributions. This is important for this project because the simulations are based on bivariate noise distributions rather than only uniform samples.\nHowever, one technical caveat is important. Steele’s theorem is stated under compact-support assumptions. A bivariate Gaussian distribution has unbounded support. Therefore, for Gaussian samples, Steele’s result should be used as a theoretical benchmark unless an additional tail-truncation or extension argument is supplied."
+    "text": "Steele’s growth theorem\nSteele considers weight functions satisfying\n\\[\n\\psi(t)\\sim t^\\alpha\n\\quad\\text{as } t\\to 0,\n\\]\nwith\n\\[\n0&lt;\\alpha&lt;d.\n\\]\nHis main theorem states that, for iid observations in \\(\\mathbb R^d\\) from a compactly supported distribution, if \\(f\\) is the density of the absolutely continuous part of the distribution, then\n\\[\nn^{-(d-\\alpha)/d}\nM(X_1,\\dots,X_n)\n\\to\nc(\\alpha,d)\n\\int f(x)^{(d-\\alpha)/d}\\,dx\n\\]\nalmost surely.\nIn the ordinary MST length case,\n\\[\n\\alpha=1.\n\\]\nFor bivariate data,\n\\[\nd=2.\n\\]\nTherefore,\n\\[\nn^{-1/2}L_n\n\\to\nc(1,2)\n\\int f(x)^{1/2}\\,dx.\n\\]\nEquivalently,\n\\[\nL_n\n\\sim\nC_f\\sqrt n,\n\\]\nwhere\n\\[\nC_f\n=\nc(1,2)\n\\int f(x)^{1/2}\\,dx.\n\\]\nThus, for two-dimensional data, the denominator has theoretical growth rate\n\\[\n\\boxed{\nL_n= O(\\sqrt n).\n}\n\\]\nSteele first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. Steele then extends the result beyond the uniform case by adding a density correction. For a more general distribution with density \\(f\\), the limiting constant is modified by a factor of the form\n\\[\n\\int f(x)^{(d-\\alpha)/d}\\,dx.\n\\]\nIn the ordinary bivariate MST-length case, this becomes\n\\[\n\\int f(x)^{1/2}\\,dx.\n\\]\nThis extension is important for my project because the simulations are based on bivariate noise distributions rather than only uniform samples.\nHowever, there is one important technical caveat. Steele’s theorem is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use Steele’s\\(\\sqrt n\\) scaling as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work."
   },
   {
     "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#motivation",
@@ -368,7 +368,7 @@
     "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#aim",
     "title": "Exploring the Growth Rate of the stringy05 Index",
     "section": "",
-    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\]"
+    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\] where \\(d_{T_n}(u,v)\\) is the length of the unique path in the tree from \\(u\\) to \\(v\\), using Euclidean edge lengths as weights.\nThus,\n\\[\nR_n\n=\n\\text{stringy05}(T_n)\n=\n\\frac{D_n}{L_n}.\n\\]\nThe main question is whether\n\\[\nR_n \\to 0,\n\\]\nor whether\n\\[\nR_n \\to \\rho &gt; 0.\n\\]\nEmpirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near \\(n=900\\), the estimated 95th percentile of the noise distribution appeared to stabilize near \\(0.1\\). This motivates a more detailed investigation of the numerator and denominator separately."
   },
   {
     "objectID": "blog/stringy05_scagnostic/stringy05.html#testing-the-stringy-index-on-a-stringy-like-pattern-and-gaussian-noise",
@@ -719,5 +719,173 @@
     "title": "Exploring Iterative Outlier Removal in cassowaryr",
     "section": "Interpretation",
     "text": "Interpretation\nThe number of removed points increases as the sample size increases. For example, only 1 point is removed when n = 50, while 57 points are removed when n = 900. In these results, the removal rate is mostly around 5% to 7%, with some variation across sample sizes.\nOverall, the MST-based outlier-removal step removes some natural Gaussian tail observations, especially as sample size increases. This reflects the geometry of the Gaussian point cloud rather than the presence of true outliers."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#my-understanding",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#my-understanding",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "My Understanding",
+    "text": "My Understanding\nThe number of removed points increases as the sample size increases. For example, only 1 point is removed when n = 50, while 57 points are removed when n = 900. In these results, the removal rate is mostly around 5% to 7%, with some variation across sample sizes.\nOverall, the MST-based outlier-removal step removes some natural Gaussian tail observations, especially as sample size increases. This reflects the geometry of the Gaussian point cloud rather than the presence of true outliers."
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#denominator-theoretical-growth-rate-of-total-mst-length",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#denominator-theoretical-growth-rate-of-total-mst-length",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Denominator: theoretical growth rate of total MST length",
+    "text": "Denominator: theoretical growth rate of total MST length\nThe denominator \\(L_n\\) is the part of the problem for which we do have strong theoretical guidance.\nSteele studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points \\(x_1,\\dots,x_n\\), the MST functional is\n\\[\nM(x_1,\\dots,x_n)\n=\n\\min_T \\sum_{e\\in T}\\psi(|e|),\n\\]\nwhere the minimum is over spanning trees \\(T\\), and \\(\\psi\\) is an edge-weighting function [Steele, 1988].\nFor the ordinary Euclidean MST length, we take\n\\[\n\\psi(t)=t.\n\\]\nThen\n\\[\nM(X_1,\\dots,X_n)\n=\n\\sum_{e\\in T_n}|e|\n=\nL_n.\n\\]\nSo Steele’s \\(M_n\\) is exactly the denominator of the stringy05 index."
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#numerator-what-is-known-about-the-mst-diameter",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#numerator-what-is-known-about-the-mst-diameter",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Numerator: what is known about the MST diameter?",
+    "text": "Numerator: what is known about the MST diameter?\nThe numerator is\n\\[\nD_n\n=\n\\max_{u,v}d_{T_n}(u,v).\n\\]\nThis is the weighted longest shortest path in the MST. It is a global path functional: it depends on how many edges lie along the longest path and how their lengths accumulate.\nThis is different from the total MST length \\(L_n\\), which is a sum over all edges. It is also different from the longest single edge of the MST.\nAt this point, the exact theoretical growth rate of \\(D_n\\) is not given by the Steele MST length theorem."
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#penroses-longest-edge-theorem-and-its-limitation",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#penroses-longest-edge-theorem-and-its-limitation",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Penrose’s longest-edge theorem and its limitation",
+    "text": "Penrose’s longest-edge theorem and its limitation\nPenrose studies the longest edge of the random Euclidean MST. Let\n\\[\nE_n\n=\n\\max_{e\\in T_n}|e|.\n\\]\nFor uniform random points in the unit square, Penrose shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension \\(2\\), the result implies that\n\\[\nn\\pi E_n^2-\\log n\n\\]\nconverges in distribution to a double-exponential limiting law [Penrose, 1997].\nPenrose also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.\nThis matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So Penrose’s result suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.\nThe longest edge scale is therefore approximately\n\\[\nE_n\n\\asymp\n\\sqrt{\\frac{\\log n}{n}}.\n\\] However, this is not the same as the stringy05 numerator.\nThe stringy05 numerator is\n\\[\nD_n =\n\\max_{u,v} d_{T_n}(u,v),\n\\]\nwhich is the length of an entire path. This path may contain many MST edges. Therefore, Penrose’s theorem does not give the growth rate of \\(D_n\\). It only gives the scale of the largest individual edge."
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#a-simple-example-longest-edge-versus-mst-diameter",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#a-simple-example-longest-edge-versus-mst-diameter",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "A simple example: longest edge versus MST diameter",
+    "text": "A simple example: longest edge versus MST diameter\nLet’s imagine the MST is a path with five vertices:\n\\[\nA \\;-\\; B \\;-\\; C \\;-\\; D \\;-\\; E\n\\]\nand the edge weights are\n\\[\n|AB|=0.10,\\quad |BC|=0.12,\\quad |CD|=0.09,\\quad |DE|=0.11.\n\\]\nPenrose’s longest-edge quantity looks only for the single largest edge in the MST:\n\\[\nE_n=\\max_{e\\in T_n}|e|=0.12.\n\\]\nSo in this example, Penrose’s quantity is the edge \\(BC\\).\nBut the stringy05 numerator is the weighted MST diameter. It looks for the longest path in the tree and adds all edge weights along that path. Here the longest path is from \\(A\\)) to \\(E\\):\n\\[\nD_n = |AB|+|BC|+|CD|+|DE| =\n0.10+0.12+0.09+0.11 =\n0.42.\n\\]\nSo in this example,\n\\[\n\\text{Penrose longest edge}=0.12,\n\\]\nwhile\n\\[\n\\text{stringy05 diameter}=0.42.\n\\]\nThis shows why Penrose’s result is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:\n\\[\nE_n\\le D_n.\n\\]"
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#upper-and-lower-bound-for-the-mst-diameter",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#upper-and-lower-bound-for-the-mst-diameter",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Upper and lower bound for the MST diameter",
+    "text": "Upper and lower bound for the MST diameter\nEven though Penrose’s longest-edge theorem does not solve the diameter problem, it provides a weak lower bound.\nFor every weighted tree,\n\\[\n\\boxed{\nE_n\\le D_n\\le L_n.\n}\n\\]\nThe first inequality holds because the longest edge is itself the path between its endpoints in the tree. The second inequality holds because any path in the tree uses only a subset of the edges of the tree.\nCombining Penrose’s longest-edge scale with Steele’s total-length scale gives\n\\[\n\\sqrt{\\frac{\\log n}{n}}\n\\lesssim\nD_n\n\\le\nO(\\sqrt n).\n\\]\nDividing by \\(L_n\\) gives the weak theoretical ratio bound\n\\[\n\\frac{\\sqrt{\\log n}}{n}\n\\lesssim\nR_n\n\\le\n1.\n\\]\nThis lower bound is mathematically valid but very weak. For example, at \\(n=1000\\),\n\\[\n\\frac{\\sqrt{\\log(1000)}}{1000}\n\\approx\n0.00263.\n\\]\nThis is much smaller than the empirical values observed in simulation, which are closer to \\(0.2\\). Therefore, the observed stringy05 behavior cannot be explained by the longest single MST edge alone. The diameter appears to be driven by the accumulation of many edges along a long path."
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#next-step-study-numerator-and-denominator-separately",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#next-step-study-numerator-and-denominator-separately",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Next step: study numerator and denominator separately",
+    "text": "Next step: study numerator and denominator separately\nThe next part of this analysis will study\n\\[\nL_n=\\operatorname{length}(T_n)\n\\]\nand\n\\[\nD_n=\\operatorname{diameter}(T_n)\n\\]\nseparately.\nThe plan is:\n\nGenerate bivariate noise samples for a grid of sample sizes \\(n\\).\nRecord the total MST length \\(L_n\\) .\nRecord the weighted MST diameter \\(D_n\\).\nRecord the ratio\n\n\\[\nR_n=\\frac{D_n}{L_n}.\n\\]\nFor the denominator, Steele’s theorem suggests checking whether\n\\[\n\\frac{L_n}{\\sqrt n}\n\\]\nstabilizes.\nFor the numerator, the key empirical question is whether\n\\[\n\\frac{D_n}{\\sqrt n}\n\\]\nalso stabilizes.\nIf both normalized quantities stabilize, then the ratio should stabilize near a positive constant:\n\\[\nR_n\n=\n\\frac{D_n}{L_n}\n\\approx\n\\frac{C_D\\sqrt n}{C_L\\sqrt n}\n=\n\\frac{C_D}{C_L}.\n\\]\nThis would support the empirical observation that stringy05 converges to a positive number, possibly near \\(0.1\\), rather than to zero."
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#empirical-growth-rate-workflow",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#empirical-growth-rate-workflow",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Empirical growth-rate workflow",
+    "text": "Empirical growth-rate workflow\nFor each sample size \\(n\\), I will run many independent simulations. For example,\n\\[\nn\\in\\{50,75,100,150,200,300,500,750,1000,1500,2000,3000,5000\\}.\n\\]\nFor each (n), I will compute Monte Carlo summaries of\n\\[\nL_n,\\quad D_n,\\quad R_n.\n\\]\nThe main plots will be:\n\nA log-log plot of (L_n) versus (n).\nA log-log plot of (D_n) versus (n).\nA plot of (L_n/n) versus (n).\nA plot of (D_n/n) versus (n).\nA plot of (R_n=D_n/L_n) versus (n).\n\nThe log-log regressions will estimate\n\\[\n\\log L_n\n=\na_L+\\beta_L\\log n+\\varepsilon_n,\n\\]\nand\n\\[\n\\log D_n\n=\na_D+\\beta_D\\log n+\\eta_n.\n\\]\nTheory predicts\n\\[\n\\beta_L\\approx 1/2.\n\\]\nThe key empirical question is whether\n\\[\n\\beta_D\\approx 1/2.\n\\]\nIf\n\\[\n\\beta_D\\approx \\beta_L\\approx 1/2,\n\\]\nthen the ratio should approach a nonzero constant.\nIf\n\\[\n\\beta_D&lt;1/2,\n\\]\nthen the ratio may eventually decay to zero, even if the finite-sample values appear stable."
+  },
+  {
+    "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#references",
+    "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#references",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "References",
+    "text": "References\nSteele, J. M. (1988). Growth Rates of Euclidean Minimal Spanning Trees with Power Weighted Edges. The Annals of Probability, 16(4), 1767–1787.\nPenrose, M. D. (1997). The Longest Edge of the Random Minimal Spanning Tree. The Annals of Applied Probability, 7(2), 340–361."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "",
+    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\] where \\(d_{T_n}(u,v)\\) is the length of the unique path in the tree from \\(u\\) to \\(v\\), using Euclidean edge lengths as weights.\nThus,\n\\[\nR_n\n=\n\\text{stringy05}(T_n)\n=\n\\frac{D_n}{L_n}.\n\\]\nThe main question is whether\n\\[\nR_n \\to 0,\n\\]\nor whether\n\\[\nR_n \\to \\rho &gt; 0.\n\\]\nEmpirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near \\(n=900\\), the estimated 95th percentile of the noise distribution appeared to stabilize near \\(0.1\\). This motivates a more detailed investigation of the numerator and denominator separately."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#aim",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#aim",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "",
+    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\] where \\(d_{T_n}(u,v)\\) is the length of the unique path in the tree from \\(u\\) to \\(v\\), using Euclidean edge lengths as weights.\nThus,\n\\[\nR_n\n=\n\\text{stringy05}(T_n)\n=\n\\frac{D_n}{L_n}.\n\\]\nThe main question is whether\n\\[\nR_n \\to 0,\n\\]\nor whether\n\\[\nR_n \\to \\rho &gt; 0.\n\\]\nEmpirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near \\(n=900\\), the estimated 95th percentile of the noise distribution appeared to stabilize near \\(0.1\\). This motivates a more detailed investigation of the numerator and denominator separately."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#denominator-theoretical-growth-rate-of-total-mst-length",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#denominator-theoretical-growth-rate-of-total-mst-length",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Denominator: theoretical growth rate of total MST length",
+    "text": "Denominator: theoretical growth rate of total MST length\nThe denominator \\(L_n\\) is the part of the problem for which we do have strong theoretical guidance.\nSteele studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points \\(x_1,\\dots,x_n\\), the MST functional is\n\\[\nM(x_1,\\dots,x_n)\n=\n\\min_T \\sum_{e\\in T}\\psi(|e|),\n\\]\nwhere the minimum is over spanning trees \\(T\\), and \\(\\psi\\) is an edge-weighting function [Steele, 1988].\nFor the ordinary Euclidean MST length, we take\n\\[\n\\psi(t)=t.\n\\]\nThen\n\\[\nM(X_1,\\dots,X_n)\n=\n\\sum_{e\\in T_n}|e|\n=\nL_n.\n\\]\nSo Steele’s \\(M_n\\) is exactly the denominator of the stringy05 index."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#steeles-growth-theorem",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#steeles-growth-theorem",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Steele’s growth theorem",
+    "text": "Steele’s growth theorem\nSteele considers weight functions satisfying\n\\[\n\\psi(t)\\sim t^\\alpha\n\\quad\\text{as } t\\to 0,\n\\]\nwith\n\\[\n0&lt;\\alpha&lt;d.\n\\]\nHis main theorem states that, for iid observations in \\(\\mathbb R^d\\) from a compactly supported distribution, if \\(f\\) is the density of the absolutely continuous part of the distribution, then\n\\[\nn^{-(d-\\alpha)/d}\nM(X_1,\\dots,X_n)\n\\to\nc(\\alpha,d)\n\\int f(x)^{(d-\\alpha)/d}\\,dx\n\\]\nalmost surely.\nIn the ordinary MST length case,\n\\[\n\\alpha=1.\n\\]\nFor bivariate data,\n\\[\nd=2.\n\\]\nTherefore,\n\\[\nn^{-1/2}L_n\n\\to\nc(1,2)\n\\int f(x)^{1/2}\\,dx.\n\\]\nEquivalently,\n\\[\nL_n\n\\sim\nC_f\\sqrt n,\n\\]\nwhere\n\\[\nC_f\n=\nc(1,2)\n\\int f(x)^{1/2}\\,dx.\n\\]\nThus, for two-dimensional data, the denominator has theoretical growth rate\n\\[\n\\boxed{\nL_n= O(\\sqrt n).\n}\n\\]\nSteele first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. Steele then extends the result beyond the uniform case by adding a density correction. For a more general distribution with density \\(f\\), the limiting constant is modified by a factor of the form\n\\[\n\\int f(x)^{(d-\\alpha)/d}\\,dx.\n\\]\nIn the ordinary bivariate MST-length case, this becomes\n\\[\n\\int f(x)^{1/2}\\,dx.\n\\]\nThis extension is important for my project because the simulations are based on bivariate noise distributions rather than only uniform samples.\nHowever, there is one important technical caveat. Steele’s theorem is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use Steele’s\\(\\sqrt n\\) scaling as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#numerator-what-is-known-about-the-mst-diameter",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#numerator-what-is-known-about-the-mst-diameter",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Numerator: what is known about the MST diameter?",
+    "text": "Numerator: what is known about the MST diameter?\nThe numerator is\n\\[\nD_n\n=\n\\max_{u,v}d_{T_n}(u,v).\n\\]\nThis is the weighted longest shortest path in the MST. It is a global path functional: it depends on how many edges lie along the longest path and how their lengths accumulate.\nThis is different from the total MST length \\(L_n\\), which is a sum over all edges. It is also different from the longest single edge of the MST.\nAt this point, the exact theoretical growth rate of \\(D_n\\) is not given by the Steele MST length theorem."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#penroses-longest-edge-theorem-and-its-limitation",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#penroses-longest-edge-theorem-and-its-limitation",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Penrose’s longest-edge theorem and its limitation",
+    "text": "Penrose’s longest-edge theorem and its limitation\nPenrose studies the longest edge of the random Euclidean MST. Let\n\\[\nE_n\n=\n\\max_{e\\in T_n}|e|.\n\\]\nFor uniform random points in the unit square, Penrose shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension \\(2\\), the result implies that\n\\[\nn\\pi E_n^2-\\log n\n\\]\nconverges in distribution to a double-exponential limiting law [Penrose, 1997].\nPenrose also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.\nThis matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So Penrose’s result suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.\nThe longest edge scale is therefore approximately\n\\[\nE_n\n\\asymp\n\\sqrt{\\frac{\\log n}{n}}.\n\\] However, this is not the same as the stringy05 numerator.\nThe stringy05 numerator is\n\\[\nD_n =\n\\max_{u,v} d_{T_n}(u,v),\n\\]\nwhich is the length of an entire path. This path may contain many MST edges. Therefore, Penrose’s theorem does not give the growth rate of \\(D_n\\). It only gives the scale of the largest individual edge."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#a-simple-example-longest-edge-versus-mst-diameter",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#a-simple-example-longest-edge-versus-mst-diameter",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "A simple example: longest edge versus MST diameter",
+    "text": "A simple example: longest edge versus MST diameter\nLet’s imagine the MST is a path with five vertices:\n\\[\nA \\;-\\; B \\;-\\; C \\;-\\; D \\;-\\; E\n\\]\nand the edge weights are\n\\[\n|AB|=0.10,\\quad |BC|=0.12,\\quad |CD|=0.09,\\quad |DE|=0.11.\n\\]\nPenrose’s longest-edge quantity looks only for the single largest edge in the MST:\n\\[\nE_n=\\max_{e\\in T_n}|e|=0.12.\n\\]\nSo in this example, Penrose’s quantity is the edge \\(BC\\).\nBut the stringy05 numerator is the weighted MST diameter. It looks for the longest path in the tree and adds all edge weights along that path. Here the longest path is from \\(A\\)) to \\(E\\):\n\\[\nD_n = |AB|+|BC|+|CD|+|DE| =\n0.10+0.12+0.09+0.11 =\n0.42.\n\\]\nSo in this example,\n\\[\n\\text{Penrose longest edge}=0.12,\n\\]\nwhile\n\\[\n\\text{stringy05 diameter}=0.42.\n\\]\nThis shows why Penrose’s result is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:\n\\[\nE_n\\le D_n.\n\\]"
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#upper-and-lower-bound-for-the-mst-diameter",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#upper-and-lower-bound-for-the-mst-diameter",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Upper and lower bound for the MST diameter",
+    "text": "Upper and lower bound for the MST diameter\nEven though Penrose’s longest-edge theorem does not solve the diameter problem, it provides a weak lower bound.\nFor every weighted tree,\n\\[\n\\boxed{\nE_n\\le D_n\\le L_n.\n}\n\\]\nThe first inequality holds because the longest edge is itself the path between its endpoints in the tree. The second inequality holds because any path in the tree uses only a subset of the edges of the tree.\nCombining Penrose’s longest-edge scale with Steele’s total-length scale gives\n\\[\n\\sqrt{\\frac{\\log n}{n}}\n\\lesssim\nD_n\n\\le\nO(\\sqrt n).\n\\]\nDividing by \\(L_n\\) gives the weak theoretical ratio bound\n\\[\n\\frac{\\sqrt{\\log n}}{n}\n\\lesssim\nR_n\n\\le\n1.\n\\]\nThis lower bound is mathematically valid but very weak. For example, at \\(n=1000\\),\n\\[\n\\frac{\\sqrt{\\log(1000)}}{1000}\n\\approx\n0.00263.\n\\]\nThis is much smaller than the empirical values observed in simulation, which are closer to \\(0.2\\). Therefore, the observed stringy05 behavior cannot be explained by the longest single MST edge alone. The diameter appears to be driven by the accumulation of many edges along a long path."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#next-step-study-numerator-and-denominator-separately",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#next-step-study-numerator-and-denominator-separately",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Next step: study numerator and denominator separately",
+    "text": "Next step: study numerator and denominator separately\nThe next part of this analysis will study\n\\[\nL_n=\\operatorname{length}(T_n)\n\\]\nand\n\\[\nD_n=\\operatorname{diameter}(T_n)\n\\]\nseparately.\nThe plan is:\n\nGenerate bivariate noise samples for a grid of sample sizes \\(n\\).\nRecord the total MST length \\(L_n\\) .\nRecord the weighted MST diameter \\(D_n\\).\nRecord the ratio\n\n\\[\nR_n=\\frac{D_n}{L_n}.\n\\]\nFor the denominator, Steele’s theorem suggests checking whether\n\\[\n\\frac{L_n}{\\sqrt n}\n\\]\nstabilizes.\nFor the numerator, the key empirical question is whether\n\\[\n\\frac{D_n}{\\sqrt n}\n\\]\nalso stabilizes.\nIf both normalized quantities stabilize, then the ratio should stabilize near a positive constant:\n\\[\nR_n\n=\n\\frac{D_n}{L_n}\n\\approx\n\\frac{C_D\\sqrt n}{C_L\\sqrt n}\n=\n\\frac{C_D}{C_L}.\n\\]\nThis would support the empirical observation that stringy05 converges to a positive number, possibly near \\(0.1\\), rather than to zero."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#empirical-simulation-study",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#empirical-simulation-study",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Empirical simulation study",
+    "text": "Empirical simulation study\nThe theoretical discussion gives a clear benchmark for the denominator \\(L_n\\), but the numerator \\(D_n\\) is still unknown. Therefore, I now move to an empirical simulation study.\nFor each sample size \\(n\\), I will generate independent bivariate Gaussian noise data,\n\\[\nX_i=(X_{i1},X_{i2}), \\qquad X_{i1},X_{i2}\\sim N(0,1),\n\\]\nso both coordinates have mean \\(0\\) and standard deviation \\(1\\). For each generated dataset, I compute the Euclidean minimum spanning tree \\(T_n\\), and then record three quantities:\n\\[\nL_n=\\operatorname{length}(T_n),\n\\]\n\\[\nD_n=\\operatorname{diameter}(T_n),\n\\]\nand\n\\[\nR_n=\\frac{D_n}{L_n}.\n\\]\nFor each sample size, I repeat this process 1000 times. This gives 1000 independent estimates of the MST length, MST diameter, and stringy05 ratio for each \\(n\\). To understand what is happening, I need to check whether \\(L_n\\) and \\(D_n\\) are growing at the same rate.\nAfter the simulation results are saved, I will examine the following quantities:\n\\[\n\\frac{L_n}{\\sqrt n},\n\\]\n\\[\n\\frac{D_n}{\\sqrt n},\n\\]\nand\n\\[\nR_n=\\frac{D_n}{L_n}.\n\\]\nIf \\(L_n/\\sqrt n\\) stabilizes, this supports the expected \\(\\sqrt n\\) growth rate for the denominator. If \\(D_n/\\sqrt n\\) also stabilizes, then the numerator appears to grow at the same rate as the denominator. In that case, the ratio \\(R_n\\) should stabilize near a positive value.\nOn the other hand, if \\(D_n/\\sqrt n\\) decreases as \\(n\\) increases, then the numerator is growing more slowly than the denominator, and the ratio may eventually converge to zero.\n\n\nCode\nlibrary(readr)\nlibrary(dplyr)\nlibrary(purrr)\nlibrary(ggplot2)\n\n\ncsv_files &lt;- c(\n  \"stringy05_50_200.csv\",\n  \"stringy05_200_500.csv\",\n  \"stringy05_550_800.csv\",\n  \"stringy05_850_1000.csv\",\n  \"stringy05_1200_2000.csv\",\n  \"stringy05_2500_6000.csv\"\n)\n\ncombined_results &lt;- map_dfr(\n  csv_files,\n  ~ read_csv(.x, show_col_types = FALSE),\n  .id = \"file_id\"\n) |&gt; \n  arrange(n, simulation_run) |&gt; \n  mutate(\n    length_sqrtn = length / sqrt(n),\n    diameter_sqrtn = diameter / sqrt(n),\n    penrose_lower_ratio = sqrt(log(n)) / n\n  )\n\n# Save combined results\nwrite_csv(combined_results, \"stringy05_combined_results.csv\")\n\n\nsummary_results &lt;- combined_results |&gt; \n  group_by(n) |&gt;\n  summarise(\n    B = n(),\n    \n    mean_length = mean(length),\n    median_length = median(length),\n    sd_length = sd(length),\n    \n    mean_diameter = mean(diameter),\n    median_diameter = median(diameter),\n    sd_diameter = sd(diameter),\n    \n    mean_ratio = mean(ratio),\n    median_ratio = median(ratio),\n    sd_ratio = sd(ratio),\n    q05_ratio = quantile(ratio, 0.05),\n    q95_ratio = quantile(ratio, 0.95),\n    \n    mean_length_sqrtn = mean(length_sqrtn),\n    median_length_sqrtn = median(length_sqrtn),\n    \n    mean_diameter_sqrtn = mean(diameter_sqrtn),\n    median_diameter_sqrtn = median(diameter_sqrtn),\n    \n    mean_penrose_lower_ratio = mean(penrose_lower_ratio),\n    .groups = \"drop\"\n  ) |&gt;\n  arrange(n)\n\nwrite_csv(summary_results, \"stringy05_summary_results.csv\")"
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#references",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#references",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "References",
+    "text": "References\nSteele, J. M. (1988). Growth Rates of Euclidean Minimal Spanning Trees with Power Weighted Edges. The Annals of Probability, 16(4), 1767–1787.\nPenrose, M. D. (1997). The Longest Edge of the Random Minimal Spanning Tree. The Annals of Applied Probability, 7(2), 340–361."
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#length-denominator",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#length-denominator",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Length (Denominator)",
+    "text": "Length (Denominator)\n\n\nCode\nggplot(combined_results, aes(x = n, y = length_sqrtn)) +\n  geom_point(alpha = 0.15, size = 0.8) +\n  stat_summary(fun = mean, geom = \"line\", linewidth = 1) +\n  stat_summary(fun = mean, geom = \"point\", size = 2) +\n  labs(\n    x = \"Sample size n\",\n    y = expression(mean(L[n] / sqrt(n))),\n    title = \"Checking denominator growth: MST length / sqrt(n)\"\n  ) + \n  theme_bw() +\n  theme(aspect.ratio = 1)"
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#diameter-numerator",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#diameter-numerator",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Diameter (Numerator)",
+    "text": "Diameter (Numerator)\n\n\nCode\nggplot(combined_results, aes(x = n, y = diameter_sqrtn)) +\n  geom_point(alpha = 0.15, size = 0.8) +\n  stat_summary(fun = mean, geom = \"line\", linewidth = 1) +\n  stat_summary(fun = mean, geom = \"point\", size = 2) +\n  labs(\n    x = \"Sample size n\",\n    y = expression(mean(D[n] / sqrt(n))),\n    title = \"Checking numerator growth: MST diameter / sqrt(n)\"\n  ) +\n  theme_bw() +\n  theme(aspect.ratio = 1)"
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#ratio",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#ratio",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "Ratio",
+    "text": "Ratio\n\n\nCode\nggplot(combined_results, aes(x = n, y = ratio)) +\n  geom_point(alpha = 0.15, size = 0.8) +\n  stat_summary(fun = mean, geom = \"line\", linewidth = 1) +\n  stat_summary(fun = mean, geom = \"point\", size = 2)  +\n  labs(\n    x = \"Sample size n\",\n    y = expression(mean(R[n])),\n    title = \"stringy05 ratio across sample sizes\"\n  ) +\n  theme_bw() +\n  theme(aspect.ratio = 1)"
+  },
+  {
+    "objectID": "blog/stringy05_growth_rate/stringy05_growth_rate.html#i-will-continue-to-explore-..",
+    "href": "blog/stringy05_growth_rate/stringy05_growth_rate.html#i-will-continue-to-explore-..",
+    "title": "Exploring the Growth Rate of the stringy05 Index",
+    "section": "I will Continue to Explore …..",
+    "text": "I will Continue to Explore ….."
   }
 ]
