@@ -256,7 +256,7 @@
     "href": "blog/index.html",
     "title": "Blog",
     "section": "",
-    "text": "Exploring the Growth Rate of the stringy05 Index\n\n\n\nscagnostics\n\nminimum spanning tree\n\nstringy05\n\nasymptotic analysis\n\nR\n\n\n\nA theoretical and empirical exploration of the stringy05 scagnostic index.\n\n\n\n\n\n22 May 2026\n\n\n\n\n\n\n\n\n\n\n\n\nTesting Scagnostic Rescaling Across Preprocessing Settings\n\n\n\nscagnostics\n\ncassowaryr\n\nshape-analysis\n\nsimulation\n\nR\n\n\n\nExploring whether fitted 95th percentile noise models for scagnostic indices remain valid when cassowaryr preprocessing choices change.\n\n\n\n\n\n19 May 2026\n\n\n\n\n\n\n\n\n\n\n\n\nDebugging and Testing the Corrected stringy05 Scagnostic Index\n\n\n\nscagnostics\n\ncassowaryr\n\nshape-analysis\n\nR\n\n\n\nA simulation-based walkthrough of debugging the stringy05 index, correcting its MST-based definition, and testing whether the modified version stays within the expected 0 to 1 range.\n\n\n\n\n\n18 May 2026\n\n\n\n\n\n\n\n\n\n\n\n\nFixing Alpha Shapes: What I Learned About the Alpha Parameter\n\n\n\nscagnostics\n\ncassowaryr\n\nshape-analysis\n\nR\n\n\n\nIn this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.\n\n\n\n\n\n19 May 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDebugging Alpha Parameter in cassowaryr package\n\n\n\nR\n\nScagnostics\n\ndata-viz\n\n\n\nIn this blog, I’m going to tell you how I came across a problem with the alpha parameter in the cassowaryr package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it.\n\n\n\n\n\n18 May 2025\n\n\n\n\n\nNo matching items"
+    "text": "Exploring Iterative Outlier Removal in cassowaryr\n\n\n\n\n\n\n\n\n25 May 2026\n\n\n\n\n\n\n\n\n\n\n\n\nDebugging and Testing the Corrected stringy05 Scagnostic Index\n\n\n\nscagnostics\n\ncassowaryr\n\nshape-analysis\n\nR\n\n\n\nA simulation-based walkthrough of debugging the stringy05 index, correcting its MST-based definition, and testing whether the modified version stays within the expected 0 to 1 range.\n\n\n\n\n\n25 May 2026\n\n\n\n\n\n\n\n\n\n\n\n\nExploring the Growth Rate of the stringy05 Index\n\n\n\nscagnostics\n\nminimum spanning tree\n\nstringy05\n\nasymptotic analysis\n\nR\n\n\n\nA theoretical and empirical exploration of the stringy05 scagnostic index.\n\n\n\n\n\n22 May 2026\n\n\n\n\n\n\n\n\n\n\n\n\nTesting Scagnostic Rescaling Across Preprocessing Settings\n\n\n\nscagnostics\n\ncassowaryr\n\nshape-analysis\n\nsimulation\n\nR\n\n\n\nExploring whether fitted 95th percentile noise models for scagnostic indices remain valid when cassowaryr preprocessing choices change.\n\n\n\n\n\n19 May 2026\n\n\n\n\n\n\n\n\n\n\n\n\nFixing Alpha Shapes: What I Learned About the Alpha Parameter\n\n\n\nscagnostics\n\ncassowaryr\n\nshape-analysis\n\nR\n\n\n\nIn this post, I dive into the weirdness of the alpha parameter in alpha hulls, why it caused problems with the skinny index, and how I try to deal with it to uncover the real structure in my data.\n\n\n\n\n\n19 May 2025\n\n\n\n\n\n\n\n\n\n\n\n\nDebugging Alpha Parameter in cassowaryr package\n\n\n\nR\n\nScagnostics\n\ndata-viz\n\n\n\nIn this blog, I’m going to tell you how I came across a problem with the alpha parameter in the cassowaryr package while playing around with shape analysis and scagnostics, and how I figured out what was going wrong and fixed it.\n\n\n\n\n\n18 May 2025\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog/stringy05_scagnostic/stringy05.html",
@@ -340,7 +340,7 @@
     "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html",
     "title": "Exploring the Growth Rate of the stringy05 Index",
     "section": "",
-    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\]\nwhere (d_{T_n}(u,v)) is the length of the unique path in the tree from (u) to (v), using Euclidean edge lengths as weights.\nThus,\n[ R_n = (T_n) = . ]\nThe main question is whether\n[ R_n , ]\nor whether\n[ R_n &gt; 0. ]\nEmpirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near (n=900), the estimated 95th percentile of the noise distribution appeared to stabilize near (0.2). This motivates a more detailed investigation of the numerator and denominator separately."
+    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\]"
   },
   {
     "objectID": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#steeles-growth-theorem",
@@ -368,7 +368,7 @@
     "href": "blog/Stringy05_growth_rate/stringy05_growth_rate.html#aim",
     "title": "Exploring the Growth Rate of the stringy05 Index",
     "section": "",
-    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\]\nwhere (d_{T_n}(u,v)) is the length of the unique path in the tree from (u) to (v), using Euclidean edge lengths as weights.\nThus,\n[ R_n = (T_n) = . ]\nThe main question is whether\n[ R_n , ]\nor whether\n[ R_n &gt; 0. ]\nEmpirically, previous simulations suggested that the ratio does not rapidly decay toward zero. Around sample sizes near (n=900), the estimated 95th percentile of the noise distribution appeared to stabilize near (0.2). This motivates a more detailed investigation of the numerator and denominator separately."
+    "text": "The goal of this blog is to understand the asymptotic behavior of the stringy05 index, defined as\n\\[\n\\text{stringy05} =\n\\frac{{diameter}(T_n)}{{length}(T_n)}.\n\\]\nHere \\(T_n\\) is the Euclidean minimum spanning tree (MST) built on \\(n\\) random bivariate observations.\nThe denominator is the total Euclidean length of the MST,\n\\[\nL_n\n= {length}(T_n) = \\sum_{e\\in T_n}|e|.\n\\]\nThe numerator is the weighted graph diameter of the MST,\n\\[\nD_n\n= {diameter}(T_n)\n= \\max_{u,v\\in T_n} d_{T_n}(u,v),\n\\]"
   },
   {
     "objectID": "blog/stringy05_scagnostic/stringy05.html#testing-the-stringy-index-on-a-stringy-like-pattern-and-gaussian-noise",
@@ -403,7 +403,7 @@
     "href": "blog/stringy05_scagnostic/stringy05.html#problem-with-the-numerator",
     "title": "Debugging and Testing the Corrected stringy05 Scagnostic Index",
     "section": "Problem with the numerator",
-    "text": "Problem with the numerator\nTo understand the issue with the numerator, consider a simple graph.\n\n\nCode\ng &lt;- igraph::make_ring(5)\n\nplot(\n  g,\n  vertex.size = 30,\n  vertex.label = 1:5,\n  vertex.color = \"lightblue\",\n  edge.width = 4\n)\n\n\n\n\n\n\n\n\n\nNow calculate the diameter path using igraph::get_diameter().\n\n\nCode\ndiameter_vertices &lt;- igraph::get_diameter(g)\n\ndiameter_vertices\n\n\n+ 3/5 vertices, from 55f5646:\n[1] 1 2 3\n\n\nCode\nlength(diameter_vertices)\n\n\n[1] 3\n\n\nThe problem is that igraph::get_diameter() returns a sequence of vertices on the diameter path. Therefore, length(diameter_vertices) counts the number of vertices, not the length of the path.\nFor a path with 5 vertices, there are only 4 edges. Therefore, using the number of vertices as the path length creates an off-by-one error.\nFor an unweighted graph, the number of edges along the path would be:\nlength(diameter_vertices) - 1\n\n\nCode\nlength(diameter_vertices) - 1\n\n\n[1] 2\n\n\nBut for scagnostics, the MST edges are weighted by Euclidean distances. Therefore, the numerator should not be a vertex count or even just an edge count. It should be the weighted length of the longest shortest path through the MST.\nThe better function for this is:\nigraph::diameter(g)\nThis returns the length of the longest shortest path. When the graph has edge weights, the weighted diameter should be used."
+    "text": "Problem with the numerator\nTo understand the issue with the numerator, consider a simple graph.\n\n\nCode\ng &lt;- igraph::make_ring(5)\n\nplot(\n  g,\n  vertex.size = 30,\n  vertex.label = 1:5,\n  vertex.color = \"lightblue\",\n  edge.width = 4\n)\n\n\n\n\n\n\n\n\n\nNow calculate the diameter path using igraph::get_diameter().\n\n\nCode\ndiameter_vertices &lt;- igraph::get_diameter(g)\n\ndiameter_vertices\n\n\n+ 3/5 vertices, from 0574f3e:\n[1] 1 2 3\n\n\nCode\nlength(diameter_vertices)\n\n\n[1] 3\n\n\nThe problem is that igraph::get_diameter() returns a sequence of vertices on the diameter path. Therefore, length(diameter_vertices) counts the number of vertices, not the length of the path.\nFor a path with 5 vertices, there are only 4 edges. Therefore, using the number of vertices as the path length creates an off-by-one error.\nFor an unweighted graph, the number of edges along the path would be:\nlength(diameter_vertices) - 1\n\n\nCode\nlength(diameter_vertices) - 1\n\n\n[1] 2\n\n\nBut for scagnostics, the MST edges are weighted by Euclidean distances. Therefore, the numerator should not be a vertex count or even just an edge count. It should be the weighted length of the longest shortest path through the MST.\nThe better function for this is:\nigraph::diameter(g)\nThis returns the length of the longest shortest path. When the graph has edge weights, the weighted diameter should be used."
   },
   {
     "objectID": "blog/stringy05_scagnostic/stringy05.html#problem-with-the-denominator",
@@ -460,5 +460,264 @@
     "title": "Debugging and Testing the Corrected stringy05 Scagnostic Index",
     "section": "Comparing a stringy curve with Gaussian noise",
     "text": "Comparing a stringy curve with Gaussian noise\nNext, I compared two simple examples. The first dataset is a curve-like pattern with a small amount of Gaussian noise added. This should have a high stringy value. The second dataset is bivariate Gaussian noise, which does not contain a string-like structure and should therefore have a lower stringy value.\n\n\nCode\nset.seed(1057)\n\nn &lt;- 500\n\nstringy_data &lt;- tibble(\n  x = seq(-2, 2, length.out = n),\n  y = sin(2 * x) + rnorm(n, mean = 0, sd = 0.03),\n  pattern = \"Stringy curve\"\n)\n\ngaussian_data &lt;- tibble(\n  x = rnorm(n),\n  y = rnorm(n),\n  pattern = \"Bivariate Gaussian\"\n)\n\nexample_data &lt;- bind_rows(\n  stringy_data,\n  gaussian_data\n)\n\n\nNow I calculate the modified stringy index for each dataset.\n\n\nCode\nstringy_values &lt;- example_data |&gt;\n  group_by(pattern) |&gt;\n  summarise(\n    stringy_value = stringy_fun(x, y),\n    .groups = \"drop\"\n  )\n\nknitr::kable(stringy_values)\n\n\n\n\n\npattern\nstringy_value\n\n\n\n\nBivariate Gaussian\n0.1922118\n\n\nStringy curve\n0.9281513\n\n\n\n\n\nTo make the comparison easier to read, I add the stringy value to the facet label.\n\n\nCode\nplot_data &lt;- example_data |&gt;\n  left_join(stringy_values, by = \"pattern\") |&gt;\n  mutate(\n    label = paste0(\n      pattern,\n      \"\\nstringy05 = \",\n      round(stringy_value, 3)\n    )\n  )\n\nggplot(plot_data, aes(x = x, y = y)) +\n  geom_point(alpha = 0.6, size = 1) +\n  facet_wrap(~ label, nrow = 1, scales = \"free\") +\n  theme_minimal(base_size = 12) +\n  theme(\n    aspect.ratio = 1,\n    strip.text = element_text(face = \"bold\"),\n    axis.ticks = element_blank(),\n    axis.text = element_blank()\n  ) +\n  labs(\n    title = \"Stringy pattern versus bivariate Gaussian noise\",\n    x = NULL,\n    y = NULL\n  )\n\n\n\n\n\n\n\n\n\nThe curve-like pattern should have a much larger stringy value than the bivariate Gaussian cloud. This confirms that the modified index behaves intuitively: it is high for a string-like shape and lower for unstructured noise."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "",
+    "text": "In the previous post, Testing Scagnostic Rescaling Across Preprocessing Settings, I looked at how different preprocessing settings might affect the scagnostic rescaling formula. One of the preprocessing settings was whether outlier removal was turned on or off.\nWhat surprised me was that setting outlier removal to \"yes\" had a clear effect. In some cases, the number of changed values went beyond 5 percent. This was unexpected because the test data were generated from bivariate Gaussian noise. I was not expecting Gaussian noise to contain many meaningful outliers, and I was not expecting outlier removal to noticeably affect the rescaling formula.\nThis raised an important question:\n\nWhat exactly is being removed by the outlier-removal step in cassowaryr?\n\nAt first, I thought the procedure might be a kind of simple trimming step. However, after looking more closely at the code, the process is iterative. Points are removed, the Delaunay triangulation and MST are recomputed, and the procedure repeats until no more outliers are detected.\nThis post explores that behaviour directly."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#motivation",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#motivation",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "",
+    "text": "In the previous post, Testing Scagnostic Rescaling Across Preprocessing Settings, I looked at how different preprocessing settings might affect the scagnostic rescaling formula. One of the preprocessing settings was whether outlier removal was turned on or off.\nWhat surprised me was that setting outlier removal to \"yes\" had a clear effect. In some cases, the number of changed values went beyond 5 percent. This was unexpected because the test data were generated from bivariate Gaussian noise. I was not expecting Gaussian noise to contain many meaningful outliers, and I was not expecting outlier removal to noticeably affect the rescaling formula.\nThis raised an important question:\n\nWhat exactly is being removed by the outlier-removal step in cassowaryr?\n\nAt first, I thought the procedure might be a kind of simple trimming step. However, after looking more closely at the code, the process is iterative. Points are removed, the Delaunay triangulation and MST are recomputed, and the procedure repeats until no more outliers are detected.\nThis post explores that behaviour directly."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#why-gaussian-data-felt-like-a-surprising-case",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#why-gaussian-data-felt-like-a-surprising-case",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Why Gaussian data felt like a surprising case",
+    "text": "Why Gaussian data felt like a surprising case\nA bivariate Gaussian distribution is a smooth, continuous distribution over two variables. In the simplest case, the data form an elliptical cloud around a mean. Most points are concentrated near the centre, with fewer points appearing farther away in the tails.\nFor a standard normal variable, most observations fall roughly within three standard deviations of the mean. However, Gaussian distributions are not bounded. This means that values outside the central region can still occur naturally.\nSo my expectation was not that Gaussian data can never produce extreme points. Rather, my expectation was that if the data are just random Gaussian noise, then outlier removal should not have a strong or systematic effect on the scagnostic rescaling formula.\nThe results suggested otherwise. That motivated this exploration."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#setup",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#setup",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Setup",
+    "text": "Setup\n\n\nCode\nlibrary(tidyverse)\nlibrary(alphahull)\nlibrary(igraph)\nlibrary(plotly)"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#original-outlier-removal-idea",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#original-outlier-removal-idea",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Original outlier-removal idea",
+    "text": "Original outlier-removal idea\nThe outlier-removal function in cassowaryr returns a final delvor object after the iterative removal process has stopped.\noutlier_removal &lt;- function(xy){\n  # remove outliers iteratively (based on \"Scagnostics Distributions\" paper)\n  repeat {\n    # Get del, MST and weights\n    del &lt;- alphahull::delvor(xy)\n    weights &lt;- gen_edge_lengths(del)\n    mst &lt;- gen_mst(del, weights)\n    mst_weights &lt;- igraph::E(mst)$weight\n\n    # get outliers\n    outliers &lt;- outlying_identify(mst, mst_weights)\n    # if no outliers, just return current del\n    if(is.null(outliers)){\n      return(del)\n    } else{\n      # otherwise we remove outliers and recompute\n      xy &lt;- xy[-outliers,]\n    }\n  }\n}\nThis is not one-step trimming. The repeat loop has been used so that after points are removed, the graph is recomputed and outlier detection is applied again.\nHowever, this function does not directly return the removed points. It only returns the final Delaunay triangulation. Therefore, to identify the removed observations without changing the function, I compare the original coordinates with the coordinates remaining in final_del$x."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#helper-function-for-comparing-before-and-after",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#helper-function-for-comparing-before-and-after",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Helper function for comparing before and after",
+    "text": "Helper function for comparing before and after\nBecause the original function returns only the final del object, I use the coordinates stored in final_del$x to identify which original observations were kept.\n\n\nCode\nmake_key &lt;- function(x, y) {\n  paste(signif(x, 17), signif(y, 17), sep = \"__\")\n}\n\nfind_removed_points &lt;- function(xy_tbl) {\n  \n  xy_mat &lt;- xy_tbl |&gt;\n    dplyr::select(x, y) |&gt;\n    as.matrix()\n  \n  final_del &lt;- cassowaryr:::outlier_removal(xy_mat)\n  \n  kept_tbl &lt;- final_del$x |&gt;\n    as_tibble(.name_repair = \"minimal\") |&gt;\n    set_names(c(\"x\", \"y\")) |&gt;\n    mutate(key = make_key(x, y))\n  \n  xy_tbl |&gt;\n    mutate(\n      key = make_key(x, y),\n      status = if_else(key %in% kept_tbl$key, \"Kept\", \"Removed\")\n    ) |&gt;\n    dplyr::select(-key)\n}"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#generate-one-bivariate-gaussian-sample",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#generate-one-bivariate-gaussian-sample",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Generate one bivariate Gaussian sample",
+    "text": "Generate one bivariate Gaussian sample\nHere I generate one bivariate Gaussian dataset. I do not add artificial outliers. The aim is to test whether the outlier-removal step removes points from ordinary Gaussian noise.\n\n\nCode\nset.seed(452)\n\nn &lt;- 250\n\nxy_one &lt;- tibble(\n  x = rnorm(n, mean = 0, sd = 1),\n  y = rnorm(n, mean = 0, sd = 1)\n) |&gt;\n  mutate(id = row_number())"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#apply-outlier-removal-to-one-gaussian-sample",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#apply-outlier-removal-to-one-gaussian-sample",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Apply outlier removal to one Gaussian sample",
+    "text": "Apply outlier removal to one Gaussian sample\n\n\nCode\nxy_one_checked &lt;- find_removed_points(xy_one)\n\nxy_one_checked |&gt;\n  count(status)\n\n\n# A tibble: 2 × 2\n  status      n\n  &lt;chr&gt;   &lt;int&gt;\n1 Kept      244\n2 Removed     6"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-one-gaussian-sample",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-one-gaussian-sample",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Plot one Gaussian sample",
+    "text": "Plot one Gaussian sample\n\n\nCode\np1 &lt;- ggplot(xy_one_checked, aes(x = x, y = y, colour = status)) +\n  geom_point(size = 2.3, alpha = 0.85) +\n  coord_equal() +\n  theme(aspect.ratio = 1)\n  labs(\n    x = \"x\",\n    y = \"y\",\n    colour = \"Status\"\n  )\n\n\n&lt;ggplot2::labels&gt; List of 3\n $ x     : chr \"x\"\n $ y     : chr \"y\"\n $ colour: chr \"Status\"\n\n\nCode\nggplotly(p1)\n\n\n\n\n\n\nThe plot shows which points were kept and which points were removed by the outlier-removal procedure. The removed points are not manually inserted outliers, they are points generated naturally from the Gaussian distribution."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#generate-10-bivariate-gaussian-samples",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#generate-10-bivariate-gaussian-samples",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Generate 10 bivariate Gaussian samples",
+    "text": "Generate 10 bivariate Gaussian samples\nNext, I repeat the same process for 10 independently generated bivariate Gaussian datasets. Again, I do not add artificial outliers.\n\n\nCode\ngenerate_gaussian_sample &lt;- function(sample_id, n = 250) {\n  \n  tibble(\n    x = rnorm(n, mean = 0, sd = 1),\n    y = rnorm(n, mean = 0, sd = 1)\n  ) |&gt;\n    mutate(\n      sample_id = sample_id,\n      id = row_number(),\n      point_type = \"gaussian\"\n    )\n}\n\nset.seed(452)\n\ngaussian_samples &lt;- map_dfr(\n  1:10,\n  generate_gaussian_sample,\n  n = n\n)"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-outlier-removal-on-all-10-samples",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-outlier-removal-on-all-10-samples",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Run outlier removal on all 10 samples",
+    "text": "Run outlier removal on all 10 samples\n\n\nCode\nchecked_samples &lt;- gaussian_samples |&gt;\n  group_by(sample_id) |&gt;\n  group_modify(~ find_removed_points(.x)) |&gt;\n  ungroup()"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#count-removed-points-per-sample",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#count-removed-points-per-sample",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Count removed points per sample",
+    "text": "Count removed points per sample\n\n\nCode\nremoved_summary &lt;- checked_samples |&gt;\n  count(sample_id, status) |&gt;\n  complete(\n    sample_id,\n    status = c(\"Kept\", \"Removed\"),\n    fill = list(n = 0)\n  )\n\nremoved_summary\n\n\n# A tibble: 20 × 3\n   sample_id status      n\n       &lt;int&gt; &lt;chr&gt;   &lt;int&gt;\n 1         1 Kept      244\n 2         1 Removed     6\n 3         2 Kept      240\n 4         2 Removed    10\n 5         3 Kept      236\n 6         3 Removed    14\n 7         4 Kept      238\n 8         4 Removed    12\n 9         5 Kept      238\n10         5 Removed    12\n11         6 Kept      237\n12         6 Removed    13\n13         7 Kept      237\n14         7 Removed    13\n15         8 Kept      232\n16         8 Removed    18\n17         9 Kept      242\n18         9 Removed     8\n19        10 Kept      243\n20        10 Removed     7"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-all-10-gaussian-samples",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-all-10-gaussian-samples",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Plot all 10 Gaussian samples",
+    "text": "Plot all 10 Gaussian samples\n\n\nCode\np2 &lt;- ggplot(checked_samples, aes(x = x, y = y, colour = status)) +\n  geom_point(size = 1.8, alpha = 0.6) +\n  coord_equal() +\n  facet_wrap(~ sample_id, ncol = 5) +\n  theme_minimal(base_size = 12) +\n  theme(aspect.ratio = 1)\n  labs(\n    title = \"Outlier removal across 10 bivariate Gaussian samples\",\n    x = \"x\",\n    y = \"y\",\n    colour = \"Status\"\n  )\n\n\n&lt;ggplot2::labels&gt; List of 4\n $ x     : chr \"x\"\n $ y     : chr \"y\"\n $ colour: chr \"Status\"\n $ title : chr \"Outlier removal across 10 bivariate Gaussian samples\"\n\n\nCode\nggplotly(p2)"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#removal-percentage",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#removal-percentage",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Removal percentage",
+    "text": "Removal percentage\nThe earlier rescaling experiment suggested that outlier removal could affect more than 5 percent of values in some settings. Here I calculate the percentage of points removed from each Gaussian sample.\n\n\nCode\nremoval_rate &lt;- checked_samples |&gt;\n  group_by(sample_id) |&gt;\n  summarise(\n    total_points = n(),\n    removed_points = sum(status == \"Removed\"),\n    removed_percent = 100 * removed_points / total_points,\n    .groups = \"drop\"\n  )\n\nremoval_rate\n\n\n# A tibble: 10 × 4\n   sample_id total_points removed_points removed_percent\n       &lt;int&gt;        &lt;int&gt;          &lt;int&gt;           &lt;dbl&gt;\n 1         1          250              6             2.4\n 2         2          250             10             4  \n 3         3          250             14             5.6\n 4         4          250             12             4.8\n 5         5          250             12             4.8\n 6         6          250             13             5.2\n 7         7          250             13             5.2\n 8         8          250             18             7.2\n 9         9          250              8             3.2\n10        10          250              7             2.8\n\n\n\n\nCode\nggplot(removal_rate, aes(x = factor(sample_id), y = removed_percent)) +\n  geom_col() +\n  geom_hline(yintercept = 5, linetype = \"dashed\") +\n  theme_minimal(base_size = 13) +\n  labs(\n    title = \"Percentage of points removed from each Gaussian sample\",\n    subtitle = \"Dashed line is 5 percent\",\n    x = \"Gaussian sample\",\n    y = \"Removed points\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#what-this-shows",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#what-this-shows",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "What this shows",
+    "text": "What this shows\nThis exploration shows that outlier removal can remove points even from data generated by a bivariate Gaussian distribution. This does not necessarily mean the algorithm is wrong. A Gaussian distribution is unbounded, so tail observations are possible. Some of those tail observations may be far enough away from the rest of the point cloud to be identified as outlying by an MST-based rule.\nThe important point is that this removal is not a simple trimming step. It is iterative. Once one set of points is removed, the MST and threshold are recalculated on the remaining data. That means the final set of removed observations can depend on the changing geometry of the point cloud.\nFor the rescaling experiment, this matters because removing even a small number of points can change the scagnostic values. If the outlier-removal setting changes the underlying point cloud before scagnostic calculation, then it can also change the rescaling formula output."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#conclusion",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#conclusion",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe original motivation for this post came from an unexpected result: outlier removal had a larger effect than expected when testing scagnostic rescaling across preprocessing settings.\nBy generating bivariate Gaussian data and tracking which points are removed, this post shows that the outlier-removal step can remove naturally occurring tail observations from Gaussian noise. These points are not manually added anomalies. They are part of the random sample.\nThis helps explain why the preprocessing setting can have a meaningful effect. The outlier-removal procedure changes the data before the scagnostic measures are calculated, and because the procedure is iterative, that change can be stronger than a single trimming step.\nThe next step is to connect this directly back to the rescaling formula by comparing scagnostic values before and after outlier removal for the same Gaussian samples."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-and-count-removed-points-per-sample",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-and-count-removed-points-per-sample",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Run and count removed points per sample",
+    "text": "Run and count removed points per sample\n\n\nCode\nchecked_samples &lt;- gaussian_samples |&gt;\n  group_by(sample_id) |&gt;\n  group_modify(~ find_removed_points(.x)) |&gt;\n  ungroup()\n\nremoved_summary &lt;- checked_samples |&gt;\n  count(sample_id, status) |&gt;\n  complete(\n    sample_id,\n    status = c(\"Kept\", \"Removed\"),\n    fill = list(n = 0)\n  )\n\nremoved_summary\n\n\n# A tibble: 20 × 3\n   sample_id status      n\n       &lt;int&gt; &lt;chr&gt;   &lt;int&gt;\n 1         1 Kept      244\n 2         1 Removed     6\n 3         2 Kept      240\n 4         2 Removed    10\n 5         3 Kept      236\n 6         3 Removed    14\n 7         4 Kept      238\n 8         4 Removed    12\n 9         5 Kept      238\n10         5 Removed    12\n11         6 Kept      237\n12         6 Removed    13\n13         7 Kept      237\n14         7 Removed    13\n15         8 Kept      232\n16         8 Removed    18\n17         9 Kept      242\n18         9 Removed     8\n19        10 Kept      243\n20        10 Removed     7"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#comparing-clean-gaussian-data-with-contaminated-gaussian-data",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#comparing-clean-gaussian-data-with-contaminated-gaussian-data",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Comparing clean Gaussian data with contaminated Gaussian data",
+    "text": "Comparing clean Gaussian data with contaminated Gaussian data\nThe previous section showed what happens when outlier removal is applied to bivariate Gaussian data with no artificial outliers added.\nNow I want to test a more specific question:\n\nIf I generate Gaussian data, then add artificial outliers to the same data, does the outlier-removal procedure remove exactly the same original Gaussian points as before, plus the new outliers? Or does adding outliers change which original Gaussian points are removed?\n\nThis matters because the outlier-removal function is iterative. The MST and the threshold are recomputed after removals. Therefore, adding new outlying points could change the geometry of the graph and affect the removal of points that were already present in the original Gaussian sample."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#add-controlled-outliers-to-the-same-gaussian-datasets",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#add-controlled-outliers-to-the-same-gaussian-datasets",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Add controlled outliers to the same Gaussian datasets",
+    "text": "Add controlled outliers to the same Gaussian datasets\nNow I add artificial outliers to the same 10 Gaussian datasets. The Gaussian points are unchanged. This means any difference in which Gaussian points are removed must be caused by the presence of the added outliers.\nI use a stepwise design:\n\nclean: no added outliers\nplus_1: one added outlier\nplus_3: three added outliers\nplus_5: five added outliers\n\n\n\nCode\noutlier_bank &lt;- tibble(\n  outlier_number = 1:5,\n  x = c(3.8, -3.8, 4.5, -4.5, 0),\n  y = c(3.8,  3.8, -4.5, -4.5, 5.0)\n)\n\nscenario_info &lt;- tibble(\n  outlier_level = c(\"clean\", \"plus_1\", \"plus_3\", \"plus_5\"),\n  n_added = c(0, 1, 3, 5)\n)\n\ncreate_scenario_data &lt;- function(sample_id_value, outlier_level, n_added) {\n  \n  base_data &lt;- gaussian_samples |&gt;\n    filter(sample_id == sample_id_value) |&gt;\n    mutate(\n      outlier_level = outlier_level,\n      point_type = \"gaussian\"\n    )\n  \n  if (n_added == 0) {\n    return(base_data)\n  }\n  \n  added_outliers &lt;- outlier_bank |&gt;\n    slice_head(n = n_added) |&gt;\n    transmute(\n      x = x,\n      y = y,\n      sample_id = sample_id_value,\n      id = n + row_number(),\n      point_type = \"added_outlier\",\n      outlier_level = outlier_level\n    )\n  \n  bind_rows(base_data, added_outliers)\n}\n\nexperiment_data &lt;- tidyr::expand_grid(\n  sample_id = unique(gaussian_samples$sample_id),\n  scenario_info\n) |&gt;\n  pmap_dfr(\n    \\(sample_id, outlier_level, n_added) {\n      create_scenario_data(sample_id, outlier_level, n_added)\n    }\n  ) |&gt;\n  mutate(\n    outlier_level = factor(\n      outlier_level,\n      levels = c(\"clean\", \"plus_1\", \"plus_3\", \"plus_5\")\n    )\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-outlier-removal-on-each-scenario",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-outlier-removal-on-each-scenario",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Run outlier removal on each scenario",
+    "text": "Run outlier removal on each scenario\n\n\nCode\nexperiment_checked &lt;- experiment_data |&gt;\n  group_by(sample_id, outlier_level) |&gt;\n  group_modify(~ find_removed_points(.x)) |&gt;\n  ungroup()"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#count-removals-by-scenario",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#count-removals-by-scenario",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Count removals by scenario",
+    "text": "Count removals by scenario\n\n\nCode\nremoval_summary &lt;- experiment_checked |&gt;\n  group_by(sample_id, outlier_level) |&gt;\n  summarise(\n    total_points = n(),\n    removed_total = sum(status == \"Removed\"),\n    removed_gaussian = sum(status == \"Removed\" & point_type == \"gaussian\"),\n    removed_added_outliers = sum(status == \"Removed\" & point_type == \"added_outlier\"),\n    removed_percent = 100 * removed_total / total_points,\n    .groups = \"drop\"\n  )\n\nremoval_summary\n\n\n# A tibble: 40 × 7\n   sample_id outlier_level total_points removed_total removed_gaussian\n       &lt;int&gt; &lt;fct&gt;                &lt;int&gt;         &lt;int&gt;            &lt;int&gt;\n 1         1 clean                  250             6                6\n 2         1 plus_1                 251             7                6\n 3         1 plus_3                 253             9                6\n 4         1 plus_5                 255            11                6\n 5         2 clean                  250            10               10\n 6         2 plus_1                 251            11               10\n 7         2 plus_3                 253            13               10\n 8         2 plus_5                 255            15               10\n 9         3 clean                  250            14               14\n10         3 plus_1                 251            15               14\n# ℹ 30 more rows\n# ℹ 2 more variables: removed_added_outliers &lt;int&gt;, removed_percent &lt;dbl&gt;"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#separate-gaussian-removals-from-added-outlier-removals",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#separate-gaussian-removals-from-added-outlier-removals",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Separate Gaussian removals from added-outlier removals",
+    "text": "Separate Gaussian removals from added-outlier removals\nThis is the key comparison. I do not only want to know whether the artificial outliers were removed. I also want to know whether the presence of artificial outliers changed which original Gaussian points were removed.\n\n\nCode\nremoval_summary_long &lt;- removal_summary |&gt;\n  dplyr::select(\n    sample_id,\n    outlier_level,\n    removed_gaussian,\n    removed_added_outliers\n  ) |&gt;\n  pivot_longer(\n    cols = c(removed_gaussian, removed_added_outliers),\n    names_to = \"removed_type\",\n    values_to = \"n_removed\"\n  )\n\nggplot(removal_summary_long, aes(x = outlier_level, y = n_removed, fill = removed_type)) +\n  geom_col(position = \"dodge\") +\n  facet_wrap(~ sample_id, ncol = 5) +\n  theme_minimal(base_size = 12) +\n  labs(\n    title = \"Removed Gaussian points versus removed added outliers\",\n    subtitle = \"Adding outliers may also change which original Gaussian points are removed\",\n    x = \"Scenario\",\n    y = \"Number removed\",\n    fill = \"Removed point type\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#are-the-same-gaussian-points-removed-after-adding-outliers",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#are-the-same-gaussian-points-removed-after-adding-outliers",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Are the same Gaussian points removed after adding outliers?",
+    "text": "Are the same Gaussian points removed after adding outliers?\nNow I compare the clean case with the plus_5 case. This directly answers whether the same original Gaussian points are removed.\n\n\nCode\ngaussian_clean_vs_plus5 &lt;- experiment_checked |&gt;\n  filter(\n    point_type == \"gaussian\",\n    outlier_level %in% c(\"clean\", \"plus_5\")\n  ) |&gt;\n  dplyr::select(sample_id, id, outlier_level, status) |&gt;\n  pivot_wider(\n    names_from = outlier_level,\n    values_from = status,\n    names_prefix = \"status_\"\n  ) |&gt;\n  mutate(\n    removal_change = case_when(\n      status_clean == \"Removed\" & status_plus_5 == \"Removed\" ~ \"Removed in both\",\n      status_clean == \"Removed\" & status_plus_5 == \"Kept\" ~ \"Removed only when clean\",\n      status_clean == \"Kept\" & status_plus_5 == \"Removed\" ~ \"Removed only after added outliers\",\n      TRUE ~ \"Kept in both\"\n    )\n  )\n\ngaussian_clean_vs_plus5 |&gt;\n  count(sample_id, removal_change)\n\n\n# A tibble: 20 × 3\n   sample_id removal_change      n\n       &lt;int&gt; &lt;chr&gt;           &lt;int&gt;\n 1         1 Kept in both      244\n 2         1 Removed in both     6\n 3         2 Kept in both      240\n 4         2 Removed in both    10\n 5         3 Kept in both      236\n 6         3 Removed in both    14\n 7         4 Kept in both      238\n 8         4 Removed in both    12\n 9         5 Kept in both      238\n10         5 Removed in both    12\n11         6 Kept in both      237\n12         6 Removed in both    13\n13         7 Kept in both      237\n14         7 Removed in both    13\n15         8 Kept in both      232\n16         8 Removed in both    18\n17         9 Kept in both      242\n18         9 Removed in both     8\n19        10 Kept in both      243\n20        10 Removed in both     7"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-whether-gaussian-removals-changed",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-whether-gaussian-removals-changed",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Plot whether Gaussian removals changed",
+    "text": "Plot whether Gaussian removals changed\n\n\nCode\ncomparison_plot_data &lt;- gaussian_samples |&gt;\n  left_join(\n    gaussian_clean_vs_plus5,\n    by = c(\"sample_id\", \"id\")\n  )\n\nggplot(comparison_plot_data, aes(x = x, y = y, colour = removal_change)) +\n  geom_point(size = 1.9, alpha = 0.7) +\n  coord_equal() +\n  facet_wrap(~ sample_id, ncol = 5) +\n  theme_minimal(base_size = 12) +\n  labs(\n    title = \"Did adding outliers change which Gaussian points were removed?\",\n    x = \"x\",\n    y = \"y\",\n    colour = \"Removal comparison\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-the-contaminated-datasets",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-the-contaminated-datasets",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Plot the contaminated datasets",
+    "text": "Plot the contaminated datasets\n\n\nCode\ncomparison_plot_data &lt;- gaussian_samples |&gt;\n  left_join(\n    gaussian_clean_vs_plus5,\n    by = c(\"sample_id\", \"id\")\n  )\n\nggplot(comparison_plot_data, aes(x = x, y = y, colour = removal_change)) +\n  geom_point(size = 1.9, alpha = 0.7) +\n  coord_equal() +\n  facet_wrap(~ sample_id, ncol = 5) +\n  theme_minimal(base_size = 12) +\n  theme(aspect.ratio = 1) +\n  labs(\n    title = \"Did adding outliers change which Gaussian points were removed?\",\n    x = \"x\",\n    y = \"y\",\n    colour = \"Removal comparison\"\n  )\n\n\n\n\n\n\n\n\n\nCode\nggplot(\n  experiment_checked |&gt; filter(outlier_level == \"plus_5\"),\n  aes(x = x, y = y, colour = status, shape = point_type)\n) +\n  geom_point(size = 1.8, alpha = 0.7) +\n  scale_shape_manual(\n    values = c(\n      \"gaussian\" = 16,       \n      \"added_outlier\" = 17  \n    )\n  ) +\n  coord_equal() +\n  facet_wrap(~ sample_id, ncol = 5) +\n  theme_minimal(base_size = 12) +\n  theme(aspect.ratio = 1) +\n  labs(\n    title = \"Outlier removal after adding five artificial outliers\",\n    x = \"x\",\n    y = \"y\",\n    colour = \"Status\",\n    shape = \"Point type\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#list-gaussian-points-whose-removal-status-changed",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#list-gaussian-points-whose-removal-status-changed",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "List Gaussian points whose removal status changed",
+    "text": "List Gaussian points whose removal status changed\n\n\nCode\nchanged_gaussian_points &lt;- comparison_plot_data |&gt;\n  filter(removal_change != \"Kept in both\") |&gt;\n  arrange(sample_id, id)\n\nchanged_gaussian_points\n\n\n# A tibble: 113 × 8\n        x      y sample_id    id point_type status_clean status_plus_5\n    &lt;dbl&gt;  &lt;dbl&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;        \n 1 -0.230 -2.84          1   163 gaussian   Removed      Removed      \n 2 -1.67   2.32          1   170 gaussian   Removed      Removed      \n 3 -2.30  -0.947         1   179 gaussian   Removed      Removed      \n 4 -1.03   2.31          1   193 gaussian   Removed      Removed      \n 5 -3.48   1.21          1   206 gaussian   Removed      Removed      \n 6  2.24  -1.74          1   224 gaussian   Removed      Removed      \n 7  2.71   0.352         2    32 gaussian   Removed      Removed      \n 8 -0.390 -2.57          2    85 gaussian   Removed      Removed      \n 9 -2.89  -0.508         2    88 gaussian   Removed      Removed      \n10 -2.11   1.37          2   107 gaussian   Removed      Removed      \n# ℹ 103 more rows\n# ℹ 1 more variable: removal_change &lt;chr&gt;\n\n\nThis table is useful because it identifies original Gaussian observations whose removal status depends on whether artificial outliers were added."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#interpretation",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#interpretation",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Interpretation",
+    "text": "Interpretation\nThis experiment shows that adding artificial outliers did not change which original Gaussian points were removed.\nThe same Gaussian tail points were removed in the clean data and in the contaminated data. When artificial outliers were added, the total number of removed points increased only by the number of added outliers. For example, if 6 points were removed from the clean Gaussian sample and 3 artificial outliers were added, then the total number of removed points became 9."
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-and-count-outlier-removals-on-each-scenario",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#run-and-count-outlier-removals-on-each-scenario",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Run and count outlier removals on each scenario",
+    "text": "Run and count outlier removals on each scenario\n\n\nCode\nexperiment_checked &lt;- experiment_data |&gt;\n  group_by(sample_id, outlier_level) |&gt;\n  group_modify(~ find_removed_points(.x)) |&gt;\n  ungroup()\n\n\n\nremoval_summary &lt;- experiment_checked |&gt;\n  group_by(sample_id, outlier_level) |&gt;\n  summarise(\n    total_points = n(),\n    removed_total = sum(status == \"Removed\"),\n    removed_gaussian = sum(status == \"Removed\" & point_type == \"gaussian\"),\n    removed_added_outliers = sum(status == \"Removed\" & point_type == \"added_outlier\"),\n    removed_percent = 100 * removed_total / total_points,\n    .groups = \"drop\"\n  )\n\nremoval_summary\n\n\n# A tibble: 40 × 7\n   sample_id outlier_level total_points removed_total removed_gaussian\n       &lt;int&gt; &lt;fct&gt;                &lt;int&gt;         &lt;int&gt;            &lt;int&gt;\n 1         1 clean                  250             6                6\n 2         1 plus_1                 251             7                6\n 3         1 plus_3                 253             9                6\n 4         1 plus_5                 255            11                6\n 5         2 clean                  250            10               10\n 6         2 plus_1                 251            11               10\n 7         2 plus_3                 253            13               10\n 8         2 plus_5                 255            15               10\n 9         3 clean                  250            14               14\n10         3 plus_1                 251            15               14\n# ℹ 30 more rows\n# ℹ 2 more variables: removed_added_outliers &lt;int&gt;, removed_percent &lt;dbl&gt;"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#exploring-sample-size-effects-in-independent-bivariate-gaussian-noise",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#exploring-sample-size-effects-in-independent-bivariate-gaussian-noise",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Exploring sample size effects in independent bivariate Gaussian noise",
+    "text": "Exploring sample size effects in independent bivariate Gaussian noise\nSo far, I have looked at one Gaussian dataset and then compared clean Gaussian data with contaminated Gaussian data after adding artificial outliers.\nAnother useful question is whether the outlier-removal behaviour changes with sample size.\nIn a Gaussian distribution, larger samples are more likely to contain more extreme tail observations. However, larger samples also make the point cloud denser. Therefore, it is not obvious whether outlier removal should increase, decrease, or remain stable as sample size increases.\nHere I generate independent bivariate Gaussian samples with different sample sizes \\((50, 100, 200, 300, 400, 500, 600, 700, 800, 900)\\).\n\n\nCode\nsample_sizes &lt;- c(50, 100, 200, 300, 400, 500, 600, 700, 800, 900)\n\n\nFor each sample size, I generate one dataset where both x and y are independent standard normal variables.\n\n\nCode\nset.seed(935)\n\ngenerate_gaussian_by_size &lt;- function(sample_size) {\n  \n  tibble(\n    x = rnorm(sample_size, mean = 0, sd = 1),\n    y = rnorm(sample_size, mean = 0, sd = 1)\n  ) |&gt;\n    mutate(\n      sample_size = sample_size,\n      id = row_number(),\n      point_type = \"gaussian\"\n    )\n}\n\ngaussian_by_size &lt;- map_dfr(\n  sample_sizes,\n  generate_gaussian_by_size\n)"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#apply-outlier-removal-at-each-sample-size",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#apply-outlier-removal-at-each-sample-size",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Apply outlier removal at each sample size",
+    "text": "Apply outlier removal at each sample size\nI use the same comparison approach as before. The original outlier_removal() function is not changed. I compare the original points with the points remaining in the final Delaunay object.\n\n\nCode\nchecked_by_size &lt;- gaussian_by_size |&gt;\n  group_by(sample_size) |&gt;\n  group_modify(~ find_removed_points(.x)) |&gt;\n  ungroup()"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#count-removed-points-by-sample-size",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#count-removed-points-by-sample-size",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Count removed points by sample size",
+    "text": "Count removed points by sample size\n\n\nCode\nremoved_by_size &lt;- checked_by_size |&gt;\n  group_by(sample_size) |&gt;\n  summarise(\n    total_points = n(),\n    removed_points = sum(status == \"Removed\"),\n    kept_points = sum(status == \"Kept\"),\n    removed_percent = 100 * removed_points / total_points,\n    .groups = \"drop\"\n  )\n\nremoved_by_size\n\n\n# A tibble: 10 × 5\n   sample_size total_points removed_points kept_points removed_percent\n         &lt;dbl&gt;        &lt;int&gt;          &lt;int&gt;       &lt;int&gt;           &lt;dbl&gt;\n 1          50           50              1          49            2   \n 2         100          100              5          95            5   \n 3         200          200             12         188            6   \n 4         300          300             23         277            7.67\n 5         400          400             29         371            7.25\n 6         500          500             25         475            5   \n 7         600          600             37         563            6.17\n 8         700          700             32         668            4.57\n 9         800          800             41         759            5.12\n10         900          900             57         843            6.33"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-removed-counts-across-sample-sizes",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-removed-counts-across-sample-sizes",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Plot removed counts across sample sizes",
+    "text": "Plot removed counts across sample sizes\n\n\nCode\nggplot(removed_by_size, aes(x = sample_size, y = removed_points)) +\n  geom_line() +\n  geom_point(size = 2.5) +\n  theme_minimal(base_size = 13) +\n  labs(\n    title = \"Number of removed points across Gaussian sample sizes\",\n    subtitle = \"Each dataset is independent bivariate Gaussian noise\",\n    x = \"Sample size\",\n    y = \"Number of removed points\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-removed-percentage-across-sample-sizes",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#plot-removed-percentage-across-sample-sizes",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Plot removed percentage across sample sizes",
+    "text": "Plot removed percentage across sample sizes\nThe count of removed points may increase simply because there are more points. Therefore, it is also useful to look at the percentage removed.\n\n\nCode\nggplot(removed_by_size, aes(x = sample_size, y = removed_percent)) +\n  geom_line() +\n  geom_point(size = 2) +\n  geom_hline(yintercept = 5, linetype = \"dashed\") +\n  theme_minimal(base_size = 13) +\n  labs(\n    title = \"Percentage of removed points\",\n    subtitle = \"Dashed line is 5 percent\",\n    x = \"Sample size\",\n    y = \"Removed percent\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#visualise-removed-points-for-each-sample-size",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#visualise-removed-points-for-each-sample-size",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Visualise removed points for each sample size",
+    "text": "Visualise removed points for each sample size\n\n\nCode\nchecked_by_size &lt;- checked_by_size |&gt;\n  mutate(\n    sample_size_label = factor(\n      paste0(\"n = \", sample_size),\n      levels = paste0(\"n = \", c(50, 100, 200, 300, 400, 500, 600, 700, 800, 900))\n    )\n  )\n\nggplot(checked_by_size, aes(x = x, y = y, colour = status)) +\n  geom_point(size = 1.6, alpha = 0.8) +\n  coord_equal() +\n  facet_wrap(~ sample_size_label, ncol = 5) +\n  theme_minimal(base_size = 12) +\n  labs(\n    title = \"Outlier removal across different Gaussian sample sizes\",\n    x = \"x\",\n    y = \"y\",\n    colour = \"Status\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#highlight-only-the-removed-points",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#highlight-only-the-removed-points",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Highlight only the removed points",
+    "text": "Highlight only the removed points\nThis plot makes the removed points easier to see by showing kept observations more faintly.\n\n\nCode\nggplot(checked_by_size, aes(x = x, y = y)) +\n  geom_point(\n    data = checked_by_size |&gt; filter(status == \"Kept\"),\n    alpha = 0.25,\n    size = 1.4\n  ) +\n  geom_point(\n    data = checked_by_size |&gt; filter(status == \"Removed\"),\n    aes(colour = status),\n    size = 2.4,\n    alpha = 0.95\n  ) +\n  coord_equal() +\n  facet_wrap(~ sample_size_label, ncol = 5) +\n  theme_minimal(base_size = 12) +\n  labs(\n    title = \"Removed points highlighted across Gaussian sample sizes\",\n    subtitle = \"No artificial outliers were added\",\n    x = \"x\",\n    y = \"y\",\n    colour = \"Status\"\n  )"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#list-removed-observations",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#list-removed-observations",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "List removed observations",
+    "text": "List removed observations\n\n\nCode\nremoved_points_by_size &lt;- checked_by_size |&gt;\n  filter(status == \"Removed\") |&gt;\n  arrange(sample_size, id)\n\nremoved_points_by_size\n\n\n# A tibble: 262 × 7\n   sample_size       x       y    id point_type status  sample_size_label\n         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;            \n 1          50 -0.690  -2.92       1 gaussian   Removed n = 50           \n 2         100 -0.372   3.62      16 gaussian   Removed n = 100          \n 3         100 -0.0409  2.69      29 gaussian   Removed n = 100          \n 4         100 -1.59   -1.87      59 gaussian   Removed n = 100          \n 5         100  1.24   -1.84      92 gaussian   Removed n = 100          \n 6         100  2.54   -0.169     95 gaussian   Removed n = 100          \n 7         200 -2.85    0.606      9 gaussian   Removed n = 200          \n 8         200  2.43    0.0286    50 gaussian   Removed n = 200          \n 9         200 -2.57   -2.70      55 gaussian   Removed n = 200          \n10         200  1.80    0.831     76 gaussian   Removed n = 200          \n# ℹ 252 more rows"
+  },
+  {
+    "objectID": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#interpretation-1",
+    "href": "blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html#interpretation-1",
+    "title": "Exploring Iterative Outlier Removal in cassowaryr",
+    "section": "Interpretation",
+    "text": "Interpretation\nThe number of removed points increases as the sample size increases. For example, only 1 point is removed when n = 50, while 57 points are removed when n = 900. In these results, the removal rate is mostly around 5% to 7%, with some variation across sample sizes.\nOverall, the MST-based outlier-removal step removes some natural Gaussian tail observations, especially as sample size increases. This reflects the geometry of the Gaussian point cloud rather than the presence of true outliers."
   }
 ]

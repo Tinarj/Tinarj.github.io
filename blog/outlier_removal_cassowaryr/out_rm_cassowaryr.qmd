@@ -1,0 +1,576 @@
+---
+title: "Exploring Iterative Outlier Removal in cassowaryr"
+description: "An exploration of how iterative MST-based outlier removal behaves on bivariate Gaussian noise, why Gaussian tail points may be removed geometrically, and what this implies for scagnostic rescaling in cassowaryr."
+categories:
+  - cassowaryr
+  - scagnostics
+  - outlier-removal
+  - bivariate-gaussian
+  - preprocessing
+  - rescaling
+format:
+  html:
+    code-fold: true
+date: 2026-05-25
+execute:
+  code-fold: true
+  warning: false
+  message: false
+license: "All Rights Reserved"
+copyright: "Copyright © 2026 Tina Rashid Jafari. All rights reserved."
+---
+
+
+## Motivation
+
+In the previous post, *Testing Scagnostic Rescaling Across Preprocessing Settings*, I looked at how different preprocessing settings might affect the scagnostic rescaling formula. One of the preprocessing settings was whether outlier removal was turned on or off.
+
+What surprised me was that setting outlier removal to `"yes"` had a clear effect. In some cases, the number of changed values went beyond 5 percent. This was unexpected because the test data were generated from bivariate Gaussian noise. I was not expecting Gaussian noise to contain many meaningful outliers, and I was not expecting outlier removal to noticeably affect the rescaling formula.
+
+This raised an important question:
+
+> What exactly is being removed by the outlier-removal step in `cassowaryr`?
+
+At first, I thought the procedure might be a kind of simple trimming step. However, after looking more closely at the code, the process is iterative. Points are removed, the Delaunay triangulation and MST are recomputed, and the procedure repeats until no more outliers are detected.
+
+This post explores that behaviour directly.
+
+
+## Why Gaussian data felt like a surprising case
+
+A bivariate Gaussian distribution is a smooth, continuous distribution over two variables. In the simplest case, the data form an elliptical cloud around a mean. Most points are concentrated near the centre, with fewer points appearing farther away in the tails.
+
+For a standard normal variable, most observations fall roughly within three standard deviations of the mean. However, Gaussian distributions are not bounded. This means that values outside the central region can still occur naturally.
+
+So my expectation was not that Gaussian data can never produce extreme points. Rather, my expectation was that if the data are just random Gaussian noise, then outlier removal should not have a strong or systematic effect on the scagnostic rescaling formula.
+
+The results suggested otherwise. That motivated this exploration.
+
+## Setup
+
+```{r}
+library(tidyverse)
+library(alphahull)
+library(igraph)
+library(plotly)
+```
+
+ 
+## Original outlier-removal idea
+
+The outlier-removal function in `cassowaryr` returns a final `delvor` object after the iterative removal process has stopped.
+
+
+```r
+outlier_removal <- function(xy){
+  # remove outliers iteratively (based on "Scagnostics Distributions" paper)
+  repeat {
+    # Get del, MST and weights
+    del <- alphahull::delvor(xy)
+    weights <- gen_edge_lengths(del)
+    mst <- gen_mst(del, weights)
+    mst_weights <- igraph::E(mst)$weight
+
+    # get outliers
+    outliers <- outlying_identify(mst, mst_weights)
+    # if no outliers, just return current del
+    if(is.null(outliers)){
+      return(del)
+    } else{
+      # otherwise we remove outliers and recompute
+      xy <- xy[-outliers,]
+    }
+  }
+}
+```
+
+This is not one-step trimming. The `repeat` loop has been used so that after points are removed, the graph is recomputed and outlier detection is applied again.
+
+However, this function does not directly return the removed points. It only returns the final Delaunay triangulation. Therefore, to identify the removed observations without changing the function, I compare the original coordinates with the coordinates remaining in `final_del$x`.
+
+## Helper function for comparing before and after
+
+Because the original function returns only the final `del` object, I use the coordinates stored in `final_del$x` to identify which original observations were kept.
+
+
+```{r}
+make_key <- function(x, y) {
+  paste(signif(x, 17), signif(y, 17), sep = "__")
+}
+
+find_removed_points <- function(xy_tbl) {
+  
+  xy_mat <- xy_tbl |>
+    dplyr::select(x, y) |>
+    as.matrix()
+  
+  final_del <- cassowaryr:::outlier_removal(xy_mat)
+  
+  kept_tbl <- final_del$x |>
+    as_tibble(.name_repair = "minimal") |>
+    set_names(c("x", "y")) |>
+    mutate(key = make_key(x, y))
+  
+  xy_tbl |>
+    mutate(
+      key = make_key(x, y),
+      status = if_else(key %in% kept_tbl$key, "Kept", "Removed")
+    ) |>
+    dplyr::select(-key)
+}
+```
+
+## Generate one bivariate Gaussian sample
+
+Here I generate one bivariate Gaussian dataset. I do not add artificial outliers. The aim is to test whether the outlier-removal step removes points from ordinary Gaussian noise.
+
+
+```{r}
+
+set.seed(452)
+
+n <- 250
+
+xy_one <- tibble(
+  x = rnorm(n, mean = 0, sd = 1),
+  y = rnorm(n, mean = 0, sd = 1)
+) |>
+  mutate(id = row_number())
+```
+
+## Apply outlier removal to one Gaussian sample
+
+```{r}
+xy_one_checked <- find_removed_points(xy_one)
+
+xy_one_checked |>
+  count(status)
+```
+
+
+## Plot one Gaussian sample
+
+```{r}
+p1 <- ggplot(xy_one_checked, aes(x = x, y = y, colour = status)) +
+  geom_point(size = 2.3, alpha = 0.85) +
+  coord_equal() +
+  theme(aspect.ratio = 1)
+  labs(
+    x = "x",
+    y = "y",
+    colour = "Status"
+  )
+
+ggplotly(p1)
+```
+
+The plot shows which points were kept and which points were removed by the outlier-removal procedure. The removed points are not manually inserted outliers, they are points generated naturally from the Gaussian distribution.
+
+
+
+## Generate 10 bivariate Gaussian samples
+
+Next, I repeat the same process for 10 independently generated bivariate Gaussian datasets. Again, I do not add artificial outliers.
+
+```{r}
+
+generate_gaussian_sample <- function(sample_id, n = 250) {
+  
+  tibble(
+    x = rnorm(n, mean = 0, sd = 1),
+    y = rnorm(n, mean = 0, sd = 1)
+  ) |>
+    mutate(
+      sample_id = sample_id,
+      id = row_number(),
+      point_type = "gaussian"
+    )
+}
+
+set.seed(452)
+
+gaussian_samples <- map_dfr(
+  1:10,
+  generate_gaussian_sample,
+  n = n
+)
+```
+
+## Run and count removed points per sample
+
+```{r}
+checked_samples <- gaussian_samples |>
+  group_by(sample_id) |>
+  group_modify(~ find_removed_points(.x)) |>
+  ungroup()
+
+removed_summary <- checked_samples |>
+  count(sample_id, status) |>
+  complete(
+    sample_id,
+    status = c("Kept", "Removed"),
+    fill = list(n = 0)
+  )
+
+removed_summary
+```
+
+
+## Plot all 10 Gaussian samples
+
+```{r}
+p2 <- ggplot(checked_samples, aes(x = x, y = y, colour = status)) +
+  geom_point(size = 1.8, alpha = 0.6) +
+  coord_equal() +
+  facet_wrap(~ sample_id, ncol = 5) +
+  theme_minimal(base_size = 12) +
+  theme(aspect.ratio = 1)
+  labs(
+    title = "Outlier removal across 10 bivariate Gaussian samples",
+    x = "x",
+    y = "y",
+    colour = "Status"
+  )
+
+ggplotly(p2)
+```
+
+
+
+
+## Removal percentage
+
+The earlier rescaling experiment suggested that outlier removal could affect more than 5 percent of values in some settings. Here I calculate the percentage of points removed from each Gaussian sample.
+
+```{r}
+removal_rate <- checked_samples |>
+  group_by(sample_id) |>
+  summarise(
+    total_points = n(),
+    removed_points = sum(status == "Removed"),
+    removed_percent = 100 * removed_points / total_points,
+    .groups = "drop"
+  )
+
+removal_rate
+```
+
+
+
+```{r}
+ggplot(removal_rate, aes(x = factor(sample_id), y = removed_percent)) +
+  geom_col() +
+  geom_hline(yintercept = 5, linetype = "dashed") +
+  theme_minimal(base_size = 13) +
+  labs(
+    title = "Percentage of points removed from each Gaussian sample",
+    subtitle = "Dashed line is 5 percent",
+    x = "Gaussian sample",
+    y = "Removed points"
+  )
+```
+## Comparing clean Gaussian data with contaminated Gaussian data
+
+The previous section showed what happens when outlier removal is applied to bivariate Gaussian data with no artificial outliers added.
+
+
+Now I want to test a more specific question:
+
+> If I generate Gaussian data, then add artificial outliers to the same data, does the outlier-removal procedure remove exactly the same original Gaussian points as before, plus the new outliers? Or does adding outliers change which original Gaussian points are removed?
+
+This matters because the outlier-removal function is iterative. The MST and the threshold are recomputed after removals. Therefore, adding new outlying points could change the geometry of the graph and affect the removal of points that were already present in the original Gaussian sample.
+
+
+## Add controlled outliers to the same Gaussian datasets
+
+Now I add artificial outliers to the same 10 Gaussian datasets. The Gaussian points are unchanged. This means any difference in which Gaussian points are removed must be caused by the presence of the added outliers.
+
+
+
+I use a stepwise design:
+
+- `clean`: no added outliers
+- `plus_1`: one added outlier
+- `plus_3`: three added outliers
+- `plus_5`: five added outliers
+
+```{r}
+outlier_bank <- tibble(
+  outlier_number = 1:5,
+  x = c(3.8, -3.8, 4.5, -4.5, 0),
+  y = c(3.8,  3.8, -4.5, -4.5, 5.0)
+)
+
+scenario_info <- tibble(
+  outlier_level = c("clean", "plus_1", "plus_3", "plus_5"),
+  n_added = c(0, 1, 3, 5)
+)
+
+create_scenario_data <- function(sample_id_value, outlier_level, n_added) {
+  
+  base_data <- gaussian_samples |>
+    filter(sample_id == sample_id_value) |>
+    mutate(
+      outlier_level = outlier_level,
+      point_type = "gaussian"
+    )
+  
+  if (n_added == 0) {
+    return(base_data)
+  }
+  
+  added_outliers <- outlier_bank |>
+    slice_head(n = n_added) |>
+    transmute(
+      x = x,
+      y = y,
+      sample_id = sample_id_value,
+      id = n + row_number(),
+      point_type = "added_outlier",
+      outlier_level = outlier_level
+    )
+  
+  bind_rows(base_data, added_outliers)
+}
+
+experiment_data <- tidyr::expand_grid(
+  sample_id = unique(gaussian_samples$sample_id),
+  scenario_info
+) |>
+  pmap_dfr(
+    \(sample_id, outlier_level, n_added) {
+      create_scenario_data(sample_id, outlier_level, n_added)
+    }
+  ) |>
+  mutate(
+    outlier_level = factor(
+      outlier_level,
+      levels = c("clean", "plus_1", "plus_3", "plus_5")
+    )
+  )
+```
+
+## Run and count outlier removals on each scenario
+
+```{r}
+experiment_checked <- experiment_data |>
+  group_by(sample_id, outlier_level) |>
+  group_modify(~ find_removed_points(.x)) |>
+  ungroup()
+
+
+
+removal_summary <- experiment_checked |>
+  group_by(sample_id, outlier_level) |>
+  summarise(
+    total_points = n(),
+    removed_total = sum(status == "Removed"),
+    removed_gaussian = sum(status == "Removed" & point_type == "gaussian"),
+    removed_added_outliers = sum(status == "Removed" & point_type == "added_outlier"),
+    removed_percent = 100 * removed_total / total_points,
+    .groups = "drop"
+  )
+
+removal_summary
+```
+
+
+## Are the same Gaussian points removed after adding outliers?
+
+Now I compare the clean case with the `plus_5` case. This directly answers whether the same original Gaussian points are removed.
+
+```{r}
+gaussian_clean_vs_plus5 <- experiment_checked |>
+  filter(
+    point_type == "gaussian",
+    outlier_level %in% c("clean", "plus_5")
+  ) |>
+  dplyr::select(sample_id, id, outlier_level, status) |>
+  pivot_wider(
+    names_from = outlier_level,
+    values_from = status,
+    names_prefix = "status_"
+  ) |>
+  mutate(
+    removal_change = case_when(
+      status_clean == "Removed" & status_plus_5 == "Removed" ~ "Removed in both",
+      status_clean == "Removed" & status_plus_5 == "Kept" ~ "Removed only when clean",
+      status_clean == "Kept" & status_plus_5 == "Removed" ~ "Removed only after added outliers",
+      TRUE ~ "Kept in both"
+    )
+  )
+
+gaussian_clean_vs_plus5 |>
+  count(sample_id, removal_change)
+```
+
+
+## Plot the contaminated datasets
+
+```{r}
+
+comparison_plot_data <- gaussian_samples |>
+  left_join(
+    gaussian_clean_vs_plus5,
+    by = c("sample_id", "id")
+  )
+
+ggplot(comparison_plot_data, aes(x = x, y = y, colour = removal_change)) +
+  geom_point(size = 1.9, alpha = 0.7) +
+  coord_equal() +
+  facet_wrap(~ sample_id, ncol = 5) +
+  theme_minimal(base_size = 12) +
+  theme(aspect.ratio = 1) +
+  labs(
+    title = "Did adding outliers change which Gaussian points were removed?",
+    x = "x",
+    y = "y",
+    colour = "Removal comparison"
+  )
+
+
+ggplot(
+  experiment_checked |> filter(outlier_level == "plus_5"),
+  aes(x = x, y = y, colour = status, shape = point_type)
+) +
+  geom_point(size = 1.8, alpha = 0.7) +
+  scale_shape_manual(
+    values = c(
+      "gaussian" = 16,       
+      "added_outlier" = 17  
+    )
+  ) +
+  coord_equal() +
+  facet_wrap(~ sample_id, ncol = 5) +
+  theme_minimal(base_size = 12) +
+  theme(aspect.ratio = 1) +
+  labs(
+    title = "Outlier removal after adding five artificial outliers",
+    x = "x",
+    y = "y",
+    colour = "Status",
+    shape = "Point type"
+  )
+```
+## Interpretation
+
+This experiment shows that adding artificial outliers did not change which original Gaussian points were removed.
+
+The same Gaussian tail points were removed in the clean data and in the contaminated data. When artificial outliers were added, the total number of removed points increased only by the number of added outliers. For example, if 6 points were removed from the clean Gaussian sample and 3 artificial outliers were added, then the total number of removed points became 9.
+
+## Exploring sample size effects in independent bivariate Gaussian noise
+
+So far, I have looked at one Gaussian dataset and then compared clean Gaussian data with contaminated Gaussian data after adding artificial outliers.
+
+Another useful question is whether the outlier-removal behaviour changes with sample size.
+
+In a Gaussian distribution, larger samples are more likely to contain more extreme tail observations. However, larger samples also make the point cloud denser. Therefore, it is not obvious whether outlier removal should increase, decrease, or remain stable as sample size increases.
+
+Here I generate independent bivariate Gaussian samples with different sample sizes $(50, 100, 200, 300, 400, 500, 600, 700, 800, 900)$.
+
+```{r}
+sample_sizes <- c(50, 100, 200, 300, 400, 500, 600, 700, 800, 900)
+```
+
+
+For each sample size, I generate one dataset where both `x` and `y` are independent standard normal variables.
+
+```{r}
+set.seed(935)
+
+generate_gaussian_by_size <- function(sample_size) {
+  
+  tibble(
+    x = rnorm(sample_size, mean = 0, sd = 1),
+    y = rnorm(sample_size, mean = 0, sd = 1)
+  ) |>
+    mutate(
+      sample_size = sample_size,
+      id = row_number(),
+      point_type = "gaussian"
+    )
+}
+
+gaussian_by_size <- map_dfr(
+  sample_sizes,
+  generate_gaussian_by_size
+)
+```
+
+## Apply outlier removal at each sample size
+
+I use the same comparison approach as before. The original `outlier_removal()` function is not changed. I compare the original points with the points remaining in the final Delaunay object.
+
+```{r}
+checked_by_size <- gaussian_by_size |>
+  group_by(sample_size) |>
+  group_modify(~ find_removed_points(.x)) |>
+  ungroup()
+```
+
+## Count removed points by sample size
+
+```{r}
+removed_by_size <- checked_by_size |>
+  group_by(sample_size) |>
+  summarise(
+    total_points = n(),
+    removed_points = sum(status == "Removed"),
+    kept_points = sum(status == "Kept"),
+    removed_percent = 100 * removed_points / total_points,
+    .groups = "drop"
+  )
+
+removed_by_size
+```
+
+
+## Plot removed percentage across sample sizes
+
+The count of removed points may increase simply because there are more points. Therefore, it is also useful to look at the percentage removed.
+
+```{r}
+ggplot(removed_by_size, aes(x = sample_size, y = removed_percent)) +
+  geom_line() +
+  geom_point(size = 2) +
+  geom_hline(yintercept = 5, linetype = "dashed") +
+  theme_minimal(base_size = 13) +
+  labs(
+    title = "Percentage of removed points",
+    subtitle = "Dashed line is 5 percent",
+    x = "Sample size",
+    y = "Removed percent"
+  )
+```
+
+## Visualise removed points for each sample size
+
+```{r}
+checked_by_size <- checked_by_size |>
+  mutate(
+    sample_size_label = factor(
+      paste0("n = ", sample_size),
+      levels = paste0("n = ", c(50, 100, 200, 300, 400, 500, 600, 700, 800, 900))
+    )
+  )
+
+ggplot(checked_by_size, aes(x = x, y = y, colour = status)) +
+  geom_point(size = 1.6, alpha = 0.8) +
+  coord_equal() +
+  facet_wrap(~ sample_size_label, ncol = 5) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Outlier removal across different Gaussian sample sizes",
+    x = "x",
+    y = "y",
+    colour = "Status"
+  )
+```
+
+## Interpretation
+
+
+The number of removed points increases as the sample size increases. For example, only 1 point is removed when `n = 50`, while 57 points are removed when `n = 900`.
+In these results, the removal rate is mostly around 5% to 7%, with some variation across sample sizes.
+
+Overall, the MST-based outlier-removal step removes some natural Gaussian tail observations, especially as sample size increases. This reflects the geometry of the Gaussian point cloud rather than the presence of true outliers.
