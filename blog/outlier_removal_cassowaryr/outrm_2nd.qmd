@@ -1,0 +1,378 @@
+---
+title: "Exploring outlier removal in cassowaryr: 1.5 IQR or 3 IQR?"
+description: "An exploration of MST-based outlier removal in cassowaryr, comparing the current 1.5 IQR rule with Tukey's 3 IQR outer fence on bivariate Gaussian data."
+categories:
+  - cassowaryr
+  - scagnostics
+  - outlier-removal
+  - minimum-spanning-tree
+  - bivariate-gaussian
+format:
+  html:
+    code-fold: true
+date: 2026-06-01
+execute:
+  code-fold: true
+  warning: false
+  message: false
+license: "All Rights Reserved"
+copyright: "Copyright © 2026 Tina Rashid Jafari. All rights reserved."
+---
+
+
+In a previous blog post, I explored the outlier removal function in `cassowaryr`, an R package for computing scagnostics on pairs of numeric variables. Scagnostics are scatterplot diagnostics: numerical summaries of visual features in two-dimensional data, such as whether a scatterplot is clumpy, skinny, stringy, monotonic, or outlying.
+
+In this post, I want to look more closely at the outlier removal step itself.
+
+The question I started with was simple:
+
+> If I generate data from a bivariate Gaussian distribution, should the outlier removal function find outliers?
+
+My intuition was: probably not, at least not many.
+
+A bivariate Gaussian sample may contain points in the tails, especially when the sample size is large. But those points are still generated from the same distribution. There is no separate contamination process and no deliberately inserted anomalous group. So if an outlier removal method finds many “outliers” in clean Gaussian data, that makes me wonder whether the rule is too sensitive for this setting.
+
+## The current outlier rule
+
+Inside `cassowaryr`, outlier removal is based on the minimum spanning tree of the two-dimensional point cloud.
+
+The relevant function uses edge lengths from the MST. It calculates a threshold using a function called `psi()`:
+
+```r
+psi <- function(w, q = c(0.25, 0.75)) {
+  q <- stats::quantile(w, probs = q)
+  unname(q[2] + 1.5 * diff(q))
+}
+```
+
+Here, `w` is a vector of MST edge weights. The threshold is:
+
+```r
+Q3 + 1.5 * IQR
+```
+
+where `Q3` is the third quartile of the MST edge lengths and `IQR` is the interquartile range.
+
+Edges longer than this threshold are treated as unusually long. If a point becomes disconnected from the rest of the graph because all of its connecting edges are above the threshold, that point is identified as an outlier.
+
+This is a geometry-based outlier rule. It is not checking whether a point is far away in one variable only. It is looking at how the point connects to the rest of the scatterplot.
+
+## Why question the 1.5 × IQR rule?
+
+The `1.5 × IQR` rule is familiar from boxplots. Tukey described this as the inner fence. Points beyond the inner fence can be considered outside or mild outliers.
+
+But Tukey also described an outer fence:
+
+```r
+Q3 + 3 * IQR
+```
+
+Points beyond the outer fence are more extreme. In other words, `3 × IQR` is a more conservative threshold than `1.5 × IQR`.
+
+In a one-dimensional boxplot, the `1.5 × IQR` rule is often useful for flagging potentially unusual observations. But in this scagnostics setting, the rule is being applied to MST edge lengths. Small changes in the geometry of the point cloud can produce relatively long edges, especially near the boundary of a Gaussian cloud.
+
+So the `1.5 × IQR` rule may be too sensitive for geometry-based outlier removal. It may flag points that are not really outliers, but simply part of the natural tail or boundary of the distribution.
+
+That led me to the main experiment in this post:
+
+> What happens if we replace the inner fence, `1.5 × IQR`, with Tukey’s outer fence, `3 × IQR`?
+
+## Modifying the threshold
+
+The smallest possible change is simply this:
+
+```r
+psi <- function(w, q = c(0.25, 0.75)) {
+  q <- stats::quantile(w, probs = q)
+  unname(q[2] + 3 * diff(q))
+}
+```
+
+That changes the threshold from:
+
+```r
+Q3 + 1.5 * IQR
+```
+
+to:
+
+```r
+Q3 + 3 * IQR
+```
+
+```{r}
+library(tidyverse)
+library(cassowaryr)
+
+psi <- function(w, q = c(0.25, 0.75)) {
+  q <- stats::quantile(w, probs = q)
+  unname(q[2] + 3 * diff(q))
+}
+
+outlying_identify_3iqr <- function(mst, mst_weights){
+  
+  n <- length(mst_weights) + 1
+
+  # get edge matrix of MST
+  mstmat <- matrix(mst[], nrow = n)
+
+  #calculate omega value
+  w <- psi(mst_weights)
+
+  # set values above omega to 0 in matrix to find outlying
+  mstmat_check <- mstmat
+  mstmat_check[mstmat>w]=0
+
+  #row sum of matrix, if 0 all edges are 0 then it is an outlier
+  rowsum <- mstmat_check%*%rep(1, length(mstmat_check[1,]))
+
+  if(sum(rowsum==0) == 0){
+    # if no outliers return NULL
+    return(NULL)
+  } else{
+    # Otherwise return the index of the outlying observation
+    return(which(rowsum==0))
+  }
+}
+
+outlier_removal_3iqr <- function(xy){
+  # remove outliers iteratively (based on "Scagnostics Distributions" paper)
+  repeat {
+    # Get del, MST and weights
+    del <- alphahull::delvor(xy)
+    weights <- cassowaryr:::gen_edge_lengths(del)
+    mst <- cassowaryr:::gen_mst(del, weights)
+    mst_weights <- igraph::E(mst)$weight
+
+    # get outliers
+    outliers <- outlying_identify_3iqr(mst, mst_weights)
+    # if no outliers, just return current del
+    if(is.null(outliers)){
+      return(del)
+    } else{
+      # otherwise we remove outliers and recompute
+      xy <- xy[-outliers,]
+    }
+  }
+}
+
+```
+
+Now, I will also write separate diagnostic function that uses 3 IQR outlier removal: 
+```{r}
+diagnose_outliers_3iqr <- function(data, x, y) {
+  
+  x_vals <- dplyr::pull(data, {{ x }})
+  y_vals <- dplyr::pull(data, {{ y }})
+  
+  if (!is.numeric(x_vals)) {
+    stop("`x` must be numeric.")
+  }
+  
+  if (!is.numeric(y_vals)) {
+    stop("`y` must be numeric.")
+  }
+  
+  x_unit <- cassowaryr:::unitize(x_vals)
+  y_unit <- cassowaryr:::unitize(y_vals)
+  
+  keep_idx <- cassowaryr:::is_dupe(x_vals, y_vals)
+  
+  xy_mat <- cbind(x_unit, y_unit)
+  xy_mat <- xy_mat[keep_idx, , drop = FALSE]
+  
+  final_del <- outlier_removal_3iqr(xy_mat)
+  
+  kept_tbl <- tibble::tibble(
+    x_unit = final_del$x[, 1],
+    y_unit = final_del$x[, 2],
+    outlier_status = "Kept"
+  )
+  
+  data |>
+    dplyr::mutate(
+      x_unit = x_unit,
+      y_unit = y_unit
+    ) |>
+    dplyr::left_join(kept_tbl, by = c("x_unit", "y_unit")) |>
+    dplyr::mutate(
+      outlier_status = dplyr::if_else(
+        keep_idx & !is.na(.data$outlier_status),
+        "Kept",
+        "Removed"
+      )
+    ) |>
+    dplyr::select(-x_unit, -y_unit)
+}
+```
+
+
+## Generating bivariate Gaussian data
+
+To test the effect of the threshold, I generated data from a bivariate Gaussian distribution.
+
+```{r}
+set.seed(1139)
+
+n <- 200
+
+data <- tibble(
+  id = seq_len(n),
+  x = rnorm(n),
+  y = rnorm(n)
+)
+```
+
+This creates a clean Gaussian scatterplot. There are no manually added outliers.
+
+Next, I used the diagnostic function to label which points were kept and which were removed under each rule.
+
+## Current cassowaryr rule:
+
+```r
+diag_1_5 <- diagnose_outliers(data, x, y) |>
+  select(id, status_1_5 = outlier_status)
+```
+
+## New 3 IQR rule:
+
+```r
+diag_3 <- diagnose_outliers_3iqr(data, x, y) |>
+  select(id, status_3 = outlier_status) 
+```
+
+```{r}
+diag_1_5 <- diagnose_outliers(data, x, y) |>
+  select(id, status_1_5 = outlier_status)
+
+diag_3 <- diagnose_outliers_3iqr(data, x, y) |>
+  select(id, status_3 = outlier_status) 
+
+comparison <- data |>
+  left_join(diag_1_5, by = "id") |>
+  left_join(diag_3, by = "id") |>
+  mutate(
+    comparison = paste(status_1_5, status_3, sep = " / ")
+  )
+
+comparison |> count(status_1_5, status_3)
+```
+
+
+These are points that were removed by the inner-fence rule but kept by the outer-fence rule.
+
+## Visual comparison
+
+```{r}
+comparison <- comparison |>
+  mutate(comparison = paste(status_1_5, status_3, sep = " / "))
+
+p <- ggplot(comparison, aes(x = x, y = y,
+    colour = comparison)) + 
+  geom_point(size = 1.5) +
+  labs(
+    title = "Outlier removal in bivariate Gaussian data: 1.5 IQR vs 3 IQR",
+    x = "",
+    y = ""
+  ) +
+  theme_minimal() +
+  theme(aspect.ratio = 1) 
+
+    
+plotly::ggplotly(p)
+```
+
+Changing the multiplier from `1.5` to `3` makes the outlier removal rule more conservative. The `3 × IQR` threshold is less sensitive to small geometric fluctuations in the MST edge lengths, so it removes fewer points than the `1.5 × IQR` threshold.
+
+For bivariate Gaussian data, this is important because points near the boundary of the cloud may create slightly longer MST edges, even though they are still part of the same underlying distribution. Using the `3 × IQR` rule reduces the chance of treating these natural tail or boundary observations as outliers.
+
+For data with truly isolated points, the `3 × IQR` rule should still be able to identify observations that are clearly separated from the main point cloud. However, compared with the `1.5 × IQR` rule, it is less likely to remove points simply because of small local changes in the geometry of the scatterplot.
+
+
+ Next, I want to continue exploring the outlier removal function by drawing the minimum spanning tree itself. Since the outlier rule is based on MST edge lengths, looking directly at the MST can help explain why particular points are removed.
+
+```{r}
+xy <- cbind(comparison$x, comparison$y)
+
+del <- alphahull::delvor(xy)
+weights <- cassowaryr:::gen_edge_lengths(del)
+mst <- cassowaryr:::gen_mst(del, weights)
+
+edge_list <- igraph::as_edgelist(mst, names = FALSE)
+
+mst_edges <- tibble::tibble(
+  x = comparison$x[edge_list[, 1]],
+  y = comparison$y[edge_list[, 1]],
+  xend = comparison$x[edge_list[, 2]],
+  yend = comparison$y[edge_list[, 2]]
+)
+
+p <- ggplot2::ggplot(
+  comparison,
+  ggplot2::aes(
+    x = x,
+    y = y,
+    colour = comparison
+  )
+) +
+  ggplot2::geom_point(size = 1) +
+  ggplot2::geom_segment(
+    data = mst_edges,
+    ggplot2::aes(
+      x = x,
+      y = y,
+      xend = xend,
+      yend = yend
+    ),
+    inherit.aes = FALSE,
+    linewidth = 0.3,
+    alpha = 0.8
+  ) +
+  ggplot2::labs(
+    title = "Outlier removal in bivariate Gaussian data: 1.5 IQR vs 3 IQR",
+    x = "",
+    y = "",
+    colour = "Status"
+  ) +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(aspect.ratio = 1)
+
+plotly::ggplotly(p)
+```
+
+
+The red points are labelled `Kept / Kept`, meaning they are kept by both the current `1.5 × IQR` rule and the `3 × IQR` rule. These points make up the main Gaussian cloud.
+
+The green points are labelled `Removed / Kept`. They are removed by the `1.5 × IQR` rule, but kept by the `3 × IQR` rule. Looking at the MST, these points are near the boundary of the Gaussian cloud, but they are not strongly isolated. `1.5 × IQR` rule is sensitive to small geometric fluctuations in the MST, especially around the edge of the cloud.
+
+The blue points are labelled `Removed / Removed`. These are removed by both rules. These points are the strongest outlying candidates under the geometry-based rule.
+
+Since the data were generated from a bivariate Gaussian distribution, there is no artificially inserted outlier class. So even the blue points should be interpreted carefully: they are not necessarily true outliers. However, if the goal is to identify only the most geometrically isolated observations, the `3 × IQR` rule (Tukey’s outer-fence idea) seems more reasonable.
+
+
+
+Just for exploration, I will also print the MST object and the MST edge weights.
+
+```{r}
+xy <- cbind(comparison$x, comparison$y)
+
+del <- alphahull::delvor(xy)
+weights <- cassowaryr:::gen_edge_lengths(del)
+mst <- cassowaryr:::gen_mst(del, weights)
+mst_weights <- igraph::E(mst)$weight
+
+# Print the minimum spanning tree
+mst
+
+
+mst_edges <- igraph::as_data_frame(mst, what = "edges")
+
+head(mst_edges, n = 15)
+```
+The MST object shows how the observations are connected in the minimum spanning tree. The vector `mst_weights` contains the edge lengths used by the outlier rule. These weights are then passed to `psi()`, where the threshold is calculated as `Q3 + 3 * IQR` in the modified version.
+
+
+
+## Refrences
+
+Tukey, J. W. (1977). Exploratory data analysis

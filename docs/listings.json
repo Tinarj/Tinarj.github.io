@@ -2,9 +2,9 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/stringy05_growth_rate/stringy05_growth_rate.html",
       "/blog/outlier_removal_cassowaryr/out_rm_cassowaryr.html",
       "/blog/stringy05_scagnostic/stringy05.html",
-      "/blog/Stringy05_growth_rate/stringy05_growth_rate.html",
       "/blog/Testing_fitted_model/Testing_fitted_model.html",
       "/blog/alpha_parameter/alpha_parameter_issues.html",
       "/blog/alpha_parameter_cassowaryr/debug_alpha.html"
