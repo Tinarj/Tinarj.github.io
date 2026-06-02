@@ -526,7 +526,7 @@ ggplot(combined_results, aes(x = n, y = length_sqrtn)) +
   stat_summary(fun = mean, geom = "point", size = 2) +
   labs(
     x = "Sample size n",
-    y = expression(mean(L[n] / sqrt(n))),
+    y = "Ln / sqrt(n)",
     title = "Checking denominator growth: MST length / sqrt(n)"
   ) + 
   theme_bw() +
@@ -540,7 +540,7 @@ ggplot(combined_results, aes(x = n, y = diameter_sqrtn)) +
   stat_summary(fun = mean, geom = "point", size = 2) +
   labs(
     x = "Sample size n",
-    y = expression(mean(D[n] / sqrt(n))),
+    y = "Dn / sqrt(n)",
     title = "Checking numerator growth: MST diameter / sqrt(n)"
   ) +
   theme_bw() +
@@ -554,7 +554,7 @@ ggplot(combined_results, aes(x = n, y = ratio)) +
   stat_summary(fun = mean, geom = "point", size = 2)  +
   labs(
     x = "Sample size n",
-    y = expression(mean(R[n])),
+    y = "Rn",
     title = "stringy05 ratio across sample sizes"
   ) +
   theme_bw() +
