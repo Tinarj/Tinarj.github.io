@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-16">
+<meta name="dcterms.date" content="2026-06-23">
 
 <title>Checking whether stringy05 is suitable as a projection pursuit index – Tina Rashid Jafari</title>
 <style>
@@ -191,13 +191,24 @@ window.Quarto = {
    
   <ul>
   <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">Goal</a></li>
-  <li><a href="#define-the-two-index-functions" id="toc-define-the-two-index-functions" class="nav-link" data-scroll-target="#define-the-two-index-functions">Define the two index functions</a></li>
-  <li><a href="#generate-polynomial-data" id="toc-generate-polynomial-data" class="nav-link" data-scroll-target="#generate-polynomial-data">Generate polynomial data</a></li>
-  <li><a href="#first-direct-check-signal-versus-noise" id="toc-first-direct-check-signal-versus-noise" class="nav-link" data-scroll-target="#first-direct-check-signal-versus-noise">First direct check: signal versus noise</a></li>
-  <li><a href="#rotation-invariance-check-with-spinebil" id="toc-rotation-invariance-check-with-spinebil" class="nav-link" data-scroll-target="#rotation-invariance-check-with-spinebil">Rotation invariance check with <code>spinebil</code></a></li>
-  <li><a href="#trace-from-noise-projection-to-true-projection" id="toc-trace-from-noise-projection-to-true-projection" class="nav-link" data-scroll-target="#trace-from-noise-projection-to-true-projection">Trace from noise projection to true projection</a></li>
+  <li><a href="#define-raw-and-rescaled-index-functions" id="toc-define-raw-and-rescaled-index-functions" class="nav-link" data-scroll-target="#define-raw-and-rescaled-index-functions">Define raw and rescaled index functions</a></li>
+  <li><a href="#generate-datasets" id="toc-generate-datasets" class="nav-link" data-scroll-target="#generate-datasets">Generate datasets</a>
+  <ul class="collapse">
+  <li><a href="#polynomial-data" id="toc-polynomial-data" class="nav-link" data-scroll-target="#polynomial-data">Polynomial data</a></li>
+  <li><a href="#pipe-sine-and-spiral-data" id="toc-pipe-sine-and-spiral-data" class="nav-link" data-scroll-target="#pipe-sine-and-spiral-data">Pipe, sine, and spiral data</a></li>
+  </ul></li>
+  <li><a href="#plot-the-true-structures" id="toc-plot-the-true-structures" class="nav-link" data-scroll-target="#plot-the-true-structures">Plot the true structures</a></li>
+  <li><a href="#direct-check-signal-versus-noise" id="toc-direct-check-signal-versus-noise" class="nav-link" data-scroll-target="#direct-check-signal-versus-noise">Direct check: signal versus noise</a></li>
+  <li><a href="#rotation-invariance" id="toc-rotation-invariance" class="nav-link" data-scroll-target="#rotation-invariance">Rotation invariance</a></li>
+  <li><a href="#trace-from-noise-projection-to-signal-projection" id="toc-trace-from-noise-projection-to-signal-projection" class="nav-link" data-scroll-target="#trace-from-noise-projection-to-signal-projection">Trace from noise projection to signal projection</a>
+  <ul class="collapse">
+  <li><a href="#polynomial" id="toc-polynomial" class="nav-link" data-scroll-target="#polynomial">Polynomial</a></li>
+  <li><a href="#pipe" id="toc-pipe" class="nav-link" data-scroll-target="#pipe">Pipe</a></li>
+  <li><a href="#sine" id="toc-sine" class="nav-link" data-scroll-target="#sine">Sine</a></li>
+  <li><a href="#spiral" id="toc-spiral" class="nav-link" data-scroll-target="#spiral">Spiral</a></li>
+  </ul></li>
+  <li><a href="#trace-between-two-noise-projections" id="toc-trace-between-two-noise-projections" class="nav-link" data-scroll-target="#trace-between-two-noise-projections">Trace between two noise projections</a></li>
   <li><a href="#squintability" id="toc-squintability" class="nav-link" data-scroll-target="#squintability">Squintability</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -217,7 +228,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">16 Jun 2026</p>
+      <p class="date">23 Jun 2026</p>
     </div>
   </div>
   
@@ -274,8 +285,8 @@ I_{\text{rescaled}}
 </details>
 </div>
 </section>
-<section id="define-the-two-index-functions" class="level2">
-<h2 class="anchored" data-anchor-id="define-the-two-index-functions">Define the two index functions</h2>
+<section id="define-raw-and-rescaled-index-functions" class="level2">
+<h2 class="anchored" data-anchor-id="define-raw-and-rescaled-index-functions">Define raw and rescaled index functions</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rescaling function for stringy05</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rescale_stringy05 <span class="ot">&lt;-</span> <span class="cf">function</span>(z, n) {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  lb <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="sc">+</span> <span class="fl">3.86</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
@@ -291,9 +302,17 @@ I_{\text{rescaled}}
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rescale_stringy05</span>(z, <span class="fu">nrow</span>(mat))</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="generate-polynomial-data" class="level2">
-<h2 class="anchored" data-anchor-id="generate-polynomial-data">Generate polynomial data</h2>
-<p>I create data where only two variables contain the hidden polynomial structure. The signal is placed in variables 2 and 3, while variables 1 and 4 are Gaussian noise. I also add a small amount of noise to the polynomial variables so the structure is not perfectly deterministic.</p>
+<section id="generate-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="generate-datasets">Generate datasets</h2>
+<p>I use four datasets:</p>
+<ol type="1">
+<li>a hidden polynomial dataset, with the signal in variables 2 and 3;</li>
+<li>a pipe dataset where the structure is in the final two variables;</li>
+<li>a sine dataset;</li>
+<li>a spiral dataset.</li>
+</ol>
+<section id="polynomial-data" class="level3">
+<h3 class="anchored" data-anchor-id="polynomial-data">Polynomial data</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -314,156 +333,206 @@ I_{\text{rescaled}}
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(x)</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>dat4 <span class="ot">&lt;-</span> <span class="fu">make_poly_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">p =</span> <span class="dv">4</span>, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">seed =</span> <span class="dv">1050</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>dat4 <span class="ot">&lt;-</span> <span class="fu">scale</span>(<span class="fu">make_poly_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">p =</span> <span class="dv">4</span>, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">seed =</span> <span class="dv">1050</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>The true interesting projection is the plane spanned by variables 2 and 3.</p>
+<p>The polynomial signal is in variables 2 and 3.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>basis_true <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(dat4))[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>basis_noise <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(dat4))[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>basis_poly_true <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>basis_poly_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Before using the guided tour, I first plotted the two signal variables directly. This is the target structure that I want the guided tour to find.</p>
+</section>
+<section id="pipe-sine-and-spiral-data" class="level3">
+<h3 class="anchored" data-anchor-id="pipe-sine-and-spiral-data">Pipe, sine, and spiral data</h3>
+<p>For these <code>spinebil</code> datasets, I use six variables. The structured variables are <code>V5</code> and <code>V6</code>, and the nuisance variables are <code>V1</code>, <code>V2</code>, <code>V3</code>, and <code>V4</code>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat4, <span class="fu">aes</span>(<span class="at">x =</span> V2, <span class="at">y =</span> V3)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>         <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>pipe_dat <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">pipe_data</span>(<span class="dv">300</span>, <span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">scale</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sine_dat <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">sin_data</span>(<span class="dv">300</span>, <span class="dv">6</span>, <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">scale</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>spiral_dat <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">spiral_data</span>(<span class="dv">300</span>, <span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">scale</span>()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>basis_spinebil_true <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">6</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>basis_spinebil_noise1 <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">6</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>basis_spinebil_noise2 <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="plot-the-true-structures" class="level2">
+<h2 class="anchored" data-anchor-id="plot-the-true-structures">Plot the true structures</h2>
+<p>Before using the guided tour, I first plotted the signal variables directly. This is the target structures that I want the guided tour to find.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>poly_plot <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(dat4) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">x =</span> V2, <span class="at">y =</span> V3, <span class="at">data =</span> <span class="st">"polynomial"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pipe_plot <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pipe_dat) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">x =</span> V5, <span class="at">y =</span> V6, <span class="at">data =</span> <span class="st">"pipe"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>sine_plot <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sine_dat) <span class="sc">|&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">x =</span> V5, <span class="at">y =</span> V6, <span class="at">data =</span> <span class="st">"sine"</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>spiral_plot <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(spiral_dat) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(<span class="at">x =</span> V5, <span class="at">y =</span> V6, <span class="at">data =</span> <span class="st">"spiral"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(poly_plot, pipe_plot, sine_plot, spiral_plot) <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> data, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"True structured projections"</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="first-direct-check-signal-versus-noise" class="level2">
-<h2 class="anchored" data-anchor-id="first-direct-check-signal-versus-noise">First direct check: signal versus noise</h2>
-<p>A useful projection pursuit index should give a higher value to the structured projection than to a noise projection.</p>
+<section id="direct-check-signal-versus-noise" class="level2">
+<h2 class="anchored" data-anchor-id="direct-check-signal-versus-noise">Direct check: signal versus noise</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rescaling function for stringy05</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>rescale_stringy05 <span class="ot">&lt;-</span> <span class="cf">function</span>(z, n) {</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  lb <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="sc">+</span> <span class="fl">3.86</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pmax</span>(<span class="dv">0</span>, (z <span class="sc">-</span> lb) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lb))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>stringy05_raw <span class="ot">&lt;-</span> <span class="cf">function</span>(mat) {</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>stringy05_rescaled <span class="ot">&lt;-</span> <span class="cf">function</span>(mat) {</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">&lt;-</span> cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rescale_stringy05</span>(z, <span class="fu">nrow</span>(mat))</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>direct_check <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">projection =</span> <span class="fu">c</span>(<span class="st">"true polynomial plane"</span>, <span class="st">"noise plane"</span>),</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw =</span> <span class="fu">c</span>(</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(<span class="fu">as.matrix</span>(dat4) <span class="sc">%*%</span> basis_true),</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(<span class="fu">as.matrix</span>(dat4) <span class="sc">%*%</span> basis_noise)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">rescaled =</span> <span class="fu">c</span>(</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(<span class="fu">as.matrix</span>(dat4) <span class="sc">%*%</span> basis_true),</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(<span class="fu">as.matrix</span>(dat4) <span class="sc">%*%</span> basis_noise)</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(direct_check)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rescaling function for stringy05</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>rescale_stringy05 <span class="ot">&lt;-</span> <span class="cf">function</span>(z, n) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  lb <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="sc">+</span> <span class="fl">3.86</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pmax</span>(<span class="dv">0</span>, (z <span class="sc">-</span> lb) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lb))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>stringy05_raw <span class="ot">&lt;-</span> <span class="cf">function</span>(mat) {</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>stringy05_rescaled <span class="ot">&lt;-</span> <span class="cf">function</span>(mat) {</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">&lt;-</span> cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rescale_stringy05</span>(z, <span class="fu">nrow</span>(mat))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>direct_check <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">c</span>(<span class="st">"polynomial"</span>, <span class="st">"pipe"</span>, <span class="st">"sine"</span>, <span class="st">"spiral"</span>),</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_signal =</span> <span class="fu">c</span>(</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(dat4 <span class="sc">%*%</span> basis_poly_true),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(pipe_dat <span class="sc">%*%</span> basis_spinebil_true),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(sine_dat <span class="sc">%*%</span> basis_spinebil_true),</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(spiral_dat <span class="sc">%*%</span> basis_spinebil_true)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_noise =</span> <span class="fu">c</span>(</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(dat4 <span class="sc">%*%</span> basis_poly_noise),</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(pipe_dat <span class="sc">%*%</span> basis_spinebil_noise1),</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(sine_dat <span class="sc">%*%</span> basis_spinebil_noise1),</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_raw</span>(spiral_dat <span class="sc">%*%</span> basis_spinebil_noise1)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">rescaled_signal =</span> <span class="fu">c</span>(</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(dat4 <span class="sc">%*%</span> basis_poly_true),</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(pipe_dat <span class="sc">%*%</span> basis_spinebil_true),</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(sine_dat <span class="sc">%*%</span> basis_spinebil_true),</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(spiral_dat <span class="sc">%*%</span> basis_spinebil_true)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">rescaled_noise =</span> <span class="fu">c</span>(</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(dat4 <span class="sc">%*%</span> basis_poly_noise),</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(pipe_dat <span class="sc">%*%</span> basis_spinebil_noise1),</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(sine_dat <span class="sc">%*%</span> basis_spinebil_noise1),</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_rescaled</span>(spiral_dat <span class="sc">%*%</span> basis_spinebil_noise1)</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(direct_check, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;">projection</th>
-<th style="text-align: right;">raw</th>
-<th style="text-align: right;">rescaled</th>
+<th style="text-align: left;">data</th>
+<th style="text-align: right;">raw_signal</th>
+<th style="text-align: right;">raw_noise</th>
+<th style="text-align: right;">rescaled_signal</th>
+<th style="text-align: right;">rescaled_noise</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">true polynomial plane</td>
-<td style="text-align: right;">0.9880098</td>
-<td style="text-align: right;">0.9835106</td>
+<td style="text-align: left;">polynomial</td>
+<td style="text-align: right;">0.988</td>
+<td style="text-align: right;">0.242</td>
+<td style="text-align: right;">0.984</td>
+<td style="text-align: right;">0.000</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">noise plane</td>
-<td style="text-align: right;">0.2421718</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: left;">pipe</td>
+<td style="text-align: right;">0.811</td>
+<td style="text-align: right;">0.400</td>
+<td style="text-align: right;">0.741</td>
+<td style="text-align: right;">0.174</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sine</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.235</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">spiral</td>
+<td style="text-align: right;">0.929</td>
+<td style="text-align: right;">0.238</td>
+<td style="text-align: right;">0.902</td>
+<td style="text-align: right;">0.000</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>If <code>stringy05</code> is useful as a PPI, the true polynomial plane should have a larger value than the noise plane.</p>
-</section>
-<section id="rotation-invariance-check-with-spinebil" class="level2">
-<h2 class="anchored" data-anchor-id="rotation-invariance-check-with-spinebil">Rotation invariance check with <code>spinebil</code></h2>
-<p>For a 2D guided tour, the index should measure the plane, not the orientation inside the plane. This means rotating the projected 2D data should not substantially change the index value.</p>
-<p>Here I use <code>spinebil::profile_rotation()</code> to rotate the true 2D polynomial projection and calculate both index versions at each rotation step.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d_true <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(dat4) <span class="sc">%*%</span> basis_true</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>index_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  stringy05_raw,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  stringy05_rescaled</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>index_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05 raw"</span>,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05 rescaled"</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>rotation_values <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">profile_rotation</span>(</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> d_true,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels,</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">200</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_rotation</span>(rotation_values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The rotation profile is almost flat for both the raw and rescaled versions of <code>stringy05</code>. This suggests that the index is approximately rotation invariant: rotating the same 2D projection does not substantially change the index value. This is a good property for a projection pursuit index because the guided tour should evaluate the projection plane itself, not the arbitrary orientation of the points inside the 2D display.</p>
-</section>
-<section id="trace-from-noise-projection-to-true-projection" class="level2">
-<h2 class="anchored" data-anchor-id="trace-from-noise-projection-to-true-projection">Trace from noise projection to true projection</h2>
-<p>Next, I examine how the index changes along an interpolated planned tour path from a noise projection to the true polynomial projection.</p>
-<p>A useful index should increase as the projection approaches the hidden structure. If the index only increases very close to the true projection, it may be difficult for an optimizer to find the structure.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  basis_noise,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  basis_true</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>trace_values <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> <span class="fu">as.matrix</span>(dat4),</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> m,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_trace</span>(trace_values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plot_proj <span class="ot">&lt;-</span> <span class="cf">function</span>(dat, basis, data, projection) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(<span class="fu">as.matrix</span>(dat) <span class="sc">%*%</span> basis) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">data =</span> data, <span class="at">projection =</span> projection)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>projection_plot_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(dat4, basis_poly_true, <span class="st">"polynomial"</span>, <span class="st">"signal"</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(dat4, basis_poly_noise, <span class="st">"polynomial"</span>, <span class="st">"noise"</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(pipe_dat, basis_spinebil_true, <span class="st">"pipe"</span>, <span class="st">"signal"</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(pipe_dat, basis_spinebil_noise1, <span class="st">"pipe"</span>, <span class="st">"noise"</span>),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(sine_dat, basis_spinebil_true, <span class="st">"sine"</span>, <span class="st">"signal"</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(sine_dat, basis_spinebil_noise1, <span class="st">"sine"</span>, <span class="st">"noise"</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(spiral_dat, basis_spinebil_true, <span class="st">"spiral"</span>, <span class="st">"signal"</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_proj</span>(spiral_dat, basis_spinebil_noise1, <span class="st">"spiral"</span>, <span class="st">"noise"</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(projection_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(projection <span class="sc">~</span> data, <span class="at">scales =</span> <span class="st">"free"</span>)  <span class="sc">+</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Signal and noise projections"</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -473,91 +542,375 @@ I_{\text{rescaled}}
 </div>
 </div>
 </div>
-<p>Both the raw and rescaled versions remain relatively flat until very close to the true projection, where the index increases sharply, suggesting that <code>stringy05</code> has relatively low squintability and may be challenging for optimizers to locate from random starting projections.</p>
+<p>A useful projection pursuit index should give larger values to the signal projection than to the noise projection. The rescaled version should reduce the values assigned to noise projections.</p>
 </section>
-<section id="squintability" class="level2">
-<h2 class="anchored" data-anchor-id="squintability">Squintability</h2>
-<p>Squintability checks how early the index starts improving when moving from random projections toward the best projection. Here the theoretical best projection is the plane spanned by variables 2 and 3.</p>
+<section id="rotation-invariance" class="level2">
+<h2 class="anchored" data-anchor-id="rotation-invariance">Rotation invariance</h2>
+<p>For a 2D guided tour, the index should measure the plane, not the orientation inside the plane. This means rotating the projected 2D data should not substantially change the index value.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stringy05_raw <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(mat) {</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>stringy05_rescaled <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(mat) {</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">&lt;-</span> cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rescale_stringy05</span>(z, <span class="fu">nrow</span>(mat))</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>dat4_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(dat4)</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>basis_squint_raw <span class="ot">&lt;-</span> ferrn<span class="sc">::</span><span class="fu">sample_bases</span>(</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">idx =</span> <span class="st">"stringy05_raw"</span>,</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat4_mat,</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_basis =</span> <span class="dv">20</span>,</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">best =</span> basis_true,</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_proj_dist =</span> <span class="fl">0.5</span>,</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">step_size =</span> <span class="fl">0.02</span>,</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1050</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>basis_squint_rescaled <span class="ot">&lt;-</span> ferrn<span class="sc">::</span><span class="fu">sample_bases</span>(</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">idx =</span> <span class="st">"stringy05_rescaled"</span>,</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat4_mat,</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_basis =</span> <span class="dv">20</span>,</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">best =</span> basis_true,</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_proj_dist =</span> <span class="fl">0.5</span>,</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">step_size =</span> <span class="fl">0.02</span>,</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1050</span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>squint_raw <span class="ot">&lt;-</span> ferrn<span class="sc">::</span><span class="fu">calc_squintability</span>(</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>  basis_squint_raw,</span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"ks"</span>,</span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">bin_width =</span> <span class="fl">0.02</span></span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>squint_rescaled <span class="ot">&lt;-</span> ferrn<span class="sc">::</span><span class="fu">calc_squintability</span>(</span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  basis_squint_rescaled,</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"ks"</span>,</span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">bin_width =</span> <span class="fl">0.02</span></span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>squint_raw</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>index_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  stringy05_raw,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  stringy05_rescaled</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>index_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05 raw"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05 rescaled"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>rotation_poly <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">profile_rotation</span>(</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> dat4 <span class="sc">%*%</span> basis_poly_true,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">200</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_rotation</span>(rotation_poly) <span class="sc">+</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Rotation invariance: polynomial"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># PP index:     stringy05_raw
-# No. of bases: 20 -&gt; 1454
-# method:       ks
-  max_x max_d squint
-  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1 0.284  2.01  0.571</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For the other datasets:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rotation_pipe <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">profile_rotation</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> pipe_dat <span class="sc">%*%</span> basis_spinebil_true,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">200</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>rotation_sine <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">profile_rotation</span>(</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> sine_dat <span class="sc">%*%</span> basis_spinebil_true,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">200</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>rotation_spiral <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">profile_rotation</span>(</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> spiral_dat <span class="sc">%*%</span> basis_spinebil_true,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">200</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_rotation</span>(rotation_pipe) <span class="sc">+</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Rotation invariance: pipe"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>squint_rescaled</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_rotation</span>(rotation_sine)  <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Rotation invariance: sine"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># PP index:     stringy05_rescaled
-# No. of bases: 20 -&gt; 1454
-# method:       ks
-  max_x max_d squint
-  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1 0.284  2.14  0.609</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_rotation</span>(rotation_spiral) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Rotation invariance: spiral"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The rotation profile is almost flat for both the raw and rescaled versions of <code>stringy05</code> . This suggests that the index is approximately rotation invariant: rotating the same 2D projection does not substantially change the index value. This is a good property for a projection pursuit index because the guided tour should evaluate the projection plane itself, not the arbitrary orientation of the points inside the 2D display.</p>
+</section>
+<section id="trace-from-noise-projection-to-signal-projection" class="level2">
+<h2 class="anchored" data-anchor-id="trace-from-noise-projection-to-signal-projection">Trace from noise projection to signal projection</h2>
+<p>Next, I examine how the index changes along an interpolated planned tour path from a noise projection to the signal projection. This checks whether the index increases as the projection moves from a noise plane toward the true structured plane.</p>
+<section id="polynomial" class="level3">
+<h3 class="anchored" data-anchor-id="polynomial">Polynomial</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>trace_poly_signal <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> dat4,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">list</span>(basis_poly_noise, basis_poly_true),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_trace</span>(trace_poly_signal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>To be written …</p>
+<section id="pipe" class="level3">
+<h3 class="anchored" data-anchor-id="pipe">Pipe</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>trace_pipe_signal <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> pipe_dat,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">list</span>(basis_spinebil_noise1, basis_spinebil_true),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_trace</span>(trace_pipe_signal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sine" class="level3">
+<h3 class="anchored" data-anchor-id="sine">Sine</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>trace_sine_signal <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> sine_dat,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">list</span>(basis_spinebil_noise1, basis_spinebil_true),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_trace</span>(trace_sine_signal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="spiral" class="level3">
+<h3 class="anchored" data-anchor-id="spiral">Spiral</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>trace_spiral_signal <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> spiral_dat,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">list</span>(basis_spinebil_noise1, basis_spinebil_true),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>spinebil<span class="sc">::</span><span class="fu">plot_trace</span>(trace_spiral_signal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Both the raw and rescaled versions remain relatively flat until very close to the true projection, where the index increases sharply, suggesting that <code>stringy05</code> has relatively low squintability and may be challenging for optimizers to locate from random starting projections.</p>
+</section>
+</section>
+<section id="trace-between-two-noise-projections" class="level2">
+<h2 class="anchored" data-anchor-id="trace-between-two-noise-projections">Trace between two noise projections</h2>
+<p>Here both endpoints are nuisance projections, so the index should ideally stay low.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>trace_pipe_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> pipe_dat,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">list</span>(basis_spinebil_noise1, basis_spinebil_noise2),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>trace_sine_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> sine_dat,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">list</span>(basis_spinebil_noise1, basis_spinebil_noise2),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>trace_spiral_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">get_trace</span>(</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> spiral_dat,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">list</span>(basis_spinebil_noise1, basis_spinebil_noise2),</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_list =</span> index_list,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_labels =</span> index_labels</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>trace_all_noise <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(trace_pipe_noise) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">data =</span> <span class="st">"pipe"</span>),</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(trace_spiral_noise) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">data =</span> <span class="st">"spiral"</span>),</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(trace_sine_noise) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">data =</span> <span class="st">"sine"</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>trace_all_noise_long <span class="ot">&lt;-</span> trace_all_noise <span class="sc">|&gt;</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">stringy05 raw</span><span class="st">`</span>, <span class="st">`</span><span class="at">stringy05 rescaled</span><span class="st">`</span>),</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"index_type"</span>,</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">factor</span>(data, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"pipe"</span>, <span class="st">"spiral"</span>, <span class="st">"sine"</span>))</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trace_all_noise_long,</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> value, <span class="at">linetype =</span> index_type)) <span class="sc">+</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> data, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"stringy05 raw"</span> <span class="ot">=</span> <span class="st">"solid"</span>,</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">"stringy05 rescaled"</span> <span class="ot">=</span> <span class="st">"dashed"</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sequence of projections"</span>,</span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"PPI value"</span>,</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="cn">NULL</span>,</span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Trace between two nuisance projections"</span></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="stringy_ppi_suitability_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Solid line: raw stringy05. Dashed line: rescaled stringy05.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The raw version gives non-zero or noisy values along nuisance paths, but the rescaled version is close to zero, this supports using the rescaled version inside the guided tour.</p>
+</section>
+<section id="squintability" class="level2">
+<h2 class="anchored" data-anchor-id="squintability">Squintability</h2>
+<p>Squintability tells us how early the index starts detecting the structure. A small squint angle means the index only becomes large when the projection is already very close to the target plane.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>cutoff_raw <span class="ot">&lt;-</span> <span class="fu">unname</span>(spinebil<span class="sc">::</span><span class="fu">ppi_noise_threshold</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_fun =</span> stringy05_raw,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_sim =</span> <span class="dv">100</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_obs =</span> <span class="dv">300</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">noise_type =</span> <span class="st">"gaussian"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1050</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>cutoff_rescaled <span class="ot">&lt;-</span> <span class="fu">unname</span>(spinebil<span class="sc">::</span><span class="fu">ppi_noise_threshold</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">index_fun =</span> stringy05_rescaled,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_sim =</span> <span class="dv">100</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_obs =</span> <span class="dv">300</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">noise_type =</span> <span class="st">"gaussian"</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1050</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Avoid zero cutoff for the rescaled index</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>cutoff_rescaled <span class="ot">&lt;-</span> <span class="fu">max</span>(cutoff_rescaled, <span class="fl">0.01</span>)</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>get_squint <span class="ot">&lt;-</span> <span class="cf">function</span>(dat, basis_true, index_fun, cutoff) {</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  angles <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">squint_angle_estimate</span>(</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">indexF =</span> index_fun,</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutoff =</span> cutoff,</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">structure_plane =</span> basis_true,</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="dv">30</span>,</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">step_size =</span> <span class="fl">0.02</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(angles, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>squint_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">c</span>(<span class="st">"polynomial"</span>, <span class="st">"pipe"</span>, <span class="st">"sine"</span>, <span class="st">"spiral"</span>),</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw =</span> <span class="fu">c</span>(</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(dat4, basis_poly_true, stringy05_raw, cutoff_raw),</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(pipe_dat, basis_spinebil_true, stringy05_raw, cutoff_raw),</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(sine_dat, basis_spinebil_true, stringy05_raw, cutoff_raw),</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(spiral_dat, basis_spinebil_true, stringy05_raw, cutoff_raw)</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">rescaled =</span> <span class="fu">c</span>(</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(dat4, basis_poly_true, stringy05_rescaled, cutoff_rescaled),</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(pipe_dat, basis_spinebil_true, stringy05_rescaled, cutoff_rescaled),</span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(sine_dat, basis_spinebil_true, stringy05_rescaled, cutoff_rescaled),</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_squint</span>(spiral_dat, basis_spinebil_true, stringy05_rescaled, cutoff_rescaled)</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>  squint_table,</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Mean squint angle for raw and rescaled stringy05 across datasets."</span></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Mean squint angle for raw and rescaled stringy05 across datasets.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">data</th>
+<th style="text-align: right;">raw</th>
+<th style="text-align: right;">rescaled</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">polynomial</td>
+<td style="text-align: right;">1.394</td>
+<td style="text-align: right;">1.437</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pipe</td>
+<td style="text-align: right;">1.654</td>
+<td style="text-align: right;">1.608</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sine</td>
+<td style="text-align: right;">1.588</td>
+<td style="text-align: right;">1.607</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">spiral</td>
+<td style="text-align: right;">1.557</td>
+<td style="text-align: right;">1.619</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The estimated squint angle for the polynomial dataset is 1.39 radians. Since this value is close to <span class="math inline">\(\pi/2\)</span>, it suggests that the index can detect the structure relatively early along the path toward the optimal projection. Therefore, for this dataset and cutoff, <code>stringy05</code> appears to have good squintability. The rescaled version also shows slightly higher squintability than the raw index.</p>
 
 
 </section>
