@@ -1328,5 +1328,54 @@
     "title": "Using the stringy05 index in a guided tour",
     "section": "Summary",
     "text": "Summary\nThe stringy05 index assigns large values to the known polynomial projection and smaller values to a Gaussian-noise projection. The rescaled version further reduces index values that are likely to arise from noise, making it a practical choice for the guided-tour examples in this vignette.\nThe optimizer remains an important part of the analysis. search_geodesic, search_better_random, and search_jellyfish explore projection space differently and may therefore return different results. Jellyfish provides broader exploration through multiple search loops, but the higher-dimensional examples show that recovering a known optimum becomes more difficult as the projection space grows.\nThese examples also illustrate why scaling should be considered carefully. Standardization changes the relative magnitude of the signal and noise variables. Although scaling makes variables comparable in variance, it may weaken a deliberately dominant signal or amplify nuisance variation, changing both the index landscape and the projection selected by the optimizer."
+  },
+  {
+    "objectID": "blog/choosing_a_ppi/choosing_ppi.html",
+    "href": "blog/choosing_a_ppi/choosing_ppi.html",
+    "title": "Choosing a Projection Pursuit Index",
+    "section": "",
+    "text": "Projection pursuit (PP) is a statistical technique for exploring high-dimensional data by searching for low-dimensional projections that reveal interesting structure. Instead of examining every possible projection, projection pursuit defines an objective function, called a projection pursuit index (PPI), which measures how “interesting” a two-dimensional projection is.\nA guided tour searches through the projection space and continuously updates the projection basis to maximize the chosen projection pursuit index. Therefore, the quality of the resulting visualization depends strongly on the properties of the selected index.\nDifferent indices are designed to detect different types of structures. Some emphasize nonlinear relationships, some detect clusters, while others are designed for holes, strings, or smooth manifolds. Consequently, no single projection pursuit index is optimal for every dataset.\nThis article introduces the basic principles of projection pursuit indices, discusses the characteristics of a useful index, and provides guidance for selecting an appropriate index for different analysis tasks."
+  },
+  {
+    "objectID": "blog/choosing_a_ppi/choosing_ppi.html#introduction",
+    "href": "blog/choosing_a_ppi/choosing_ppi.html#introduction",
+    "title": "Choosing a Projection Pursuit Index",
+    "section": "",
+    "text": "Projection pursuit (PP) is a statistical technique for exploring high-dimensional data by searching for low-dimensional projections that reveal interesting structure. Instead of examining every possible projection, projection pursuit defines an objective function, called a projection pursuit index (PPI), which measures how “interesting” a two-dimensional projection is.\nA guided tour searches through the projection space and continuously updates the projection basis to maximize the chosen projection pursuit index. Therefore, the quality of the resulting visualization depends strongly on the properties of the selected index.\nDifferent indices are designed to detect different types of structures. Some emphasize nonlinear relationships, some detect clusters, while others are designed for holes, strings, or smooth manifolds. Consequently, no single projection pursuit index is optimal for every dataset.\nThis article introduces the basic principles of projection pursuit indices, discusses the characteristics of a useful index, and provides guidance for selecting an appropriate index for different analysis tasks."
+  },
+  {
+    "objectID": "blog/choosing_a_ppi/choosing_ppi.html#what-is-a-projection-pursuit-index",
+    "href": "blog/choosing_a_ppi/choosing_ppi.html#what-is-a-projection-pursuit-index",
+    "title": "Choosing a Projection Pursuit Index",
+    "section": "What is a Projection Pursuit Index?",
+    "text": "What is a Projection Pursuit Index?\nSuppose the data matrix is\n\\[\nX \\in \\mathbb{R}^{n \\times p},\n\\]\nand let\n\\[\nA \\in \\mathbb{R}^{p \\times 2}\n\\]\nbe a two-dimensional projection basis.\nThe projected data are\n\\[\nY = XA.\n\\]\nA projection pursuit index is a function\n\\[\nI(Y),\n\\]\nthat assigns a numerical score to the projected data.\nHigher values indicate projections that better match the type of structure the index is designed to detect.\nThe guided tour repeatedly evaluates this index while searching through projection space, attempting to locate projections with high index values."
+  },
+  {
+    "objectID": "blog/choosing_a_ppi/choosing_ppi.html#how-does-a-guided-tour-work",
+    "href": "blog/choosing_a_ppi/choosing_ppi.html#how-does-a-guided-tour-work",
+    "title": "Choosing a Projection Pursuit Index",
+    "section": "How Does a Guided Tour Work?",
+    "text": "How Does a Guided Tour Work?\nA guided tour is an optimization procedure operating in projection space.\nRather than searching every possible projection, it:\n\nbegins from an initial projection;\ngenerates nearby candidate projections;\nevaluates the projection pursuit index for each candidate;\nmoves toward projections with higher index values; and\nrepeats until no better projection is found.\n\nThe optimization algorithm is independent of the projection pursuit index. Different indices provide different objective functions that guide the search toward different structures.\nA general guided tour in R can be written as:\n\nlibrary(tourr)\n\nanimate_xy(\n  data,\n  guided_tour(index_function)\n)\nHere, index_function is the projection pursuit index used to evaluate each candidate projection."
+  },
+  {
+    "objectID": "blog/choosing_a_ppi/choosing_ppi.html#what-makes-a-good-projection-pursuit-index",
+    "href": "blog/choosing_a_ppi/choosing_ppi.html#what-makes-a-good-projection-pursuit-index",
+    "title": "Choosing a Projection Pursuit Index",
+    "section": "What Makes a Good Projection Pursuit Index?",
+    "text": "What Makes a Good Projection Pursuit Index?\nA useful projection pursuit index should possess several desirable properties.\n\nDetects Meaningful Structure\nThe index should assign larger values to projections containing genuine structure than to random noise.\n\n\nRotation Invariance\nRotating the same two-dimensional projection should not substantially change the index value.\nSince the projection plane remains unchanged, the index should depend on the plane itself rather than the orientation of the points within that plane.\n\n\nDistinguishes Signal from Noise\nA useful index should assign consistently low values to projections containing only noise while producing higher values for structured projections.\nLarge overlap between signal and noise can make optimization substantially more difficult.\n\n\nSmooth Optimization Landscape\nThe index should change smoothly as the projection moves through projection space.\nLarge discontinuities or many local optima may prevent optimization algorithms from finding the global optimum.\n\n\nGood Squintability\nAn ideal index begins increasing before reaching the optimal projection.\nIf the index only increases when the projection is already very close to the optimum, optimization becomes much more challenging.\n\n\nComputational Efficiency\nSince guided tours may evaluate the index thousands of times, computational efficiency is important, especially for large datasets.\n\n\nRobustness\nThe index should behave reasonably under moderate noise, outliers, and different sample sizes.\nDepending on the application, robustness to data scaling may also be an important consideration. Scaling can change the relative contribution of signal and noise variables and may therefore alter the projection identified as optimal."
+  },
+  {
+    "objectID": "blog/choosing_a_ppi/choosing_ppi.html#choosing-an-index",
+    "href": "blog/choosing_a_ppi/choosing_ppi.html#choosing-an-index",
+    "title": "Choosing a Projection Pursuit Index",
+    "section": "Choosing an Index",
+    "text": "Choosing an Index\nDifferent projection pursuit indices are designed to identify different structures. The table below provides a starting point when selecting an index.\n\n\n\nIndex\nPrimary structure\nTypical applications\nDocumentation\nBlog\n\n\n\n\nStringy\nCurves and elongated structures\nHidden nonlinear relationships\nStringy vignette\nStringy blog"
+  },
+  {
+    "objectID": "blog/choosing_a_ppi/choosing_ppi.html#comparing-projection-pursuit-indices",
+    "href": "blog/choosing_a_ppi/choosing_ppi.html#comparing-projection-pursuit-indices",
+    "title": "Choosing a Projection Pursuit Index",
+    "section": "Comparing Projection Pursuit Indices",
+    "text": "Comparing Projection Pursuit Indices\nThe following articles provide detailed evaluations of each projection pursuit index."
   }
 ]
