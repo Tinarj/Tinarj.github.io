@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-17">
+<meta name="dcterms.date" content="2026-06-20">
 
-<title>Can tourr optimizers find the hidden stringy projection? – Tina Rashid Jafari</title>
+<title>Using the stringy05 index in a guided tour – Tina Rashid Jafari</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -190,37 +190,42 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">Goal</a></li>
-  <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper functions</a></li>
-  <li><a href="#first-optimizer-test-geodesic-and-better-random" id="toc-first-optimizer-test-geodesic-and-better-random" class="nav-link" data-scroll-target="#first-optimizer-test-geodesic-and-better-random">First optimizer test: geodesic and better random</a></li>
-  <li><a href="#d-data" id="toc-d-data" class="nav-link" data-scroll-target="#d-data">4D data</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#generate-a-four-dimensional-dataset" id="toc-generate-a-four-dimensional-dataset" class="nav-link" data-scroll-target="#generate-a-four-dimensional-dataset">Generate a four-dimensional dataset</a></li>
+  <li><a href="#define-the-true-structure-and-a-noise-projection" id="toc-define-the-true-structure-and-a-noise-projection" class="nav-link" data-scroll-target="#define-the-true-structure-and-a-noise-projection">Define the true structure and a noise projection</a></li>
+  <li><a href="#plot-the-signal-and-noise-projections" id="toc-plot-the-signal-and-noise-projections" class="nav-link" data-scroll-target="#plot-the-signal-and-noise-projections">Plot the signal and noise projections</a></li>
+  <li><a href="#explore-the-data-with-a-grand-tour" id="toc-explore-the-data-with-a-grand-tour" class="nav-link" data-scroll-target="#explore-the-data-with-a-grand-tour">Explore the data with a grand tour</a>
   <ul class="collapse">
-  <li><a href="#search_geodesic" id="toc-search_geodesic" class="nav-link" data-scroll-target="#search_geodesic"><code>search_geodesic</code></a></li>
+  <li><a href="#run-and-save-the-grand-tour" id="toc-run-and-save-the-grand-tour" class="nav-link" data-scroll-target="#run-and-save-the-grand-tour">Run and save the grand tour</a></li>
   </ul></li>
-  <li><a href="#d-data-1" id="toc-d-data-1" class="nav-link" data-scroll-target="#d-data-1">6D data</a>
+  <li><a href="#define-stringy05-as-a-projection-pursuit-index" id="toc-define-stringy05-as-a-projection-pursuit-index" class="nav-link" data-scroll-target="#define-stringy05-as-a-projection-pursuit-index">Define <code>stringy05</code> as a projection pursuit index</a></li>
+  <li><a href="#check-stringy05-on-the-true-structure-and-on-noise" id="toc-check-stringy05-on-the-true-structure-and-on-noise" class="nav-link" data-scroll-target="#check-stringy05-on-the-true-structure-and-on-noise">Check <code>stringy05</code> on the true structure and on noise</a></li>
+  <li><a href="#guided-tour-using-search_geodesic" id="toc-guided-tour-using-search_geodesic" class="nav-link" data-scroll-target="#guided-tour-using-search_geodesic">Guided tour using <code>search_geodesic</code></a>
   <ul class="collapse">
-  <li><a href="#search_geodesic-1" id="toc-search_geodesic-1" class="nav-link" data-scroll-target="#search_geodesic-1"><code>search_geodesic</code></a></li>
+  <li><a href="#view-the-search_geodesic-tour-interactively" id="toc-view-the-search_geodesic-tour-interactively" class="nav-link" data-scroll-target="#view-the-search_geodesic-tour-interactively">View the <code>search_geodesic</code> tour interactively</a></li>
   </ul></li>
-  <li><a href="#d-data-2" id="toc-d-data-2" class="nav-link" data-scroll-target="#d-data-2">8D data</a>
+  <li><a href="#guided-tour-using-search_better_random" id="toc-guided-tour-using-search_better_random" class="nav-link" data-scroll-target="#guided-tour-using-search_better_random">Guided tour using <code>search_better_random</code></a>
   <ul class="collapse">
-  <li><a href="#search_geodesic-2" id="toc-search_geodesic-2" class="nav-link" data-scroll-target="#search_geodesic-2"><code>search_geodesic</code></a></li>
+  <li><a href="#save-the-search_better_random-tour-as-a-gif" id="toc-save-the-search_better_random-tour-as-a-gif" class="nav-link" data-scroll-target="#save-the-search_better_random-tour-as-a-gif">Save the <code>search_better_random</code> tour as a gif</a></li>
   </ul></li>
-  <li><a href="#d-data-3" id="toc-d-data-3" class="nav-link" data-scroll-target="#d-data-3">4D data</a>
+  <li><a href="#guided-tour-using-search_jellyfish" id="toc-guided-tour-using-search_jellyfish" class="nav-link" data-scroll-target="#guided-tour-using-search_jellyfish">Guided tour using <code>search_jellyfish</code></a></li>
+  <li><a href="#find-the-best-jellyfish-projection" id="toc-find-the-best-jellyfish-projection" class="nav-link" data-scroll-target="#find-the-best-jellyfish-projection">Find the best Jellyfish projection</a></li>
+  <li><a href="#save-and-show-the-best-jellyfish-loop" id="toc-save-and-show-the-best-jellyfish-loop" class="nav-link" data-scroll-target="#save-and-show-the-best-jellyfish-loop">Save and show the best Jellyfish loop</a></li>
+  <li><a href="#visualize-the-best-final-projection" id="toc-visualize-the-best-final-projection" class="nav-link" data-scroll-target="#visualize-the-best-final-projection">Visualize the best final projection</a></li>
+  <li><a href="#extend-the-example-to-higher-dimensions" id="toc-extend-the-example-to-higher-dimensions" class="nav-link" data-scroll-target="#extend-the-example-to-higher-dimensions">Extend the example to higher dimensions</a></li>
+  <li><a href="#define-true-signal-and-noise-bases" id="toc-define-true-signal-and-noise-bases" class="nav-link" data-scroll-target="#define-true-signal-and-noise-bases">Define true signal and noise bases</a></li>
+  <li><a href="#check-the-index-value-on-the-true-2d-projection" id="toc-check-the-index-value-on-the-true-2d-projection" class="nav-link" data-scroll-target="#check-the-index-value-on-the-true-2d-projection">Check the index value on the true 2D projection</a></li>
+  <li><a href="#run-jellyfish-in-higher-dimensions" id="toc-run-jellyfish-in-higher-dimensions" class="nav-link" data-scroll-target="#run-jellyfish-in-higher-dimensions">Run Jellyfish in higher dimensions</a></li>
+  <li><a href="#find-the-best-jellyfish-projection-in-each-dataset" id="toc-find-the-best-jellyfish-projection-in-each-dataset" class="nav-link" data-scroll-target="#find-the-best-jellyfish-projection-in-each-dataset">Find the best Jellyfish projection in each dataset</a></li>
+  <li><a href="#extract-the-best-loop-from-each-search" id="toc-extract-the-best-loop-from-each-search" class="nav-link" data-scroll-target="#extract-the-best-loop-from-each-search">Extract the best loop from each search</a></li>
+  <li><a href="#render-the-best-jellyfish-loops" id="toc-render-the-best-jellyfish-loops" class="nav-link" data-scroll-target="#render-the-best-jellyfish-loops">Render the best Jellyfish loops</a>
   <ul class="collapse">
-  <li><a href="#search_better_random" id="toc-search_better_random" class="nav-link" data-scroll-target="#search_better_random"><code>search_better_random</code></a></li>
+  <li><a href="#d-polynomial-data" id="toc-d-polynomial-data" class="nav-link" data-scroll-target="#d-polynomial-data">6D polynomial data</a></li>
+  <li><a href="#d-polynomial-data-1" id="toc-d-polynomial-data-1" class="nav-link" data-scroll-target="#d-polynomial-data-1">8D polynomial data</a></li>
+  <li><a href="#d-polynomial-data-2" id="toc-d-polynomial-data-2" class="nav-link" data-scroll-target="#d-polynomial-data-2">12D polynomial data</a></li>
   </ul></li>
-  <li><a href="#d-data-4" id="toc-d-data-4" class="nav-link" data-scroll-target="#d-data-4">6D data</a>
-  <ul class="collapse">
-  <li><a href="#search_better_random-1" id="toc-search_better_random-1" class="nav-link" data-scroll-target="#search_better_random-1"><code>search_better_random</code></a></li>
-  </ul></li>
-  <li><a href="#d-data-5" id="toc-d-data-5" class="nav-link" data-scroll-target="#d-data-5">8D data</a>
-  <ul class="collapse">
-  <li><a href="#search_better_random-2" id="toc-search_better_random-2" class="nav-link" data-scroll-target="#search_better_random-2"><code>search_better_random</code></a></li>
-  </ul></li>
-  <li><a href="#jellyfish-search" id="toc-jellyfish-search" class="nav-link" data-scroll-target="#jellyfish-search">Jellyfish search</a>
-  <ul class="collapse">
-  <li><a href="#d-jellyfish-search" id="toc-d-jellyfish-search" class="nav-link" data-scroll-target="#d-jellyfish-search">4D Jellyfish search</a></li>
-  </ul></li>
+  <li><a href="#plot-the-best-final-projections" id="toc-plot-the-best-final-projections" class="nav-link" data-scroll-target="#plot-the-best-final-projections">Plot the best final projections</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -229,7 +234,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Can tourr optimizers find the hidden stringy projection?</h1>
+<h1 class="title">Using the <code>stringy05</code> index in a guided tour</h1>
 </div>
 
 
@@ -240,7 +245,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">17 Jun 2026</p>
+      <p class="date">20 Jun 2026</p>
     </div>
   </div>
   
@@ -252,484 +257,974 @@ window.Quarto = {
 </header>
 
 
-<section id="goal" class="level2">
-<h2 class="anchored" data-anchor-id="goal">Goal</h2>
-<p>In the previous post, I explored whether <code>stringy05</code> behaves like a suitable projection pursuit index. I checked properties such as rotation invariance, trace behaviour, smoothness, and squintability.</p>
-<p>In this post, I move to the next question:</p>
-<p><strong>Can different <code>tourr</code> search methods actually find the true hidden projection?</strong></p>
-<p>The data are generated so that only variables 2 and 3 contain the polynomial structure. The remaining variables are Gaussian noise. I repeat this for 4, 6, and 8 dimensions.</p>
-<p>Here, I use the rescaled <code>stringy05</code> index as the objective function.</p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>The <code>stringy05</code> scagnostic measures string-like or snake-like structure in a two-dimensional point cloud. Patterns receiving large values may include chains, curved paths, and polynomial or sine-wave-like relationships. This makes <code>stringy05</code> a potential projection pursuit index for guiding a tour toward nonlinear structures hidden in high-dimensional data.</p>
+<p>This vignette demonstrates how to:</p>
+<ul>
+<li>construct a four-dimensional dataset containing a hidden polynomial structure;</li>
+<li>compare the index value of the known signal and noise projections;</li>
+<li>use <code>stringy05</code> with several guided-tour optimizers; and</li>
+<li>examine how the Jellyfish optimizer behaves as the number of noise dimensions increases.</li>
+</ul>
+<p>The examples use both the original index and a rescaled version that reduces values likely to arise from Gaussian noise.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tourr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cassowaryr)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tourr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cassowaryr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spinebil)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the index</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rescale_stringy05 <span class="ot">&lt;-</span> <span class="cf">function</span>(z, n) {</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  lb <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="sc">+</span> <span class="fl">3.86</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pmax</span>(<span class="dv">0</span>, (z <span class="sc">-</span> lb) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lb))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>stringy05_raw <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">rescale =</span> <span class="cn">FALSE</span>) {</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(mat) {</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">&lt;-</span> cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (rescale) {</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      z <span class="ot">&lt;-</span> <span class="fu">rescale_stringy05</span>(z, <span class="fu">nrow</span>(mat))</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    z</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>stringy05_index <span class="ot">&lt;-</span> <span class="fu">stringy05_raw</span>(<span class="at">rescale =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate polynomial data</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>make_poly_data <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">p =</span> <span class="dv">4</span>, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">seed =</span> <span class="dv">1050</span>,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                           <span class="at">signal_noise_sd =</span> <span class="fl">0.03</span>) {</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  signal <span class="ot">&lt;-</span> <span class="fu">poly</span>(t, <span class="at">degree =</span> degree, <span class="at">raw =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n <span class="sc">*</span> p), <span class="at">nrow =</span> n, <span class="at">ncol =</span> p)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  x[, <span class="dv">2</span>] <span class="ot">&lt;-</span> signal[, <span class="dv">1</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> signal_noise_sd)</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  x[, <span class="dv">3</span>] <span class="ot">&lt;-</span> signal[, <span class="dv">2</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> signal_noise_sd)</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(x) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"V"</span>, <span class="fu">seq_len</span>(p))</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(x)</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>dat4 <span class="ot">&lt;-</span>  <span class="fu">make_poly_data</span>(<span class="at">p =</span> <span class="dv">4</span>, <span class="at">seed =</span> <span class="dv">1050</span>)</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>dat6 <span class="ot">&lt;-</span>  <span class="fu">make_poly_data</span>(<span class="at">p =</span> <span class="dv">6</span>, <span class="at">seed =</span> <span class="dv">1050</span>)</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>dat8 <span class="ot">&lt;-</span>  <span class="fu">make_poly_data</span>(<span class="at">p =</span> <span class="dv">8</span>, <span class="at">seed =</span> <span class="dv">1050</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<p>The true projection is always the plane spanned by variables 2 and 3.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>true_basis <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">diag</span>(p)[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
-<section id="helper-functions" class="level2">
-<h2 class="anchored" data-anchor-id="helper-functions">Helper functions</h2>
-<p>I compare each optimized basis with the true basis using projection distance:</p>
-<p><span class="math display">\[
-d(A, B) =
-|AA^T - BB^T|_F.
-\]</span></p>
-<p>Smaller distance means the optimizer found a projection closer to the true polynomial plane.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>projection_distance <span class="ot">&lt;-</span> <span class="cf">function</span>(A, B) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">norm</span>(A <span class="sc">%*%</span> <span class="fu">t</span>(A) <span class="sc">-</span> B <span class="sc">%*%</span> <span class="fu">t</span>(B), <span class="at">type =</span> <span class="st">"F"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>index_at_basis <span class="ot">&lt;-</span> <span class="cf">function</span>(data, basis, <span class="at">index_f =</span> stringy05_index) {</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">index_f</span>(<span class="fu">as.matrix</span>(data) <span class="sc">%*%</span> basis)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-</section>
-<section id="first-optimizer-test-geodesic-and-better-random" class="level2">
-<h2 class="anchored" data-anchor-id="first-optimizer-test-geodesic-and-better-random">First optimizer test: geodesic and better random</h2>
-<p>To keep the first experiment simple, I start with two search methods:</p>
+<section id="generate-a-four-dimensional-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="generate-a-four-dimensional-dataset">Generate a four-dimensional dataset</h2>
+<p>The example dataset contains four variables. Variables <code>V1</code> and <code>V2</code> are Gaussian noise. Variables <code>V3</code> and <code>V4</code> contain the true structure.</p>
+<p>A quadratic polynomial is used to create a clear string-like pattern:</p>
 <ul>
-<li><code>search_geodesic</code></li>
-<li><code>search_better_random</code></li>
+<li><code>V3</code> is a linear coordinate along the curve,</li>
+<li><code>V4</code> is a sinusoidal function of <code>V3</code>.</li>
 </ul>
-<p>I run each method once for 4D, 6D, and 8D data, save the basis history, compute the index value along the path, and then replay the history as a GIF using <code>planned_tour()</code>.</p>
-</section>
-<section id="d-data" class="level2">
-<h2 class="anchored" data-anchor-id="d-data">4D data</h2>
-<section id="search_geodesic" class="level3">
-<h3 class="anchored" data-anchor-id="search_geodesic"><code>search_geodesic</code></h3>
+<p>The data are not standardized in this example so that the signal remains dominant relative to the noise variables. Standardizing all variables to unit variance would change this relative signal-to-noise magnitude and may alter the projection found by the optimizer.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>hist_p4_geodesic <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  dat4,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_geodesic</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(hist_p4_geodesic, <span class="st">"blog/tourr_stringy/hist_p4_geodesic.rds"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  dat4,</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">planned_tour</span>(hist_p4_geodesic),</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display_xy</span>(),</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"blog/tourr_stringy/p4_geodesic.gif"</span>,</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>poly_signal <span class="ot">&lt;-</span> <span class="fu">poly</span>(t, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>stringy4_raw <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">V1 =</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.15</span>),                       </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">V2 =</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.15</span>),                     </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">V3 =</span> poly_signal[, <span class="dv">1</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.01</span>),  </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">V4 =</span> poly_signal[, <span class="dv">2</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.02</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>stringy4 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(stringy4_raw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+</section>
+<section id="define-the-true-structure-and-a-noise-projection" class="level2">
+<h2 class="anchored" data-anchor-id="define-the-true-structure-and-a-noise-projection">Define the true structure and a noise projection</h2>
+<ul>
+<li>The <strong>true structured projection</strong> is the plane spanned by <code>V3</code> and <code>V4</code>.</li>
+<li>The <strong>noise projection</strong> is the plane spanned by <code>V1</code> and <code>V2</code>.</li>
+</ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"p4_geodesic.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="p4_geodesic.gif" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="d-data-1" class="level2">
-<h2 class="anchored" data-anchor-id="d-data-1">6D data</h2>
-<section id="search_geodesic-1" class="level3">
-<h3 class="anchored" data-anchor-id="search_geodesic-1"><code>search_geodesic</code></h3>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p6_history_geodesic <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  dat6,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_geodesic</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(p6_history_geodesic, <span class="st">"p6_history_geodesic.rds"</span>)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  dat6,</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">planned_tour</span>(p6_history_geodesic),</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display_xy</span>(),</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"p6_geodesic.gif"</span>,</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>basis_true <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>basis_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+</section>
+<section id="plot-the-signal-and-noise-projections" class="level2">
+<h2 class="anchored" data-anchor-id="plot-the-signal-and-noise-projections">Plot the signal and noise projections</h2>
+<p>The signal and noise projections are shown side by side to define the target structure that the guided tour should recover.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"p6_geodesic.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plot_projection <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> stringy4[, <span class="dv">1</span>],</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> stringy4[, <span class="dv">2</span>],</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">projection =</span> <span class="st">"noise: V1 and V2"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> stringy4[, <span class="dv">3</span>],</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> stringy4[, <span class="dv">4</span>],</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">projection =</span> <span class="st">"signal: V3 and V4"</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_projection, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.7</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> projection, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Noise and signal projections"</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="p6_geodesic.gif" class="img-fluid figure-img"></p>
+<p><img src="tourr_stringy_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>The right panel contains the true stringy structure. The left panel contains only noise.</p>
+</section>
+<section id="explore-the-data-with-a-grand-tour" class="level2">
+<h2 class="anchored" data-anchor-id="explore-the-data-with-a-grand-tour">Explore the data with a grand tour</h2>
+<p>A grand tour rotates through many two-dimensional projections of the four-dimensional data. It provides an initial visual check that the hidden structure is present and visible from suitable projection angles before an index-guided search is applied.</p>
+<section id="run-and-save-the-grand-tour" class="level3">
+<h3 class="anchored" data-anchor-id="run-and-save-the-grand-tour">Run and save the grand tour</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> stringy4,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">grand_tour</span>(),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">display =</span> <span class="fu">display_xy</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axes =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">half_range =</span> <span class="dv">3</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.6</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">frames =</span> <span class="dv">500</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"stringy4_grand_tour.gif"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">500</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">300</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"stringy4_grand_tour.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy4_grand_tour.gif" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The grand tour provides an unguided view of the projection space. The guided tour can then use <code>stringy05</code> to search specifically for projections with string-like structure.</p>
 </section>
 </section>
-<section id="d-data-2" class="level2">
-<h2 class="anchored" data-anchor-id="d-data-2">8D data</h2>
-<section id="search_geodesic-2" class="level3">
-<h3 class="anchored" data-anchor-id="search_geodesic-2"><code>search_geodesic</code></h3>
+<section id="define-stringy05-as-a-projection-pursuit-index" class="level2">
+<h2 class="anchored" data-anchor-id="define-stringy05-as-a-projection-pursuit-index">Define <code>stringy05</code> as a projection pursuit index</h2>
+<p>Two versions of the index are defined:</p>
+<ul>
+<li>a <strong>raw</strong> <code>stringy05</code> index, and</li>
+<li>a <strong>rescaled</strong> version.</li>
+</ul>
+<p>The rescaled version uses the estimated Gaussian-noise threshold</p>
+<p><span class="math display">\[
+\ell(n) = 0.05 + \frac{3.86}{\sqrt{n}}
+\]</span></p>
+<p>and maps values likely to arise from noise toward zero.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the index</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>rescale_stringy05 <span class="ot">&lt;-</span> <span class="cf">function</span>(z, n) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  lb <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="sc">+</span> <span class="fl">3.86</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pmax</span>(<span class="dv">0</span>, (z <span class="sc">-</span> lb) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lb))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>stringy05_raw <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">rescale =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(mat) {</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">&lt;-</span> cassowaryr<span class="sc">::</span><span class="fu">sc_stringy05</span>(mat[, <span class="dv">1</span>], mat[, <span class="dv">2</span>])</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (rescale) {</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      z <span class="ot">&lt;-</span> <span class="fu">rescale_stringy05</span>(z, <span class="fu">nrow</span>(mat))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    z</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>stringy05_index_raw <span class="ot">&lt;-</span> <span class="fu">stringy05_raw</span>(<span class="at">rescale =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>stringy05_index_rescaled <span class="ot">&lt;-</span> <span class="fu">stringy05_raw</span>(<span class="at">rescale =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="check-stringy05-on-the-true-structure-and-on-noise" class="level2">
+<h2 class="anchored" data-anchor-id="check-stringy05-on-the-true-structure-and-on-noise">Check <code>stringy05</code> on the true structure and on noise</h2>
+<p>Before optimization, the index is evaluated directly on the known signal and noise planes.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>direct_check <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">projection =</span> <span class="fu">c</span>(<span class="st">"true structure: V3-V4"</span>, <span class="st">"noise: V1-V2"</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">raw_stringy05 =</span> <span class="fu">c</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_raw</span>(stringy4 <span class="sc">%*%</span> basis_true),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_raw</span>(stringy4 <span class="sc">%*%</span> basis_noise)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">rescaled_stringy05 =</span> <span class="fu">c</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(stringy4 <span class="sc">%*%</span> basis_true),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(stringy4 <span class="sc">%*%</span> basis_noise)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  direct_check,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Raw and rescaled stringy05 values for the true structured projection and a noise projection."</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Raw and rescaled stringy05 values for the true structured projection and a noise projection.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">projection</th>
+<th style="text-align: right;">raw_stringy05</th>
+<th style="text-align: right;">rescaled_stringy05</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">true structure: V3-V4</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">0.996</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">noise: V1-V2</td>
+<td style="text-align: right;">0.207</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The structured projection should receive a substantially larger value than the noise projection. In this example, the rescaling maps the noise value to zero while retaining a large value for the signal.</p>
+</section>
+<section id="guided-tour-using-search_geodesic" class="level2">
+<h2 class="anchored" data-anchor-id="guided-tour-using-search_geodesic">Guided tour using <code>search_geodesic</code></h2>
+<p>The first guided tour uses the default optimizer, <code>search_geodesic</code>, with the rescaled <code>stringy05</code> index.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>p8_history_geodesic <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  dat8,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_geodesic</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(p8_history_geodesic, <span class="st">"p8_history_geodesic.rds"</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  dat8,</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">planned_tour</span>(p8_history_geodesic),</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display_xy</span>(),</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"p8_geodesic.gif"</span>,</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>hist_geodesic <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> stringy4,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">guided_tour</span>(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index_rescaled,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_geodesic,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.tries =</span> <span class="dv">100</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cooling =</span> <span class="fl">0.995</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_bases =</span> <span class="dv">100</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">rescale =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(hist_geodesic, <span class="st">"hist_geodesic.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="view-the-search_geodesic-tour-interactively" class="level3">
+<h3 class="anchored" data-anchor-id="view-the-search_geodesic-tour-interactively">View the <code>search_geodesic</code> tour interactively</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> stringy4,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">planned_tour</span>(hist_geodesic),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">display =</span> <span class="fu">display_xy</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axes =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">half_range =</span> <span class="dv">3</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.6</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">frames =</span> <span class="dv">200</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"stringy4_guided_geodesic.gif"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">500</span>, </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">300</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"p8_geodesic.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"stringy4_guided_geodesic.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="p8_geodesic.gif" class="img-fluid figure-img"></p>
+<p><img src="stringy4_guided_geodesic.gif" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>The animation can be used to assess whether the guided tour moves toward the hidden polynomial structure in variables <code>V3</code> and <code>V4</code>.</p>
 </section>
 </section>
-<section id="d-data-3" class="level2">
-<h2 class="anchored" data-anchor-id="d-data-3">4D data</h2>
-<section id="search_better_random" class="level3">
-<h3 class="anchored" data-anchor-id="search_better_random"><code>search_better_random</code></h3>
+<section id="guided-tour-using-search_better_random" class="level2">
+<h2 class="anchored" data-anchor-id="guided-tour-using-search_better_random">Guided tour using <code>search_better_random</code></h2>
+<p>The <code>search_better_random</code> optimizer provides a more exploratory alternative to the default geodesic search. This can be useful when a scagnostic index produces an irregular optimization surface or several local optima.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>p4_history_better_random <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  dat4,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_better_random</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  p6_history_better_random,</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"p4_history_better_random.rds"</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  dat4,</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">planned_tour</span>(p4_history_better_random),</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display_xy</span>(),</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"p4_better_random.gif"</span>,</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>hist_better_random <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> stringy4,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">guided_tour</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index_rescaled,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_better_random,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.tries =</span> <span class="dv">100</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cooling =</span> <span class="fl">0.995</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_bases =</span> <span class="dv">100</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(hist_better_random, <span class="st">"hist_better_random.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="save-the-search_better_random-tour-as-a-gif" class="level3">
+<h3 class="anchored" data-anchor-id="save-the-search_better_random-tour-as-a-gif">Save the <code>search_better_random</code> tour as a gif</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> stringy4,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">planned_tour</span>(hist_better_random),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">display =</span> <span class="fu">display_xy</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axes =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">half_range =</span> <span class="dv">3</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.6</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">frames =</span> <span class="dv">200</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"stringy4_guided_better_random.gif"</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">500</span>, </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">300</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"p4_better_random.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"stringy4_guided_better_random.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="p4_better_random.gif" class="img-fluid figure-img"></p>
+<p><img src="stringy4_guided_better_random.gif" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Comparing the two animations shows whether either optimizer recovers the polynomial structure more clearly or more consistently.</p>
 </section>
 </section>
-<section id="d-data-4" class="level2">
-<h2 class="anchored" data-anchor-id="d-data-4">6D data</h2>
-<section id="search_better_random-1" class="level3">
-<h3 class="anchored" data-anchor-id="search_better_random-1"><code>search_better_random</code></h3>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>p6_history_better_random <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  dat6,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_better_random</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  p6_history_better_random,</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"p6_history_better_random.rds"</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  dat6,</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">planned_tour</span>(p6_history_better_random),</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display_xy</span>(),</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"p6_better_random.gif"</span>,</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"p6_better_random.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="p6_better_random.gif" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="d-data-5" class="level2">
-<h2 class="anchored" data-anchor-id="d-data-5">8D data</h2>
-<section id="search_better_random-2" class="level3">
-<h3 class="anchored" data-anchor-id="search_better_random-2"><code>search_better_random</code></h3>
+<section id="guided-tour-using-search_jellyfish" class="level2">
+<h2 class="anchored" data-anchor-id="guided-tour-using-search_jellyfish">Guided tour using <code>search_jellyfish</code></h2>
+<p>The Jellyfish optimizer starts from multiple candidate bases, so the returned object contains several search loops. Each loop represents one path through projection space.</p>
+<p>Jellyfish is first applied to the four-dimensional polynomial dataset and the returned search history is saved.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>p8_history_better_random <span class="ot">&lt;-</span> <span class="fu">save_history</span>(</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  dat8,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>jellyfish_res <span class="ot">&lt;-</span> <span class="fu">animate_xy</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  stringy4,</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_better_random</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  p8_history_better_random,</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"p8_history_better_random.rds"</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  dat8,</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">planned_tour</span>(p8_history_better_random),</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display_xy</span>(),</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"p8_better_random.gif"</span>,</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index_rescaled,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_jellyfish</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(jellyfish_res, <span class="st">"jellyfish_res.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="find-the-best-jellyfish-projection" class="level2">
+<h2 class="anchored" data-anchor-id="find-the-best-jellyfish-projection">Find the best Jellyfish projection</h2>
+<p>The projection with the <strong>largest index value</strong> is selected across all Jellyfish loops and iterations.</p>
+<p>The loop containing the maximum index value is extracted and replayed. The loop number is determined from the result rather than fixed in advance.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>jellyfish_res <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"jellyfish_res.rds"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>best_jelly <span class="ot">&lt;-</span> jellyfish_res <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(index_val)) <span class="sc">|&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(index_val, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>best_jelly</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 8
+  basis         index_val info         method           alpha tries  loop    id
+  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+1 &lt;dbl [4 × 2]&gt;     0.986 current_best search_jellyfish    NA    24    18   708</code></pre>
+</div>
+</div>
+<p>Extract the best loop and its sequence of bases:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>best_loop <span class="ot">&lt;-</span> best_jelly<span class="sc">$</span>loop</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>best_loop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bases_best_loop <span class="ot">&lt;-</span> jellyfish_res <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(loop <span class="sc">==</span> best_loop) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(tries) <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(basis) <span class="sc">|&gt;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">check_dup</span>(<span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Only the loop containing the best projection is replayed.</p>
+</section>
+<section id="save-and-show-the-best-jellyfish-loop" class="level2">
+<h2 class="anchored" data-anchor-id="save-and-show-the-best-jellyfish-loop">Save and show the best Jellyfish loop</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> stringy4,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">planned_tour</span>(bases_best_loop),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">display =</span> <span class="fu">display_xy</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axes =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">half_range =</span> <span class="dv">3</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.6</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">frames =</span> <span class="dv">200</span>,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"stringy4_jellyfish_best_loop.gif"</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">500</span>,</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">300</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"p8_better_random.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"stringy4_jellyfish_best_loop.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="p8_better_random.gif" class="img-fluid figure-img"></p>
+<p><img src="stringy4_jellyfish_best_loop.gif" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualize-the-best-final-projection" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-the-best-final-projection">Visualize the best final projection</h2>
+<p>The exact best basis can also be extracted and used to plot the corresponding projection directly.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>best_basis <span class="ot">&lt;-</span> best_jelly<span class="sc">$</span>basis[[<span class="dv">1</span>]]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>best_projection <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(stringy4 <span class="sc">%*%</span> best_basis)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(best_projection) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(best_projection, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.7</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Best projection found by Jellyfish"</span>,</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Best loop = "</span>, best_loop,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">", tries = "</span>, best_jelly<span class="sc">$</span>tries,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">", stringy05 = "</span>, <span class="fu">round</span>(best_jelly<span class="sc">$</span>index_val, <span class="dv">3</span>)</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tourr_stringy_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The maximum index value found by Jellyfish is:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>best_jelly<span class="sc">$</span>index_val</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.986364</code></pre>
+</div>
+</div>
+<p>Jellyfish can be useful for scagnostic indices because their optimization surfaces may be irregular or contain local optima. Exploring several candidate paths increases the opportunity to locate a projection with a large index value, although it does not guarantee recovery of the global optimum.</p>
+</section>
+<section id="extend-the-example-to-higher-dimensions" class="level2">
+<h2 class="anchored" data-anchor-id="extend-the-example-to-higher-dimensions">Extend the example to higher dimensions</h2>
+<p>The number of noise variables is increased to examine whether Jellyfish can still recover the hidden polynomial structure. In each dataset, the final two variables contain the signal and all preceding variables contain Gaussian noise.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>make_poly_data <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">p =</span> <span class="dv">6</span>, <span class="at">seed =</span> <span class="dv">1050</span>) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  poly_signal <span class="ot">&lt;-</span> <span class="fu">poly</span>(t, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  poly_data <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(n <span class="sc">*</span> p, <span class="at">sd =</span> <span class="fl">0.15</span>),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow =</span> n,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> p</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  poly_data[, p <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> poly_signal[, <span class="dv">1</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.01</span>)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  poly_data[, p] <span class="ot">&lt;-</span> poly_signal[, <span class="dv">2</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.02</span>)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(poly_data) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"V"</span>, <span class="fu">seq_len</span>(p))</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  poly_data</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Generate the datasets:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>poly6 <span class="ot">&lt;-</span> <span class="fu">make_poly_data</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">p =</span> <span class="dv">6</span>, <span class="at">seed =</span> <span class="dv">1050</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>poly8 <span class="ot">&lt;-</span> <span class="fu">make_poly_data</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">p =</span> <span class="dv">8</span>, <span class="at">seed =</span> <span class="dv">1050</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>poly12 <span class="ot">&lt;-</span> <span class="fu">make_poly_data</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">p =</span> <span class="dv">12</span>, <span class="at">seed =</span> <span class="dv">1050</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="define-true-signal-and-noise-bases" class="level2">
+<h2 class="anchored" data-anchor-id="define-true-signal-and-noise-bases">Define true signal and noise bases</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>basis6_true <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">6</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>basis8_true <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">8</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>basis12_true <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">12</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>basis6_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">6</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>basis8_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">8</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>basis12_noise <span class="ot">&lt;-</span> spinebil<span class="sc">::</span><span class="fu">basis_matrix</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="check-the-index-value-on-the-true-2d-projection" class="level2">
+<h2 class="anchored" data-anchor-id="check-the-index-value-on-the-true-2d-projection">Check the index value on the true 2D projection</h2>
+<p>Before running Jellyfish, the index is evaluated on the known signal and noise projections.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>poly_direct_check <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">c</span>(<span class="st">"poly6"</span>, <span class="st">"poly8"</span>, <span class="st">"poly12"</span>),</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">true_projection =</span> <span class="fu">c</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(poly6 <span class="sc">%*%</span> basis6_true),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(poly8 <span class="sc">%*%</span> basis8_true),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(poly12 <span class="sc">%*%</span> basis12_true)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">noise_projection =</span> <span class="fu">c</span>(</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(poly6 <span class="sc">%*%</span> basis6_noise),</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(poly8 <span class="sc">%*%</span> basis8_noise),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stringy05_index_rescaled</span>(poly12 <span class="sc">%*%</span> basis12_noise)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(poly_direct_check, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">data</th>
+<th style="text-align: right;">true_projection</th>
+<th style="text-align: right;">noise_projection</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">poly6</td>
+<td style="text-align: right;">0.973</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">poly8</td>
+<td style="text-align: right;">0.992</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">poly12</td>
+<td style="text-align: right;">0.985</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A large value for the known signal projection confirms that the index recognizes the target structure. If the optimizer does not recover a comparable projection, the limitation is more likely related to search difficulty than to the index definition itself.</p>
+</section>
+<section id="run-jellyfish-in-higher-dimensions" class="level2">
+<h2 class="anchored" data-anchor-id="run-jellyfish-in-higher-dimensions">Run Jellyfish in higher dimensions</h2>
+<p>The same search procedure is applied to the six-, eight-, and twelve-dimensional datasets.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>poly6_jelly <span class="ot">&lt;-</span> <span class="fu">animate_xy</span>(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  poly6,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index_rescaled,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_jellyfish</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(poly6_jelly, <span class="st">"poly6_jelly.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>poly8_jelly <span class="ot">&lt;-</span> <span class="fu">animate_xy</span>(</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  poly8,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index_rescaled,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_jellyfish</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(poly8_jelly, <span class="st">"poly8_jelly.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>poly12_jelly <span class="ot">&lt;-</span> <span class="fu">animate_xy</span>(</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  poly12,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index_rescaled,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_jellyfish</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(poly12_jelly, <span class="st">"poly12_jelly.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Read the saved results:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>poly6_jelly <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"poly6_jelly.rds"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>poly8_jelly <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"poly8_jelly.rds"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>poly12_jelly <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"poly12_jelly.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="find-the-best-jellyfish-projection-in-each-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="find-the-best-jellyfish-projection-in-each-dataset">Find the best Jellyfish projection in each dataset</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>best_poly6 <span class="ot">&lt;-</span> poly6_jelly <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(index_val, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>best_poly8 <span class="ot">&lt;-</span> poly8_jelly <span class="sc">|&gt;</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(index_val, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>best_poly12 <span class="ot">&lt;-</span> poly12_jelly <span class="sc">|&gt;</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(index_val, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Summarize the best values:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>best_poly_summary <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">c</span>(<span class="st">"poly6"</span>, <span class="st">"poly8"</span>, <span class="st">"poly12"</span>),</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">best_loop =</span> <span class="fu">c</span>(best_poly6<span class="sc">$</span>loop, best_poly8<span class="sc">$</span>loop, best_poly12<span class="sc">$</span>loop),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tries =</span> <span class="fu">c</span>(best_poly6<span class="sc">$</span>tries, best_poly8<span class="sc">$</span>tries, best_poly12<span class="sc">$</span>tries),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_index_val =</span> <span class="fu">c</span>(best_poly6<span class="sc">$</span>index_val, best_poly8<span class="sc">$</span>index_val, best_poly12<span class="sc">$</span>index_val)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(best_poly_summary, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">data</th>
+<th style="text-align: right;">best_loop</th>
+<th style="text-align: right;">tries</th>
+<th style="text-align: right;">max_index_val</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">poly6</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.436</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">poly8</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.348</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">poly12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.248</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="extract-the-best-loop-from-each-search" class="level2">
+<h2 class="anchored" data-anchor-id="extract-the-best-loop-from-each-search">Extract the best loop from each search</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>bases_poly6_best <span class="ot">&lt;-</span> poly6_jelly <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(loop <span class="sc">==</span> best_poly6<span class="sc">$</span>loop) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(tries) <span class="sc">|&gt;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(basis) <span class="sc">|&gt;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">check_dup</span>(<span class="fl">0.1</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>bases_poly8_best <span class="ot">&lt;-</span> poly8_jelly <span class="sc">|&gt;</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(loop <span class="sc">==</span> best_poly8<span class="sc">$</span>loop) <span class="sc">|&gt;</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(tries) <span class="sc">|&gt;</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(basis) <span class="sc">|&gt;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">check_dup</span>(<span class="fl">0.1</span>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>bases_poly12_best <span class="ot">&lt;-</span> poly12_jelly <span class="sc">|&gt;</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(loop <span class="sc">==</span> best_poly12<span class="sc">$</span>loop) <span class="sc">|&gt;</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(tries) <span class="sc">|&gt;</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(basis) <span class="sc">|&gt;</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">check_dup</span>(<span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="render-the-best-jellyfish-loops" class="level2">
+<h2 class="anchored" data-anchor-id="render-the-best-jellyfish-loops">Render the best Jellyfish loops</h2>
+<section id="d-polynomial-data" class="level3">
+<h3 class="anchored" data-anchor-id="d-polynomial-data">6D polynomial data</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> poly6,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">planned_tour</span>(bases_poly6_best),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">display =</span> <span class="fu">display_xy</span>(</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axes =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">half_range =</span> <span class="dv">3</span>,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.6</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">frames =</span> <span class="dv">200</span>,</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"poly6_jellyfish_best.gif"</span>,</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">500</span>,</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">300</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"poly6_jellyfish_best.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="poly6_jellyfish_best.gif" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="d-polynomial-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="d-polynomial-data-1">8D polynomial data</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> poly8,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">planned_tour</span>(bases_poly8_best),</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">display =</span> <span class="fu">display_xy</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axes =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">half_range =</span> <span class="dv">3</span>,</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.6</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">frames =</span> <span class="dv">200</span>,</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"poly8_jellyfish_best.gif"</span>,</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">500</span>,</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">300</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"poly8_jellyfish_best.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="poly8_jellyfish_best.gif" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="d-polynomial-data-2" class="level3">
+<h3 class="anchored" data-anchor-id="d-polynomial-data-2">12D polynomial data</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> poly12,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tour_path =</span> <span class="fu">planned_tour</span>(bases_poly12_best),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">display =</span> <span class="fu">display_xy</span>(</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axes =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">half_range =</span> <span class="dv">3</span>,</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex =</span> <span class="fl">0.6</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">frames =</span> <span class="dv">200</span>,</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"poly12_jellyfish_best.gif"</span>,</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">500</span>,</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">300</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"poly12_jellyfish_best.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="poly12_jellyfish_best.gif" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
 </section>
-<section id="jellyfish-search" class="level2">
-<h2 class="anchored" data-anchor-id="jellyfish-search">Jellyfish search</h2>
-<p>Unlike <code>search_geodesic()</code> and <code>search_better_random()</code>, the Jellyfish optimizer does not follow a single optimisation path. It keeps several candidate bases at each iteration. Therefore, <code>save_history()</code> is not suitable here.</p>
-<p>Instead, I use <code>animate_xy()</code> to run the guided tour and store the returned object. I then inspect the returned object, extract one path of bases, and replay that path using <code>planned_tour()</code>.</p>
-<section id="d-jellyfish-search" class="level3">
-<h3 class="anchored" data-anchor-id="d-jellyfish-search">4D Jellyfish search</h3>
+<section id="plot-the-best-final-projections" class="level2">
+<h2 class="anchored" data-anchor-id="plot-the-best-final-projections">Plot the best final projections</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1050</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>p4_jellyfish_res <span class="ot">&lt;-</span> <span class="fu">animate_xy</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  dat4,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guided_tour</span>(</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">index_f =</span> stringy05_index,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">search_f =</span> search_jellyfish</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(p4_jellyfish_res, <span class="st">"p4_jellyfish_res.rds"</span>)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract one jellyfish path</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>p4_jelly_1 <span class="ot">&lt;-</span> p4_jellyfish_res <span class="sc">|&gt;</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(id <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>p4_jelly_1_bases <span class="ot">&lt;-</span> p4_jelly_1<span class="sc">$</span>basis</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="fu">render_gif</span>(</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  dat4,</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">planned_tour</span>(p4_jelly_1_bases),</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">display_xy</span>(),</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">gif_file =</span> <span class="st">"p4_jellyfish_jelly1.gif"</span>,</span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">sphere =</span> <span class="cn">FALSE</span></span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>plot_best_proj <span class="ot">&lt;-</span> <span class="cf">function</span>(data, best_row, title_text) {</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  best_basis <span class="ot">&lt;-</span> best_row<span class="sc">$</span>basis[[<span class="dv">1</span>]]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  proj <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.matrix</span>(data) <span class="sc">%*%</span> best_basis)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(proj) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(proj, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.6</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> title_text,</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">subtitle =</span> <span class="fu">paste0</span>(</span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"best loop = "</span>, best_row<span class="sc">$</span>loop,</span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">", tries = "</span>, best_row<span class="sc">$</span>tries,</span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">", stringy05 = "</span>, <span class="fu">round</span>(best_row<span class="sc">$</span>index_val, <span class="dv">3</span>)</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"p4_jellyfish_jelly1.gif"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_best_proj</span>(poly6, best_poly6, <span class="st">"Best Jellyfish projection for 6D polynomial data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="p4_jellyfish_jelly1.gif" class="img-fluid figure-img"></p>
+<p><img src="tourr_stringy_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
+</div>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p4_jellyfish_res <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"p4_jellyfish_res.rds"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>p4_jelly_1 <span class="ot">&lt;-</span> p4_jellyfish_res <span class="sc">|&gt;</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(id <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>p4_jelly_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_best_proj</span>(poly8, best_poly8, <span class="st">"Best Jellyfish projection for 8D polynomial data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 8
-  basis         index_val info       method           alpha tries  loop    id
-  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
-1 &lt;dbl [4 × 2]&gt;    0.0574 initiation search_jellyfish    NA     1     1     1</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tourr_stringy_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
+</div>
+</div>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p4_jelly_750 <span class="ot">&lt;-</span> p4_jellyfish_res <span class="sc">|&gt;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(id <span class="sc">==</span> <span class="dv">750</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>p4_jelly_750</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_best_proj</span>(poly12, best_poly12, <span class="st">"Best Jellyfish projection for 12D polynomial data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 8
-  basis         index_val info             method        alpha tries  loop    id
-  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
-1 &lt;dbl [4 × 2]&gt;     0.112 jellyfish_update search_jelly…    NA    25    30   750</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p4_jellyfish_res</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 750 × 8
-   basis         index_val info       method           alpha tries  loop    id
-   &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
- 1 &lt;dbl [4 × 2]&gt;    0.0574 initiation search_jellyfish    NA     1     1     1
- 2 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     2     2
- 3 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     3     3
- 4 &lt;dbl [4 × 2]&gt;    0.0118 initiation search_jellyfish    NA     1     4     4
- 5 &lt;dbl [4 × 2]&gt;    0.0348 initiation search_jellyfish    NA     1     5     5
- 6 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     6     6
- 7 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     7     7
- 8 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     8     8
- 9 &lt;dbl [4 × 2]&gt;    0.0183 initiation search_jellyfish    NA     1     9     9
-10 &lt;dbl [4 × 2]&gt;    0.0345 initiation search_jellyfish    NA     1    10    10
-# ℹ 740 more rows</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tourr_stringy_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-
-
+</div>
 </section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>The <code>stringy05</code> index assigns large values to the known polynomial projection and smaller values to a Gaussian-noise projection. The rescaled version further reduces index values that are likely to arise from noise, making it a practical choice for the guided-tour examples in this vignette.</p>
+<p>The optimizer remains an important part of the analysis. <code>search_geodesic</code>, <code>search_better_random</code>, and <code>search_jellyfish</code> explore projection space differently and may therefore return different results. Jellyfish provides broader exploration through multiple search loops, but the higher-dimensional examples show that recovering a known optimum becomes more difficult as the projection space grows.</p>
+<p>These examples also illustrate why scaling should be considered carefully. Standardization changes the relative magnitude of the signal and noise variables. Although scaling makes variables comparable in variance, it may weaken a deliberately dominant signal or amplify nuisance variation, changing both the index landscape and the projection selected by the optimizer.</p>
+
+
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div>All Rights Reserved</div></div></section><section class="quarto-appendix-contents" id="quarto-copyright"><h2 class="anchored quarto-appendix-heading">Copyright</h2><div class="quarto-appendix-contents"><div>Copyright © 2026 Tina Rashid Jafari. All rights reserved.</div></div></section></div></main> <!-- /main -->

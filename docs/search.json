@@ -849,16 +849,16 @@
   {
     "objectID": "blog/tourr_stringy/tourr_stringy.html",
     "href": "blog/tourr_stringy/tourr_stringy.html",
-    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "title": "Using the stringy05 index in a guided tour",
     "section": "",
-    "text": "In the previous post, I explored whether stringy05 behaves like a suitable projection pursuit index. I checked properties such as rotation invariance, trace behaviour, smoothness, and squintability.\nIn this post, I move to the next question:\nCan different tourr search methods actually find the true hidden projection?\nThe data are generated so that only variables 2 and 3 contain the polynomial structure. The remaining variables are Gaussian noise. I repeat this for 4, 6, and 8 dimensions.\nHere, I use the rescaled stringy05 index as the objective function.\n\n\nCode\n# Load packages\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(tibble)\n\n\n\n\nCode\n# Define the index\nrescale_stringy05 &lt;- function(z, n) {\n  lb &lt;- 0.05 + 3.86 / sqrt(n)\n  pmax(0, (z - lb) / (1 - lb))\n}\n\nstringy05_raw &lt;- function(rescale = FALSE) {\n  function(mat) {\n    z &lt;- cassowaryr::sc_stringy05(mat[, 1], mat[, 2])\n\n    if (rescale) {\n      z &lt;- rescale_stringy05(z, nrow(mat))\n    }\n\n    z\n  }\n}\n\nstringy05_index &lt;- stringy05_raw(rescale = TRUE)\n\n# Generate polynomial data\nmake_poly_data &lt;- function(n = 300, p = 4, degree = 2, seed = 1050,\n                           signal_noise_sd = 0.03) {\n  set.seed(seed)\n\n  t &lt;- seq(-1, 1, length.out = n)\n  signal &lt;- poly(t, degree = degree, raw = TRUE)\n\n  x &lt;- matrix(rnorm(n * p), nrow = n, ncol = p)\n\n  x[, 2] &lt;- signal[, 1] + rnorm(n, sd = signal_noise_sd)\n  x[, 3] &lt;- signal[, 2] + rnorm(n, sd = signal_noise_sd)\n\n  colnames(x) &lt;- paste0(\"V\", seq_len(p))\n\n  as.data.frame(x)\n}\n\ndat4 &lt;-  make_poly_data(p = 4, seed = 1050)\ndat6 &lt;-  make_poly_data(p = 6, seed = 1050)\ndat8 &lt;-  make_poly_data(p = 8, seed = 1050)\n\n\nThe true projection is always the plane spanned by variables 2 and 3.\n\n\nCode\ntrue_basis &lt;- function(p) {\n  diag(p)[, c(2, 3)]\n}"
+    "text": "The stringy05 scagnostic measures string-like or snake-like structure in a two-dimensional point cloud. Patterns receiving large values may include chains, curved paths, and polynomial or sine-wave-like relationships. This makes stringy05 a potential projection pursuit index for guiding a tour toward nonlinear structures hidden in high-dimensional data.\nThis vignette demonstrates how to:\n\nconstruct a four-dimensional dataset containing a hidden polynomial structure;\ncompare the index value of the known signal and noise projections;\nuse stringy05 with several guided-tour optimizers; and\nexamine how the Jellyfish optimizer behaves as the number of noise dimensions increases.\n\nThe examples use both the original index and a rescaled version that reduces values likely to arise from Gaussian noise.\n\n\nCode\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(spinebil)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(knitr)"
   },
   {
     "objectID": "blog/tourr_stringy/tourr_stringy.html#goal",
     "href": "blog/tourr_stringy/tourr_stringy.html#goal",
     "title": "Can tourr optimizers find the hidden stringy projection?",
     "section": "",
-    "text": "In the previous post, I explored whether stringy05 behaves like a suitable projection pursuit index. I checked properties such as rotation invariance, trace behaviour, smoothness, and squintability.\nIn this post, I move to the next question:\nCan different tourr search methods actually find the true hidden projection?\nThe data are generated so that only variables 2 and 3 contain the polynomial structure. The remaining variables are Gaussian noise. I repeat this for 4, 6, and 8 dimensions.\nHere, I use the rescaled stringy05 index as the objective function.\n\n\nCode\n# Load packages\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(tibble)\n\n\n\n\nCode\n# Define the index\nrescale_stringy05 &lt;- function(z, n) {\n  lb &lt;- 0.05 + 3.86 / sqrt(n)\n  pmax(0, (z - lb) / (1 - lb))\n}\n\nstringy05_raw &lt;- function(rescale = FALSE) {\n  function(mat) {\n    z &lt;- cassowaryr::sc_stringy05(mat[, 1], mat[, 2])\n\n    if (rescale) {\n      z &lt;- rescale_stringy05(z, nrow(mat))\n    }\n\n    z\n  }\n}\n\nstringy05_index &lt;- stringy05_raw(rescale = TRUE)\n\n# Generate polynomial data\nmake_poly_data &lt;- function(n = 300, p = 4, degree = 2, seed = 1050,\n                           signal_noise_sd = 0.03) {\n  set.seed(seed)\n\n  t &lt;- seq(-1, 1, length.out = n)\n  signal &lt;- poly(t, degree = degree, raw = TRUE)\n\n  x &lt;- matrix(rnorm(n * p), nrow = n, ncol = p)\n\n  x[, 2] &lt;- signal[, 1] + rnorm(n, sd = signal_noise_sd)\n  x[, 3] &lt;- signal[, 2] + rnorm(n, sd = signal_noise_sd)\n\n  colnames(x) &lt;- paste0(\"V\", seq_len(p))\n\n  as.data.frame(x)\n}\n\ndat4 &lt;-  make_poly_data(p = 4, seed = 1050)\ndat6 &lt;-  make_poly_data(p = 6, seed = 1050)\ndat8 &lt;-  make_poly_data(p = 8, seed = 1050)\n\n\nThe true projection is always the plane spanned by variables 2 and 3.\n\n\nCode\ntrue_basis &lt;- function(p) {\n  diag(p)[, c(2, 3)]\n}"
+    "text": "I have added the stringy05 scagnostics index to the tourr package, and now I want to test it as a projection pursuit index inside the guided tour.\nThe stringy05 index is designed to give larger values to string-like and snake-like patterns, such as chains, curved paths, or sine-wave-like structures. If this works well as a projection pursuit index, then the guided tour should move toward projections that contain this kind of structure.\nIn this post, I generate a simple four-dimensional dataset with:\n\ntwo noise variables, and\ntwo variables containing the true stringy structure.\n\nThen I first inspect the data using a grand tour, and after that I move on to the guided tour using stringy05.\n\n\nCode\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(spinebil)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(knitr)"
   },
   {
     "objectID": "blog/tourr_stringy/tourr_stringy.html#helper-functions",
@@ -879,7 +879,7 @@
     "href": "blog/tourr_stringy/tourr_stringy.html#d-data",
     "title": "Can tourr optimizers find the hidden stringy projection?",
     "section": "4D data",
-    "text": "4D data\n\nsearch_geodesic\n\n\nCode\nset.seed(1050)\n\nhist_p4_geodesic &lt;- save_history(\n  dat4,\n  guided_tour(\n    index_f = stringy05_index,\n    search_f = search_geodesic\n  )\n)\n\nsaveRDS(hist_p4_geodesic, \"blog/tourr_stringy/hist_p4_geodesic.rds\")\n\nrender_gif(\n  dat4,\n  planned_tour(hist_p4_geodesic),\n  display_xy(),\n  gif_file = \"blog/tourr_stringy/p4_geodesic.gif\",\n  sphere = FALSE\n)\n\n\n\n\nCode\nknitr::include_graphics(\"p4_geodesic.gif\")"
+    "text": "4D data\n\nsearch_geodesic\n\n\nCode\nset.seed(1050)\n\nhist_p4_geodesic &lt;- save_history(\n  dat4,\n  guided_tour(\n    index_f = stringy05_index,\n    search_f = search_geodesic\n  )\n)\n\nsaveRDS(hist_p4_geodesic, \"hist_p4_geodesic.rds\")\n\nrender_gif(\n  dat4,\n  planned_tour(hist_p4_geodesic),\n  display_xy(),\n  gif_file = \"p4_geodesic.gif\",\n  sphere = FALSE\n)\n\n\n\n\nCode\nknitr::include_graphics(\"p4_geodesic.gif\")"
   },
   {
     "objectID": "blog/tourr_stringy/tourr_stringy.html#d-data-1",
@@ -900,7 +900,7 @@
     "href": "blog/tourr_stringy/tourr_stringy.html#d-data-3",
     "title": "Can tourr optimizers find the hidden stringy projection?",
     "section": "4D data",
-    "text": "4D data\n\nsearch_better_random\n\n\nCode\nset.seed(1050)\n\np4_history_better_random &lt;- save_history(\n  dat4,\n  guided_tour(\n    index_f = stringy05_index,\n    search_f = search_better_random\n  ),\n  sphere = FALSE\n)\n\nsaveRDS(\n  p6_history_better_random,\n  \"p4_history_better_random.rds\"\n)\n\nrender_gif(\n  dat4,\n  planned_tour(p4_history_better_random),\n  display_xy(),\n  gif_file = \"p4_better_random.gif\",\n  sphere = FALSE\n)\n\n\n\n\nCode\nknitr::include_graphics(\"p4_better_random.gif\")"
+    "text": "4D data\n\nsearch_better_random\n\n\nCode\nset.seed(1050)\n\np4_history_better_random &lt;- save_history(\n  dat4,\n  guided_tour(\n    index_f = stringy05_index,\n    search_f = search_better_random\n  ),\n  sphere = FALSE\n)\n\nsaveRDS(\n  p4_history_better_random,\n  \"p4_history_better_random.rds\"\n)\n\nrender_gif(\n  dat4,\n  planned_tour(p4_history_better_random),\n  display_xy(),\n  gif_file = \"p4_better_random.gif\",\n  sphere = FALSE\n)\n\n\n\n\nCode\nknitr::include_graphics(\"p4_better_random.gif\")"
   },
   {
     "objectID": "blog/tourr_stringy/tourr_stringy.html#d-data-4",
@@ -922,5 +922,411 @@
     "title": "Can tourr optimizers find the hidden stringy projection?",
     "section": "Jellyfish search",
     "text": "Jellyfish search\nUnlike search_geodesic() and search_better_random(), the Jellyfish optimizer does not follow a single optimisation path. It keeps several candidate bases at each iteration. Therefore, save_history() is not suitable here.\nInstead, I use animate_xy() to run the guided tour and store the returned object. I then inspect the returned object, extract one path of bases, and replay that path using planned_tour().\n\n4D Jellyfish search\n\n\nCode\nset.seed(1050)\n\np4_jellyfish_res &lt;- animate_xy(\n  dat4,\n  guided_tour(\n    index_f = stringy05_index,\n    search_f = search_jellyfish\n  ),\n  sphere = FALSE\n)\n\nsaveRDS(p4_jellyfish_res, \"p4_jellyfish_res.rds\")\n\n# Extract one jellyfish path\np4_jelly_1 &lt;- p4_jellyfish_res |&gt;\n  dplyr::filter(id == 1)\n\np4_jelly_1_bases &lt;- p4_jelly_1$basis\n\nrender_gif(\n  dat4,\n  planned_tour(p4_jelly_1_bases),\n  display_xy(),\n  gif_file = \"p4_jellyfish_jelly1.gif\",\n  sphere = FALSE\n)\n\n\n\n\nCode\nknitr::include_graphics(\"p4_jellyfish_jelly1.gif\")\n\n\n\n\n\n\n\n\n\nCode\np4_jellyfish_res &lt;- readRDS(\"p4_jellyfish_res.rds\")\n\np4_jelly_1 &lt;- p4_jellyfish_res |&gt;\n  dplyr::filter(id == 1)\np4_jelly_1\n\n\n# A tibble: 1 × 8\n  basis         index_val info       method           alpha tries  loop    id\n  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;\n1 &lt;dbl [4 × 2]&gt;    0.0574 initiation search_jellyfish    NA     1     1     1\n\n\nCode\np4_jelly_750 &lt;- p4_jellyfish_res |&gt;\n  dplyr::filter(id == 750)\n\np4_jelly_750\n\n\n# A tibble: 1 × 8\n  basis         index_val info             method        alpha tries  loop    id\n  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;\n1 &lt;dbl [4 × 2]&gt;     0.112 jellyfish_update search_jelly…    NA    25    30   750\n\n\nCode\np4_jellyfish_res\n\n\n# A tibble: 750 × 8\n   basis         index_val info       method           alpha tries  loop    id\n   &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;\n 1 &lt;dbl [4 × 2]&gt;    0.0574 initiation search_jellyfish    NA     1     1     1\n 2 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     2     2\n 3 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     3     3\n 4 &lt;dbl [4 × 2]&gt;    0.0118 initiation search_jellyfish    NA     1     4     4\n 5 &lt;dbl [4 × 2]&gt;    0.0348 initiation search_jellyfish    NA     1     5     5\n 6 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     6     6\n 7 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     7     7\n 8 &lt;dbl [4 × 2]&gt;    0      initiation search_jellyfish    NA     1     8     8\n 9 &lt;dbl [4 × 2]&gt;    0.0183 initiation search_jellyfish    NA     1     9     9\n10 &lt;dbl [4 × 2]&gt;    0.0345 initiation search_jellyfish    NA     1    10    10\n# ℹ 740 more rows"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#goal-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#goal-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Goal",
+    "text": "Goal\nI have added the stringy05 scagnostics index to the tourr package, and now I want to test it as a projection pursuit index inside the guided tour.\nThe stringy05 index is designed to give larger values to string-like and snake-like patterns, such as chains, curved paths, or sine-wave-like structures. If this works well as a projection pursuit index, then the guided tour should move toward projections that contain this kind of structure.\nIn this post, I generate a simple four-dimensional dataset with:\n\ntwo noise variables, and\ntwo variables containing the true stringy structure.\n\nThen I first inspect the data using a grand tour, and after that I move on to the guided tour using stringy05.\n\n\nCode\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(spinebil)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(knitr)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#generate-a-4d-dataset-with-a-hidden-stringy-pattern",
+    "href": "blog/tourr_stringy/tourr_stringy.html#generate-a-4d-dataset-with-a-hidden-stringy-pattern",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Generate a 4D dataset with a hidden stringy pattern",
+    "text": "Generate a 4D dataset with a hidden stringy pattern\nI generate a four-dimensional dataset. Variables V1 and V2 are Gaussian noise. Variables V3 and V4 contain the true structure.\nTo make the signal clearly string-like, I use a sine-wave-like pattern:\n\nV3 is a linear coordinate along the curve,\nV4 is a sinusoidal function of V3.\n\nI do not rescale the data here, because I want the signal variables to remain visually clear relative to the noise variables.\n\n\nCode\nset.seed(1050)\n\nn &lt;- 500\nt &lt;- seq(-2, 2, length.out = n)\n\npoly_signal &lt;- poly(t, degree = 2, raw = TRUE)\n\nstringy4_raw &lt;- data.frame(\n  V1 = rnorm(n, sd = 0.15),                       \n  V2 = rnorm(n, sd = 0.15),                     \n  V3 = poly_signal[, 1] + rnorm(n, sd = 0.01),  \n  V4 = poly_signal[, 2] + rnorm(n, sd = 0.02)\n)\n\nstringy4 &lt;- as.matrix(stringy4_raw)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-the-true-structure-and-a-noise-projection",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-the-true-structure-and-a-noise-projection",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Define the true structure and a noise projection",
+    "text": "Define the true structure and a noise projection\n\nThe true structured projection is the plane spanned by V3 and V4.\nThe noise projection is the plane spanned by V1 and V2.\n\n\n\nCode\nbasis_true &lt;- spinebil::basis_matrix(3, 4, 4)\nbasis_noise &lt;- spinebil::basis_matrix(1, 2, 4)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#plot-the-signal-and-noise-projections",
+    "href": "blog/tourr_stringy/tourr_stringy.html#plot-the-signal-and-noise-projections",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Plot the signal and noise projections",
+    "text": "Plot the signal and noise projections\nThe signal and noise projections are shown side by side to define the target structure that the guided tour should recover.\n\n\nCode\nplot_projection &lt;- bind_rows(\n  tibble(\n    x = stringy4[, 1],\n    y = stringy4[, 2],\n    projection = \"noise: V1 and V2\"\n  ),\n  tibble(\n    x = stringy4[, 3],\n    y = stringy4[, 4],\n    projection = \"signal: V3 and V4\"\n  )\n)\n\nggplot(plot_projection, aes(x = x, y = y)) +\n  geom_point(size = 0.7, alpha = 0.7) +\n  facet_wrap(~ projection, nrow = 1, scales = \"free\") +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"Noise and signal projections\"\n  )\n\n\n\n\n\n\n\n\n\nThe right panel contains the true stringy structure. The left panel contains only noise."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#first-explore-the-data-with-a-grand-tour",
+    "href": "blog/tourr_stringy/tourr_stringy.html#first-explore-the-data-with-a-grand-tour",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "First explore the data with a grand tour",
+    "text": "First explore the data with a grand tour\nBefore using any optimisation, I first explore the data using the grand tour. The grand tour rotates through many two-dimensional projections of the four-dimensional data. This helps confirm that the hidden structure is present and visible from some projection angles.\n\nRun and save the grand tour\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = grand_tour(),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 500,\n  gif_file = \"stringy4_grand_tour.gif\",\n  width = 500, \n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_grand_tour.gif\")\n\n\n\n\n\n\n\n\n\nThe grand tour is useful as an initial exploratory step. Now that I have checked the data visually, it is time to move to the guided tour."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-stringy05-as-a-projection-pursuit-index",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-stringy05-as-a-projection-pursuit-index",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Define stringy05 as a projection pursuit index",
+    "text": "Define stringy05 as a projection pursuit index\nTwo versions of the index are defined:\n\na raw stringy05 index, and\na rescaled version.\n\nThe rescaled version uses the estimated Gaussian-noise threshold\n\\[\n\\ell(n) = 0.05 + \\frac{3.86}{\\sqrt{n}}\n\\]\nand maps values likely to arise from noise toward zero.\n\n\nCode\n# Define the index\nrescale_stringy05 &lt;- function(z, n) {\n  lb &lt;- 0.05 + 3.86 / sqrt(n)\n  pmax(0, (z - lb) / (1 - lb))\n}\n\nstringy05_raw &lt;- function(rescale = FALSE) {\n  function(mat) {\n    z &lt;- cassowaryr::sc_stringy05(mat[, 1], mat[, 2])\n\n    if (rescale) {\n      z &lt;- rescale_stringy05(z, nrow(mat))\n    }\n\n    z\n  }\n}\n\n\nstringy05_index_raw &lt;- stringy05_raw(rescale = FALSE)\nstringy05_index_rescaled &lt;- stringy05_raw(rescale = TRUE)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#check-stringy05-on-the-true-structure-and-on-noise",
+    "href": "blog/tourr_stringy/tourr_stringy.html#check-stringy05-on-the-true-structure-and-on-noise",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Check stringy05 on the true structure and on noise",
+    "text": "Check stringy05 on the true structure and on noise\nBefore optimization, the index is evaluated directly on the known signal and noise planes.\n\n\nCode\ndirect_check &lt;- tibble(\n  projection = c(\"true structure: V3-V4\", \"noise: V1-V2\"),\n  raw_stringy05 = c(\n    stringy05_index_raw(stringy4 %*% basis_true),\n    stringy05_index_raw(stringy4 %*% basis_noise)\n  ),\n  rescaled_stringy05 = c(\n    stringy05_index_rescaled(stringy4 %*% basis_true),\n    stringy05_index_rescaled(stringy4 %*% basis_noise)\n  )\n)\n\nknitr::kable(\n  direct_check,\n  digits = 3,\n  caption = \"Raw and rescaled stringy05 values for the true structured projection and a noise projection.\"\n)\n\n\n\nRaw and rescaled stringy05 values for the true structured projection and a noise projection.\n\n\nprojection\nraw_stringy05\nrescaled_stringy05\n\n\n\n\ntrue structure: V3-V4\n0.997\n0.996\n\n\nnoise: V1-V2\n0.207\n0.000\n\n\n\n\n\nThe structured projection should receive a substantially larger value than the noise projection. In this example, the rescaling maps the noise value to zero while retaining a large value for the signal."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#helper-functions-for-guided-tour-comparisons",
+    "href": "blog/tourr_stringy/tourr_stringy.html#helper-functions-for-guided-tour-comparisons",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Helper functions for guided tour comparisons",
+    "text": "Helper functions for guided tour comparisons\nTo compare optimisers, I calculate the index value along the tour path and also compare each found projection with the known true signal plane."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_geodesic",
+    "href": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_geodesic",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Guided tour using search_geodesic",
+    "text": "Guided tour using search_geodesic\nThe first guided tour uses the default optimizer, search_geodesic, with the rescaled stringy05 index.\n\n\nCode\nset.seed(1050)\n\nhist_geodesic &lt;- save_history(\n  data = stringy4,\n  tour_path = guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_geodesic,\n    max.tries = 100,\n    alpha = 0.8,\n    cooling = 0.995\n  ),\n  max_bases = 100,\n  sphere = FALSE,\n  rescale = FALSE\n)\n\nsaveRDS(hist_geodesic, \"hist_geodesic.rds\")\n\n\n\nView the search_geodesic tour interactively\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(hist_geodesic),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_guided_geodesic.gif\",\n  width = 500, \n  height = 300\n  \n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_guided_geodesic.gif\")\n\n\n\n\n\n\n\n\n\nThe animation can be used to assess whether the guided tour moves toward the hidden polynomial structure in variables V3 and V4."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_better_random",
+    "href": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_better_random",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Guided tour using search_better_random",
+    "text": "Guided tour using search_better_random\nThe search_better_random optimizer provides a more exploratory alternative to the default geodesic search. This can be useful when a scagnostic index produces an irregular optimization surface or several local optima.\n\n\nCode\nset.seed(1050)\n\nhist_better_random &lt;- save_history(\n  data = stringy4,\n  tour_path = guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_better_random,\n    max.tries = 100,\n    alpha = 0.8,\n    cooling = 0.995\n  ),\n  max_bases = 100\n)\n\nsaveRDS(hist_better_random, \"hist_better_random.rds\")\n\n\n\nSave the search_better_random tour as a gif\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(hist_better_random),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_guided_better_random.gif\",\n  width = 500, \n  height = 300\n  \n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_guided_better_random.gif\")\n\n\n\n\n\n\n\n\n\nComparing the two animations shows whether either optimizer recovers the polynomial structure more clearly or more consistently."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_jellyfish",
+    "href": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_jellyfish",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Guided tour using search_jellyfish",
+    "text": "Guided tour using search_jellyfish\nThe Jellyfish optimizer starts from multiple candidate bases, so the returned object contains several search loops. Each loop represents one path through projection space.\nJellyfish is first applied to the four-dimensional polynomial dataset and the returned search history is saved.\n\n\nCode\nset.seed(1050)\n\njellyfish_res &lt;- animate_xy(\n  stringy4,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(jellyfish_res, \"jellyfish_res.rds\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#compare-a-few-jellyfish-loops",
+    "href": "blog/tourr_stringy/tourr_stringy.html#compare-a-few-jellyfish-loops",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Compare a few Jellyfish loops",
+    "text": "Compare a few Jellyfish loops\nBecause Jellyfish keeps multiple loops, I can also extract and replay different loops.\n\n\nCode\nbases_loop2 &lt;- jellyfish_res |&gt;\n  filter(loop == 2) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_loop5 &lt;- jellyfish_res |&gt;\n  filter(loop == 5) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\n\n\nSave Jellyfish loop 2\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(bases_loop2),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_jellyfish_loop2.gif\",\n  width = 500, \n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_jellyfish_loop2.gif\")\n\n\n\n\n\n\n\n\n\n\n\nSave Jellyfish loop 3\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(bases_loop5),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_jellyfish_loop5.gif\",\n  width = 500, \n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_jellyfish_loop5.gif\")\n\n\n\n\n\n\n\n\n\nJellyfish is useful here because scagnostic indices can be noisy or not smoothly behaved across projection space. Instead of relying on only one optimisation path, Jellyfish explores several candidate paths. By filtering different loops, I can visually compare whether different starting bases lead to the same stringy projection or get stuck in different views."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#generate-spiral-data-in-6d-8d-and-12d",
+    "href": "blog/tourr_stringy/tourr_stringy.html#generate-spiral-data-in-6d-8d-and-12d",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Generate spiral data in 6D, 8D, and 12D",
+    "text": "Generate spiral data in 6D, 8D, and 12D\nNow, let’s create spiral data and test on that data as well.\n\n\nCode\nset.seed(1050)\n\nspiral6 &lt;- as.matrix(spinebil::spiral_data(600, 6))\nspiral8 &lt;- as.matrix(spinebil::spiral_data(600, 8))\nspiral12 &lt;- as.matrix(spinebil::spiral_data(600, 12))"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-signal-and-noise-bases",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-signal-and-noise-bases",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Define signal and noise bases",
+    "text": "Define signal and noise bases\n\n\nCode\nbasis6_true &lt;- as.matrix(spinebil::basis_matrix(5, 6, 6))\nbasis8_true &lt;- as.matrix(spinebil::basis_matrix(7, 8, 8))\nbasis12_true &lt;- as.matrix(spinebil::basis_matrix(11, 12, 12))\n\n\nbasis6_noise &lt;- as.matrix(spinebil::basis_matrix(1, 2, 6))\nbasis8_noise &lt;- as.matrix(spinebil::basis_matrix(1, 2, 8))\nbasis12_noise &lt;- as.matrix(spinebil::basis_matrix(1, 2, 12))"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#plot-signal-and-noise-projections",
+    "href": "blog/tourr_stringy/tourr_stringy.html#plot-signal-and-noise-projections",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Plot signal and noise projections",
+    "text": "Plot signal and noise projections\n\n\nCode\nplot_proj &lt;- function(data, basis, projection) {\n  proj &lt;- as.data.frame(as.matrix(data) %*% as.matrix(basis))\n  colnames(proj) &lt;- c(\"x\", \"y\")\n  proj |&gt; mutate(projection = projection)\n}\n\nspiral_proj_plot &lt;- bind_rows(\n  plot_proj(spiral6, basis6_true, \"spiral structure\"),\n  plot_proj(spiral6, basis6_noise, \"noise\")\n)\n\nggplot(spiral_proj_plot, aes(x = x, y = y)) +\n  geom_point(size = 0.6, alpha = 0.7) +\n  facet_wrap(~ projection, scales = \"free\") +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"Spiral structure and noise projection\"\n  )\n\n\n\n\n\n\n\n\n\n\n\nCode\nlibrary(dplyr)\nres &lt;- animate_xy(flea[, 1:6], guided_tour(lda_pp(cl = flea$species),\nsearch_f = search_jellyfish))\nbases &lt;- res |&gt; filter(loop == 1) |&gt; pull(basis) |&gt; check_dup(0.1)\nanimate_xy(data = flea[,1:6], tour_path = planned_tour(bases), col = flea$species)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCode\nres &lt;- animate_xy(\n  flea[, 1:6],\n  guided_tour(\n    lda_pp(cl = flea$species),\n    search_f = search_jellyfish\n  )\n)\n\nlibrary(dplyr)\nlibrary(ggplot2)\nlibrary(tourr)\n\n# 1. Find the row with the maximum index value\nbest_jelly &lt;- res |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection",
+    "href": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Find the best Jellyfish projection",
+    "text": "Find the best Jellyfish projection\nThe projection with the largest index value is selected across all Jellyfish loops and iterations.\nThe loop containing the maximum index value is extracted and replayed. The loop number is determined from the result rather than fixed in advance.\n\n\nCode\njellyfish_res &lt;- readRDS(\"jellyfish_res.rds\")\n\nbest_jelly &lt;- jellyfish_res |&gt;\n  filter(!is.na(index_val)) |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_jelly\n\n\n# A tibble: 1 × 8\n  basis         index_val info         method           alpha tries  loop    id\n  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;\n1 &lt;dbl [4 × 2]&gt;     0.986 current_best search_jellyfish    NA    24    18   708\n\n\nExtract the best loop and its sequence of bases:\n\n\nCode\nbest_loop &lt;- best_jelly$loop\nbest_loop\n\n\n[1] 18\n\n\n\n\nCode\nbases_best_loop &lt;- jellyfish_res |&gt;\n  filter(loop == best_loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\n\nOnly the loop containing the best projection is replayed."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#save-and-show-the-best-jellyfish-loop",
+    "href": "blog/tourr_stringy/tourr_stringy.html#save-and-show-the-best-jellyfish-loop",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Save and show the best Jellyfish loop",
+    "text": "Save and show the best Jellyfish loop\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(bases_best_loop),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_jellyfish_best_loop.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_jellyfish_best_loop.gif\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#visualize-the-best-final-projection",
+    "href": "blog/tourr_stringy/tourr_stringy.html#visualize-the-best-final-projection",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Visualize the best final projection",
+    "text": "Visualize the best final projection\nThe exact best basis can also be extracted and used to plot the corresponding projection directly.\n\n\nCode\nbest_basis &lt;- best_jelly$basis[[1]]\n\nbest_projection &lt;- as.data.frame(stringy4 %*% best_basis)\ncolnames(best_projection) &lt;- c(\"x\", \"y\")\n\nggplot(best_projection, aes(x = x, y = y)) +\n  geom_point(size = 0.7, alpha = 0.7) +\n  coord_equal() +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"Best projection found by Jellyfish\",\n    subtitle = paste0(\n      \"Best loop = \", best_loop,\n      \", tries = \", best_jelly$tries,\n      \", stringy05 = \", round(best_jelly$index_val, 3)\n    )\n  )\n\n\n\n\n\n\n\n\n\nThe maximum index value found by Jellyfish is:\n\n\nCode\nbest_jelly$index_val\n\n\n[1] 0.986364\n\n\nJellyfish can be useful for scagnostic indices because their optimization surfaces may be irregular or contain local optima. Exploring several candidate paths increases the opportunity to locate a projection with a large index value, although it does not guarantee recovery of the global optimum."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#generate-spiral-datasets",
+    "href": "blog/tourr_stringy/tourr_stringy.html#generate-spiral-datasets",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Generate spiral datasets",
+    "text": "Generate spiral datasets\n\n\nCode\nset.seed(1050)\n\nspiral6  &lt;- as.matrix(spinebil::spiral_data(600, 6))\nspiral8  &lt;- as.matrix(spinebil::spiral_data(600, 8))\nspiral12 &lt;- as.matrix(spinebil::spiral_data(600, 12))"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-true-and-noise-projections",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-true-and-noise-projections",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Define true and noise projections",
+    "text": "Define true and noise projections\n\n\nCode\nbasis6_true  &lt;- as.matrix(spinebil::basis_matrix(5, 6, 6))\nbasis8_true  &lt;- as.matrix(spinebil::basis_matrix(7, 8, 8))\nbasis12_true &lt;- as.matrix(spinebil::basis_matrix(11, 12, 12))\n\nbasis6_noise  &lt;- as.matrix(spinebil::basis_matrix(1, 2, 6))\nbasis8_noise  &lt;- as.matrix(spinebil::basis_matrix(1, 2, 8))\nbasis12_noise &lt;- as.matrix(spinebil::basis_matrix(1, 2, 12))"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#plot-the-6d-spiral-structure-and-a-noise-projection",
+    "href": "blog/tourr_stringy/tourr_stringy.html#plot-the-6d-spiral-structure-and-a-noise-projection",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Plot the 6D spiral structure and a noise projection",
+    "text": "Plot the 6D spiral structure and a noise projection\n\n\nCode\nplot_proj &lt;- function(data, basis, projection) {\n  proj &lt;- as.data.frame(data %*% basis)\n  colnames(proj) &lt;- c(\"x\", \"y\")\n  proj |&gt;\n    mutate(projection = projection)\n}\n\nspiral_proj_plot &lt;- bind_rows(\n  plot_proj(spiral6, basis6_true, \"spiral structure\"),\n  plot_proj(spiral6, basis6_noise, \"noise\")\n)\n\nggplot(spiral_proj_plot, aes(x = x, y = y)) +\n  geom_point(size = 0.6, alpha = 0.7) +\n  facet_wrap(~ projection, scales = \"free\") +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"6D spiral: structure and noise projection\"\n  )"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#direct-check-of-the-true-spiral-projection",
+    "href": "blog/tourr_stringy/tourr_stringy.html#direct-check-of-the-true-spiral-projection",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Direct check of the true spiral projection",
+    "text": "Direct check of the true spiral projection\nBefore running the guided tour, I first check the stringy index on the true spiral projection in 6D, 8D, and 12D.\n\n\nCode\nspiral_direct_check &lt;- tibble(\n  data = c(\"spiral6\", \"spiral8\", \"spiral12\"),\n  true_projection = c(\n    stringy05_index_rescaled(spiral6 %*% basis6_true),\n    stringy05_index_rescaled(spiral8 %*% basis8_true),\n    stringy05_index_rescaled(spiral12 %*% basis12_true)\n  ),\n  noise_projection = c(\n    stringy05_index_rescaled(spiral6 %*% basis6_noise),\n    stringy05_index_rescaled(spiral8 %*% basis8_noise),\n    stringy05_index_rescaled(spiral12 %*% basis12_noise)\n  )\n)\n\nknitr::kable(spiral_direct_check, digits = 3)\n\n\n\n\n\ndata\ntrue_projection\nnoise_projection\n\n\n\n\nspiral6\n0.762\n0.000\n\n\nspiral8\n0.695\n0.019\n\n\nspiral12\n0.719\n0.034"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#run-jellyfish",
+    "href": "blog/tourr_stringy/tourr_stringy.html#run-jellyfish",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Run Jellyfish",
+    "text": "Run Jellyfish\n\n\nCode\nset.seed(1050)\n\nspiral6_jelly &lt;- animate_xy(\n  spiral6,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nspiral8_jelly &lt;- animate_xy(\n  spiral8,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nspiral12_jelly &lt;- animate_xy(\n  spiral12,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(spiral6_jelly, \"spiral6_jelly.rds\")\nsaveRDS(spiral8_jelly, \"spiral8_jelly.rds\")\nsaveRDS(spiral12_jelly, \"spiral12_jelly.rds\")\n\n\n\n\nCode\nspiral6_jelly &lt;- readRDS(\"spiral6_jelly.rds\")\nspiral8_jelly &lt;- readRDS(\"spiral8_jelly.rds\")\nspiral12_jelly &lt;- readRDS(\"spiral12_jelly.rds\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#find-the-best-projection-in-each-dimension",
+    "href": "blog/tourr_stringy/tourr_stringy.html#find-the-best-projection-in-each-dimension",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Find the best projection in each dimension",
+    "text": "Find the best projection in each dimension\n\n\nCode\nbest_spiral6 &lt;- spiral6_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_spiral8 &lt;- spiral8_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_spiral12 &lt;- spiral12_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_spiral_summary &lt;- tibble(\n  data = c(\"spiral6\", \"spiral8\", \"spiral12\"),\n  best_loop = c(best_spiral6$loop, best_spiral8$loop, best_spiral12$loop),\n  tries = c(best_spiral6$tries, best_spiral8$tries, best_spiral12$tries),\n  max_index_val = c(best_spiral6$index_val, best_spiral8$index_val, best_spiral12$index_val)\n)\n\nknitr::kable(best_spiral_summary, digits = 3)\n\n\n\n\n\ndata\nbest_loop\ntries\nmax_index_val\n\n\n\n\nspiral6\n7\n18\n0.112\n\n\nspiral8\n11\n22\n0.096\n\n\nspiral12\n5\n10\n0.112\n\n\n\n\n\nThis table shows the best projection found by Jellyfish in each dimension."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#extract-the-best-loops",
+    "href": "blog/tourr_stringy/tourr_stringy.html#extract-the-best-loops",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Extract the best loops",
+    "text": "Extract the best loops\n\n\nCode\nbases_spiral6_best &lt;- spiral6_jelly |&gt;\n  filter(loop == best_spiral6$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_spiral8_best &lt;- spiral8_jelly |&gt;\n  filter(loop == best_spiral8$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_spiral12_best &lt;- spiral12_jelly |&gt;\n  filter(loop == best_spiral12$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#render-the-best-jellyfish-loop-for-each-dimension",
+    "href": "blog/tourr_stringy/tourr_stringy.html#render-the-best-jellyfish-loop-for-each-dimension",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Render the best Jellyfish loop for each dimension",
+    "text": "Render the best Jellyfish loop for each dimension\n\n\nCode\nrender_gif(\n  data = spiral6,\n  tour_path = planned_tour(bases_spiral6_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.5\n  ),\n  frames = 200,\n  gif_file = \"spiral6_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\nrender_gif(\n  data = spiral8,\n  tour_path = planned_tour(bases_spiral8_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.5\n  ),\n  frames = 200,\n  gif_file = \"spiral8_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\nrender_gif(\n  data = spiral12,\n  tour_path = planned_tour(bases_spiral12_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.5\n  ),\n  frames = 200,\n  gif_file = \"spiral12_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"spiral6_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\nCode\nknitr::include_graphics(\"spiral8_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\nCode\nknitr::include_graphics(\"spiral12_jellyfish_best.gif\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#visualize-the-best-final-projections",
+    "href": "blog/tourr_stringy/tourr_stringy.html#visualize-the-best-final-projections",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Visualize the best final projections",
+    "text": "Visualize the best final projections\n\n\nCode\nplot_best_proj &lt;- function(data, best_row, title_text) {\n  best_basis &lt;- best_row$basis[[1]]\n  proj &lt;- as.data.frame(as.matrix(data) %*% best_basis)\n  colnames(proj) &lt;- c(\"x\", \"y\")\n  \n  ggplot(proj, aes(x = x, y = y)) +\n    geom_point(size = 0.6, alpha = 0.7) +\n    coord_equal() +\n    theme_bw() +\n    theme(\n      aspect.ratio = 1,\n      axis.text = element_blank(),\n      axis.ticks = element_blank()\n    ) +\n    labs(\n      x = NULL,\n      y = NULL,\n      title = title_text,\n      subtitle = paste0(\n        \"best loop = \", best_row$loop,\n        \", tries = \", best_row$tries,\n        \", stringy05 = \", round(best_row$index_val, 3)\n      )\n    )\n}\n\n\n\n\nCode\nplot_best_proj(spiral6, best_spiral6, \"Best Jellyfish projection for 6D spiral\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(spiral8, best_spiral8, \"Best Jellyfish projection for 8D spiral\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(spiral12, best_spiral12, \"Best Jellyfish projection for 12D spiral\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#conclusion",
+    "href": "blog/tourr_stringy/tourr_stringy.html#conclusion",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Conclusion",
+    "text": "Conclusion\nJellyfish is especially useful when the projection pursuit index is not smooth or easy to optimize. This is often the case for scagnostic indices, because small changes in projection can sometimes produce irregular changes in index value. By exploring several candidate bases at once, Jellyfish gives a better chance of finding the best projection than a single-path optimizer.\nFor the 4D polynomial example, Jellyfish found a very high stringy value, and in this run the best path was loop 18. For the higher-dimensional spiral examples, the same idea can be used: first identify the row with the maximum index_val, then use the corresponding loop to replay the best search path and inspect the final projected view.\n\nIf you want, I can also now turn this into an even more polished full blog-style QMD section with better headings and slightly shorter text."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#generate-6d-8d-and-12d-polynomial-datasets",
+    "href": "blog/tourr_stringy/tourr_stringy.html#generate-6d-8d-and-12d-polynomial-datasets",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Generate 6D, 8D, and 12D polynomial datasets",
+    "text": "Generate 6D, 8D, and 12D polynomial datasets\nAfter checking the 4D example, I now increase the number of noise variables and see whether Jellyfish can still recover the hidden polynomial structure. The idea is the same as before: the final two variables contain the signal, and the remaining variables are Gaussian noise.\n\n\nCode\nmake_poly_data &lt;- function(n = 500, p = 6, seed = 1050) {\n  set.seed(seed)\n\n  t &lt;- seq(-2, 2, length.out = n)\n\n  poly_signal &lt;- poly(t, degree = 2, raw = TRUE)\n\n  poly_data &lt;- matrix(\n    rnorm(n * p, sd = 0.15),\n    nrow = n,\n    ncol = p\n  )\n\n  poly_data[, p - 1] &lt;- poly_signal[, 1] + rnorm(n, sd = 0.01)\n  poly_data[, p] &lt;- poly_signal[, 2] + rnorm(n, sd = 0.02)\n\n  colnames(poly_data) &lt;- paste0(\"V\", seq_len(p))\n\n  poly_data\n}\n\n\nGenerate the datasets:\n\n\nCode\npoly6 &lt;- make_poly_data(n = 500, p = 6, seed = 1050)\npoly8 &lt;- make_poly_data(n = 500, p = 8, seed = 1050)\npoly12 &lt;- make_poly_data(n = 500, p = 12, seed = 1050)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-true-signal-and-noise-bases",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-true-signal-and-noise-bases",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Define true signal and noise bases",
+    "text": "Define true signal and noise bases\n\n\nCode\nbasis6_true &lt;- spinebil::basis_matrix(5, 6, 6)\nbasis8_true &lt;- spinebil::basis_matrix(7, 8, 8)\nbasis12_true &lt;- spinebil::basis_matrix(11, 12, 12)\n\nbasis6_noise &lt;- spinebil::basis_matrix(1, 2, 6)\nbasis8_noise &lt;- spinebil::basis_matrix(1, 2, 8)\nbasis12_noise &lt;- spinebil::basis_matrix(1, 2, 12)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#check-the-index-value-on-the-true-2d-projection",
+    "href": "blog/tourr_stringy/tourr_stringy.html#check-the-index-value-on-the-true-2d-projection",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Check the index value on the true 2D projection",
+    "text": "Check the index value on the true 2D projection\nBefore running Jellyfish, the index is evaluated on the known signal and noise projections.\n\n\nCode\npoly_direct_check &lt;- tibble(\n  data = c(\"poly6\", \"poly8\", \"poly12\"),\n  true_projection = c(\n    stringy05_index_rescaled(poly6 %*% basis6_true),\n    stringy05_index_rescaled(poly8 %*% basis8_true),\n    stringy05_index_rescaled(poly12 %*% basis12_true)\n  ),\n  noise_projection = c(\n    stringy05_index_rescaled(poly6 %*% basis6_noise),\n    stringy05_index_rescaled(poly8 %*% basis8_noise),\n    stringy05_index_rescaled(poly12 %*% basis12_noise)\n  )\n)\n\nknitr::kable(poly_direct_check, digits = 3)\n\n\n\n\n\ndata\ntrue_projection\nnoise_projection\n\n\n\n\npoly6\n0.973\n0\n\n\npoly8\n0.992\n0\n\n\npoly12\n0.985\n0\n\n\n\n\n\nA large value for the known signal projection confirms that the index recognizes the target structure. If the optimizer does not recover a comparable projection, the limitation is more likely related to search difficulty than to the index definition itself."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#run-jellyfish-on-6d-8d-and-12d-polynomial-data",
+    "href": "blog/tourr_stringy/tourr_stringy.html#run-jellyfish-on-6d-8d-and-12d-polynomial-data",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Run Jellyfish on 6D, 8D, and 12D polynomial data",
+    "text": "Run Jellyfish on 6D, 8D, and 12D polynomial data\nThis follows the same procedure as the 4D example.\n\n\nCode\nset.seed(1050)\n\npoly6_jelly &lt;- animate_xy(\n  poly6,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly6_jelly, \"poly6_jelly.rds\")\n\n\n\n\nCode\nset.seed(1050)\n\npoly8_jelly &lt;- animate_xy(\n  poly8,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly8_jelly, \"poly8_jelly.rds\")\n\n\n\n\nCode\nset.seed(1050)\n\npoly12_jelly &lt;- animate_xy(\n  poly12,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly12_jelly, \"poly12_jelly.rds\")\n\n\nThen read the saved results:\n\n\nCode\npoly6_jelly &lt;- readRDS(\"poly6_jelly.rds\")\npoly8_jelly &lt;- readRDS(\"poly8_jelly.rds\")\npoly12_jelly &lt;- readRDS(\"poly12_jelly.rds\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection-in-each-dataset",
+    "href": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection-in-each-dataset",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Find the best Jellyfish projection in each dataset",
+    "text": "Find the best Jellyfish projection in each dataset\n\n\nCode\nbest_poly6 &lt;- poly6_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_poly8 &lt;- poly8_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_poly12 &lt;- poly12_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\n\nSummarize the best values:\n\n\nCode\nbest_poly_summary &lt;- tibble(\n  data = c(\"poly6\", \"poly8\", \"poly12\"),\n  best_loop = c(best_poly6$loop, best_poly8$loop, best_poly12$loop),\n  tries = c(best_poly6$tries, best_poly8$tries, best_poly12$tries),\n  max_index_val = c(best_poly6$index_val, best_poly8$index_val, best_poly12$index_val)\n)\n\nknitr::kable(best_poly_summary, digits = 3)\n\n\n\n\n\ndata\nbest_loop\ntries\nmax_index_val\n\n\n\n\npoly6\n19\n3\n0.436\n\n\npoly8\n30\n1\n0.348\n\n\npoly12\n1\n3\n0.248"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#extract-only-the-best-loop",
+    "href": "blog/tourr_stringy/tourr_stringy.html#extract-only-the-best-loop",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Extract only the best loop",
+    "text": "Extract only the best loop\n\n\nCode\nbases_poly6_best &lt;- poly6_jelly |&gt;\n  filter(loop == best_poly6$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_poly8_best &lt;- poly8_jelly |&gt;\n  filter(loop == best_poly8$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_poly12_best &lt;- poly12_jelly |&gt;\n  filter(loop == best_poly12$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#render-only-the-best-jellyfish-loop",
+    "href": "blog/tourr_stringy/tourr_stringy.html#render-only-the-best-jellyfish-loop",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Render only the best Jellyfish loop",
+    "text": "Render only the best Jellyfish loop\n\n6D polynomial data\n\n\nCode\nrender_gif(\n  data = poly6,\n  tour_path = planned_tour(bases_poly6_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly6_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n[1] \"/Users/tras0007/Desktop/files/website/blog/tourr_stringy/poly6_jellyfish_best.gif\"\n\n\n\n\nCode\nknitr::include_graphics(\"poly6_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\n\n\n8D polynomial data\n\n\nCode\nrender_gif(\n  data = poly8,\n  tour_path = planned_tour(bases_poly8_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly8_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n[1] \"/Users/tras0007/Desktop/files/website/blog/tourr_stringy/poly8_jellyfish_best.gif\"\n\n\n\n\nCode\nknitr::include_graphics(\"poly8_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\n\n\n12D polynomial data\n\n\nCode\nrender_gif(\n  data = poly12,\n  tour_path = planned_tour(bases_poly12_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly12_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n[1] \"/Users/tras0007/Desktop/files/website/blog/tourr_stringy/poly12_jellyfish_best.gif\"\n\n\n\n\nCode\nknitr::include_graphics(\"poly12_jellyfish_best.gif\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#plot-the-exact-best-final-projection",
+    "href": "blog/tourr_stringy/tourr_stringy.html#plot-the-exact-best-final-projection",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Plot the exact best final projection",
+    "text": "Plot the exact best final projection\n\n\nCode\nplot_best_proj &lt;- function(data, best_row, title_text) {\n  best_basis &lt;- best_row$basis[[1]]\n\n  proj &lt;- as.data.frame(as.matrix(data) %*% best_basis)\n  colnames(proj) &lt;- c(\"x\", \"y\")\n\n  ggplot(proj, aes(x = x, y = y)) +\n    geom_point(size = 0.6, alpha = 0.7) +\n    coord_equal() +\n    theme_bw() +\n    theme(\n      aspect.ratio = 1,\n      axis.text = element_blank(),\n      axis.ticks = element_blank()\n    ) +\n    labs(\n      x = NULL,\n      y = NULL,\n      title = title_text,\n      subtitle = paste0(\n        \"best loop = \", best_row$loop,\n        \", tries = \", best_row$tries,\n        \", stringy05 = \", round(best_row$index_val, 3)\n      )\n    )\n}\n\n\n\n\nCode\nplot_best_proj(poly6, best_poly6, \"Best Jellyfish projection for 6D polynomial data\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(poly8, best_poly8, \"Best Jellyfish projection for 8D polynomial data\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(poly12, best_poly12, \"Best Jellyfish projection for 12D polynomial data\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#overview",
+    "href": "blog/tourr_stringy/tourr_stringy.html#overview",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "",
+    "text": "The stringy05 scagnostic measures string-like or snake-like structure in a two-dimensional point cloud. Patterns receiving large values may include chains, curved paths, and polynomial or sine-wave-like relationships. This makes stringy05 a potential projection pursuit index for guiding a tour toward nonlinear structures hidden in high-dimensional data.\nThis vignette demonstrates how to:\n\nconstruct a four-dimensional dataset containing a hidden polynomial structure;\ncompare the index value of the known signal and noise projections;\nuse stringy05 with several guided-tour optimizers; and\nexamine how the Jellyfish optimizer behaves as the number of noise dimensions increases.\n\nThe examples use both the original index and a rescaled version that reduces values likely to arise from Gaussian noise.\n\n\nCode\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(spinebil)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(knitr)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#generate-a-four-dimensional-dataset",
+    "href": "blog/tourr_stringy/tourr_stringy.html#generate-a-four-dimensional-dataset",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Generate a four-dimensional dataset",
+    "text": "Generate a four-dimensional dataset\nThe example dataset contains four variables. Variables V1 and V2 are Gaussian noise. Variables V3 and V4 contain the true structure.\nA quadratic polynomial is used to create a clear string-like pattern:\n\nV3 is a linear coordinate along the curve,\nV4 is a sinusoidal function of V3.\n\nThe data are not standardized in this example so that the signal remains dominant relative to the noise variables. Standardizing all variables to unit variance would change this relative signal-to-noise magnitude and may alter the projection found by the optimizer.\n\n\nCode\nset.seed(1050)\n\nn &lt;- 500\nt &lt;- seq(-2, 2, length.out = n)\n\npoly_signal &lt;- poly(t, degree = 2, raw = TRUE)\n\nstringy4_raw &lt;- data.frame(\n  V1 = rnorm(n, sd = 0.15),                       \n  V2 = rnorm(n, sd = 0.15),                     \n  V3 = poly_signal[, 1] + rnorm(n, sd = 0.01),  \n  V4 = poly_signal[, 2] + rnorm(n, sd = 0.02)\n)\n\nstringy4 &lt;- as.matrix(stringy4_raw)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-the-true-structure-and-a-noise-projection-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-the-true-structure-and-a-noise-projection-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Define the true structure and a noise projection",
+    "text": "Define the true structure and a noise projection\n\nThe true structured projection is the plane spanned by V3 and V4.\nThe noise projection is the plane spanned by V1 and V2.\n\n\n\nCode\nbasis_true &lt;- spinebil::basis_matrix(3, 4, 4)\nbasis_noise &lt;- spinebil::basis_matrix(1, 2, 4)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#plot-the-signal-and-noise-projections-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#plot-the-signal-and-noise-projections-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Plot the signal and noise projections",
+    "text": "Plot the signal and noise projections\nThe signal and noise projections are shown side by side to define the target structure that the guided tour should recover.\n\n\nCode\nplot_projection &lt;- bind_rows(\n  tibble(\n    x = stringy4[, 1],\n    y = stringy4[, 2],\n    projection = \"noise: V1 and V2\"\n  ),\n  tibble(\n    x = stringy4[, 3],\n    y = stringy4[, 4],\n    projection = \"signal: V3 and V4\"\n  )\n)\n\nggplot(plot_projection, aes(x = x, y = y)) +\n  geom_point(size = 0.7, alpha = 0.7) +\n  facet_wrap(~ projection, nrow = 1, scales = \"free\") +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"Noise and signal projections\"\n  )\n\n\n\n\n\n\n\n\n\nThe right panel contains the true stringy structure. The left panel contains only noise."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#explore-the-data-with-a-grand-tour",
+    "href": "blog/tourr_stringy/tourr_stringy.html#explore-the-data-with-a-grand-tour",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Explore the data with a grand tour",
+    "text": "Explore the data with a grand tour\nA grand tour rotates through many two-dimensional projections of the four-dimensional data. It provides an initial visual check that the hidden structure is present and visible from suitable projection angles before an index-guided search is applied.\n\nRun and save the grand tour\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = grand_tour(),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 500,\n  gif_file = \"stringy4_grand_tour.gif\",\n  width = 500, \n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_grand_tour.gif\")\n\n\n\n\n\n\n\n\n\nThe grand tour provides an unguided view of the projection space. The guided tour can then use stringy05 to search specifically for projections with string-like structure."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-stringy05-as-a-projection-pursuit-index-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-stringy05-as-a-projection-pursuit-index-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Define stringy05 as a projection pursuit index",
+    "text": "Define stringy05 as a projection pursuit index\nTwo versions of the index are defined:\n\na raw stringy05 index, and\na rescaled version.\n\nThe rescaled version uses the estimated Gaussian-noise threshold\n\\[\n\\ell(n) = 0.05 + \\frac{3.86}{\\sqrt{n}}\n\\]\nand maps values likely to arise from noise toward zero.\n\n\nCode\n# Define the index\nrescale_stringy05 &lt;- function(z, n) {\n  lb &lt;- 0.05 + 3.86 / sqrt(n)\n  pmax(0, (z - lb) / (1 - lb))\n}\n\nstringy05_raw &lt;- function(rescale = FALSE) {\n  function(mat) {\n    z &lt;- cassowaryr::sc_stringy05(mat[, 1], mat[, 2])\n\n    if (rescale) {\n      z &lt;- rescale_stringy05(z, nrow(mat))\n    }\n\n    z\n  }\n}\n\n\nstringy05_index_raw &lt;- stringy05_raw(rescale = FALSE)\nstringy05_index_rescaled &lt;- stringy05_raw(rescale = TRUE)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#check-stringy05-on-the-true-structure-and-on-noise-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#check-stringy05-on-the-true-structure-and-on-noise-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Check stringy05 on the true structure and on noise",
+    "text": "Check stringy05 on the true structure and on noise\nBefore optimization, the index is evaluated directly on the known signal and noise planes.\n\n\nCode\ndirect_check &lt;- tibble(\n  projection = c(\"true structure: V3-V4\", \"noise: V1-V2\"),\n  raw_stringy05 = c(\n    stringy05_index_raw(stringy4 %*% basis_true),\n    stringy05_index_raw(stringy4 %*% basis_noise)\n  ),\n  rescaled_stringy05 = c(\n    stringy05_index_rescaled(stringy4 %*% basis_true),\n    stringy05_index_rescaled(stringy4 %*% basis_noise)\n  )\n)\n\nknitr::kable(\n  direct_check,\n  digits = 3,\n  caption = \"Raw and rescaled stringy05 values for the true structured projection and a noise projection.\"\n)\n\n\n\nRaw and rescaled stringy05 values for the true structured projection and a noise projection.\n\n\nprojection\nraw_stringy05\nrescaled_stringy05\n\n\n\n\ntrue structure: V3-V4\n0.997\n0.996\n\n\nnoise: V1-V2\n0.207\n0.000\n\n\n\n\n\nThe structured projection should receive a substantially larger value than the noise projection. In this example, the rescaling maps the noise value to zero while retaining a large value for the signal."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_geodesic-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_geodesic-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Guided tour using search_geodesic",
+    "text": "Guided tour using search_geodesic\nThe first guided tour uses the default optimizer, search_geodesic, with the rescaled stringy05 index.\n\n\nCode\nset.seed(1050)\n\nhist_geodesic &lt;- save_history(\n  data = stringy4,\n  tour_path = guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_geodesic,\n    max.tries = 100,\n    alpha = 0.8,\n    cooling = 0.995\n  ),\n  max_bases = 100,\n  sphere = FALSE,\n  rescale = FALSE\n)\n\nsaveRDS(hist_geodesic, \"hist_geodesic.rds\")\n\n\n\nView the search_geodesic tour interactively\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(hist_geodesic),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_guided_geodesic.gif\",\n  width = 500, \n  height = 300\n  \n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_guided_geodesic.gif\")\n\n\n\n\n\n\n\n\n\nThe animation can be used to assess whether the guided tour moves toward the hidden polynomial structure in variables V3 and V4."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_better_random-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_better_random-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Guided tour using search_better_random",
+    "text": "Guided tour using search_better_random\nThe search_better_random optimizer provides a more exploratory alternative to the default geodesic search. This can be useful when a scagnostic index produces an irregular optimization surface or several local optima.\n\n\nCode\nset.seed(1050)\n\nhist_better_random &lt;- save_history(\n  data = stringy4,\n  tour_path = guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_better_random,\n    max.tries = 100,\n    alpha = 0.8,\n    cooling = 0.995\n  ),\n  max_bases = 100\n)\n\nsaveRDS(hist_better_random, \"hist_better_random.rds\")\n\n\n\nSave the search_better_random tour as a gif\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(hist_better_random),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_guided_better_random.gif\",\n  width = 500, \n  height = 300\n  \n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_guided_better_random.gif\")\n\n\n\n\n\n\n\n\n\nComparing the two animations shows whether either optimizer recovers the polynomial structure more clearly or more consistently."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_jellyfish-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#guided-tour-using-search_jellyfish-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Guided tour using search_jellyfish",
+    "text": "Guided tour using search_jellyfish\nThe Jellyfish optimizer starts from multiple candidate bases, so the returned object contains several search loops. Each loop represents one path through projection space.\nJellyfish is first applied to the four-dimensional polynomial dataset and the returned search history is saved.\n\n\nCode\nset.seed(1050)\n\njellyfish_res &lt;- animate_xy(\n  stringy4,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(jellyfish_res, \"jellyfish_res.rds\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Find the best Jellyfish projection",
+    "text": "Find the best Jellyfish projection\nThe projection with the largest index value is selected across all Jellyfish loops and iterations.\nThe loop containing the maximum index value is extracted and replayed. The loop number is determined from the result rather than fixed in advance.\n\n\nCode\njellyfish_res &lt;- readRDS(\"jellyfish_res.rds\")\n\nbest_jelly &lt;- jellyfish_res |&gt;\n  filter(!is.na(index_val)) |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_jelly\n\n\n# A tibble: 1 × 8\n  basis         index_val info         method           alpha tries  loop    id\n  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;\n1 &lt;dbl [4 × 2]&gt;     0.986 current_best search_jellyfish    NA    24    18   708\n\n\nExtract the best loop and its sequence of bases:\n\n\nCode\nbest_loop &lt;- best_jelly$loop\nbest_loop\n\n\n[1] 18\n\n\n\n\nCode\nbases_best_loop &lt;- jellyfish_res |&gt;\n  filter(loop == best_loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\n\nOnly the loop containing the best projection is replayed."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#save-and-show-the-best-jellyfish-loop-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#save-and-show-the-best-jellyfish-loop-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Save and show the best Jellyfish loop",
+    "text": "Save and show the best Jellyfish loop\n\n\nCode\nrender_gif(\n  data = stringy4,\n  tour_path = planned_tour(bases_best_loop),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"stringy4_jellyfish_best_loop.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"stringy4_jellyfish_best_loop.gif\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#visualize-the-best-final-projection-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#visualize-the-best-final-projection-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Visualize the best final projection",
+    "text": "Visualize the best final projection\nThe exact best basis can also be extracted and used to plot the corresponding projection directly.\n\n\nCode\nbest_basis &lt;- best_jelly$basis[[1]]\n\nbest_projection &lt;- as.data.frame(stringy4 %*% best_basis)\ncolnames(best_projection) &lt;- c(\"x\", \"y\")\n\nggplot(best_projection, aes(x = x, y = y)) +\n  geom_point(size = 0.7, alpha = 0.7) +\n  coord_equal() +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"Best projection found by Jellyfish\",\n    subtitle = paste0(\n      \"Best loop = \", best_loop,\n      \", tries = \", best_jelly$tries,\n      \", stringy05 = \", round(best_jelly$index_val, 3)\n    )\n  )\n\n\n\n\n\n\n\n\n\nThe maximum index value found by Jellyfish is:\n\n\nCode\nbest_jelly$index_val\n\n\n[1] 0.986364\n\n\nJellyfish can be useful for scagnostic indices because their optimization surfaces may be irregular or contain local optima. Exploring several candidate paths increases the opportunity to locate a projection with a large index value, although it does not guarantee recovery of the global optimum."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#extend-the-example-to-higher-dimensions",
+    "href": "blog/tourr_stringy/tourr_stringy.html#extend-the-example-to-higher-dimensions",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Extend the example to higher dimensions",
+    "text": "Extend the example to higher dimensions\nThe number of noise variables is increased to examine whether Jellyfish can still recover the hidden polynomial structure. In each dataset, the final two variables contain the signal and all preceding variables contain Gaussian noise.\n\n\nCode\nmake_poly_data &lt;- function(n = 500, p = 6, seed = 1050) {\n  set.seed(seed)\n\n  t &lt;- seq(-2, 2, length.out = n)\n\n  poly_signal &lt;- poly(t, degree = 2, raw = TRUE)\n\n  poly_data &lt;- matrix(\n    rnorm(n * p, sd = 0.15),\n    nrow = n,\n    ncol = p\n  )\n\n  poly_data[, p - 1] &lt;- poly_signal[, 1] + rnorm(n, sd = 0.01)\n  poly_data[, p] &lt;- poly_signal[, 2] + rnorm(n, sd = 0.02)\n\n  colnames(poly_data) &lt;- paste0(\"V\", seq_len(p))\n\n  poly_data\n}\n\n\nGenerate the datasets:\n\n\nCode\npoly6 &lt;- make_poly_data(n = 500, p = 6, seed = 1050)\npoly8 &lt;- make_poly_data(n = 500, p = 8, seed = 1050)\npoly12 &lt;- make_poly_data(n = 500, p = 12, seed = 1050)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#define-true-signal-and-noise-bases-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#define-true-signal-and-noise-bases-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Define true signal and noise bases",
+    "text": "Define true signal and noise bases\n\n\nCode\nbasis6_true &lt;- spinebil::basis_matrix(5, 6, 6)\nbasis8_true &lt;- spinebil::basis_matrix(7, 8, 8)\nbasis12_true &lt;- spinebil::basis_matrix(11, 12, 12)\n\nbasis6_noise &lt;- spinebil::basis_matrix(1, 2, 6)\nbasis8_noise &lt;- spinebil::basis_matrix(1, 2, 8)\nbasis12_noise &lt;- spinebil::basis_matrix(1, 2, 12)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#check-the-index-value-on-the-true-2d-projection-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#check-the-index-value-on-the-true-2d-projection-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Check the index value on the true 2D projection",
+    "text": "Check the index value on the true 2D projection\nBefore running Jellyfish, the index is evaluated on the known signal and noise projections.\n\n\nCode\npoly_direct_check &lt;- tibble(\n  data = c(\"poly6\", \"poly8\", \"poly12\"),\n  true_projection = c(\n    stringy05_index_rescaled(poly6 %*% basis6_true),\n    stringy05_index_rescaled(poly8 %*% basis8_true),\n    stringy05_index_rescaled(poly12 %*% basis12_true)\n  ),\n  noise_projection = c(\n    stringy05_index_rescaled(poly6 %*% basis6_noise),\n    stringy05_index_rescaled(poly8 %*% basis8_noise),\n    stringy05_index_rescaled(poly12 %*% basis12_noise)\n  )\n)\n\nknitr::kable(poly_direct_check, digits = 3)\n\n\n\n\n\ndata\ntrue_projection\nnoise_projection\n\n\n\n\npoly6\n0.973\n0\n\n\npoly8\n0.992\n0\n\n\npoly12\n0.985\n0\n\n\n\n\n\nA large value for the known signal projection confirms that the index recognizes the target structure. If the optimizer does not recover a comparable projection, the limitation is more likely related to search difficulty than to the index definition itself."
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#run-jellyfish-in-higher-dimensions",
+    "href": "blog/tourr_stringy/tourr_stringy.html#run-jellyfish-in-higher-dimensions",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Run Jellyfish in higher dimensions",
+    "text": "Run Jellyfish in higher dimensions\nThe same search procedure is applied to the six-, eight-, and twelve-dimensional datasets.\n\n\nCode\nset.seed(1050)\n\npoly6_jelly &lt;- animate_xy(\n  poly6,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly6_jelly, \"poly6_jelly.rds\")\n\n\n\n\nCode\nset.seed(1050)\n\npoly8_jelly &lt;- animate_xy(\n  poly8,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly8_jelly, \"poly8_jelly.rds\")\n\n\n\n\nCode\nset.seed(1050)\n\npoly12_jelly &lt;- animate_xy(\n  poly12,\n  guided_tour(\n    index_f = stringy05_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly12_jelly, \"poly12_jelly.rds\")\n\n\nRead the saved results:\n\n\nCode\npoly6_jelly &lt;- readRDS(\"poly6_jelly.rds\")\npoly8_jelly &lt;- readRDS(\"poly8_jelly.rds\")\npoly12_jelly &lt;- readRDS(\"poly12_jelly.rds\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection-in-each-dataset-1",
+    "href": "blog/tourr_stringy/tourr_stringy.html#find-the-best-jellyfish-projection-in-each-dataset-1",
+    "title": "Can tourr optimizers find the hidden stringy projection?",
+    "section": "Find the best Jellyfish projection in each dataset",
+    "text": "Find the best Jellyfish projection in each dataset\n\n\nCode\nbest_poly6 &lt;- poly6_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_poly8 &lt;- poly8_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_poly12 &lt;- poly12_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\n\nSummarize the best values:\n\n\nCode\nbest_poly_summary &lt;- tibble(\n  data = c(\"poly6\", \"poly8\", \"poly12\"),\n  best_loop = c(best_poly6$loop, best_poly8$loop, best_poly12$loop),\n  tries = c(best_poly6$tries, best_poly8$tries, best_poly12$tries),\n  max_index_val = c(best_poly6$index_val, best_poly8$index_val, best_poly12$index_val)\n)\n\nknitr::kable(best_poly_summary, digits = 3)\n\n\n\n\n\ndata\nbest_loop\ntries\nmax_index_val\n\n\n\n\npoly6\n19\n3\n0.436\n\n\npoly8\n30\n1\n0.348\n\n\npoly12\n1\n3\n0.248"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#extract-the-best-loop-from-each-search",
+    "href": "blog/tourr_stringy/tourr_stringy.html#extract-the-best-loop-from-each-search",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Extract the best loop from each search",
+    "text": "Extract the best loop from each search\n\n\nCode\nbases_poly6_best &lt;- poly6_jelly |&gt;\n  filter(loop == best_poly6$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_poly8_best &lt;- poly8_jelly |&gt;\n  filter(loop == best_poly8$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_poly12_best &lt;- poly12_jelly |&gt;\n  filter(loop == best_poly12$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#render-the-best-jellyfish-loops",
+    "href": "blog/tourr_stringy/tourr_stringy.html#render-the-best-jellyfish-loops",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Render the best Jellyfish loops",
+    "text": "Render the best Jellyfish loops\n\n6D polynomial data\n\n\nCode\nrender_gif(\n  data = poly6,\n  tour_path = planned_tour(bases_poly6_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly6_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"poly6_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\n\n\n8D polynomial data\n\n\nCode\nrender_gif(\n  data = poly8,\n  tour_path = planned_tour(bases_poly8_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly8_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"poly8_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\n\n\n12D polynomial data\n\n\nCode\nrender_gif(\n  data = poly12,\n  tour_path = planned_tour(bases_poly12_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly12_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"poly12_jellyfish_best.gif\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#plot-the-best-final-projections",
+    "href": "blog/tourr_stringy/tourr_stringy.html#plot-the-best-final-projections",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Plot the best final projections",
+    "text": "Plot the best final projections\n\n\nCode\nplot_best_proj &lt;- function(data, best_row, title_text) {\n  best_basis &lt;- best_row$basis[[1]]\n\n  proj &lt;- as.data.frame(as.matrix(data) %*% best_basis)\n  colnames(proj) &lt;- c(\"x\", \"y\")\n\n  ggplot(proj, aes(x = x, y = y)) +\n    geom_point(size = 0.6, alpha = 0.7) +\n    coord_equal() +\n    theme_bw() +\n    theme(\n      aspect.ratio = 1,\n      axis.text = element_blank(),\n      axis.ticks = element_blank()\n    ) +\n    labs(\n      x = NULL,\n      y = NULL,\n      title = title_text,\n      subtitle = paste0(\n        \"best loop = \", best_row$loop,\n        \", tries = \", best_row$tries,\n        \", stringy05 = \", round(best_row$index_val, 3)\n      )\n    )\n}\n\n\n\n\nCode\nplot_best_proj(poly6, best_poly6, \"Best Jellyfish projection for 6D polynomial data\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(poly8, best_poly8, \"Best Jellyfish projection for 8D polynomial data\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(poly12, best_poly12, \"Best Jellyfish projection for 12D polynomial data\")"
+  },
+  {
+    "objectID": "blog/tourr_stringy/tourr_stringy.html#summary",
+    "href": "blog/tourr_stringy/tourr_stringy.html#summary",
+    "title": "Using the stringy05 index in a guided tour",
+    "section": "Summary",
+    "text": "Summary\nThe stringy05 index assigns large values to the known polynomial projection and smaller values to a Gaussian-noise projection. The rescaled version further reduces index values that are likely to arise from noise, making it a practical choice for the guided-tour examples in this vignette.\nThe optimizer remains an important part of the analysis. search_geodesic, search_better_random, and search_jellyfish explore projection space differently and may therefore return different results. Jellyfish provides broader exploration through multiple search loops, but the higher-dimensional examples show that recovering a known optimum becomes more difficult as the projection space grows.\nThese examples also illustrate why scaling should be considered carefully. Standardization changes the relative magnitude of the signal and noise variables. Although scaling makes variables comparable in variance, it may weaken a deliberately dominant signal or amplify nuisance variation, changing both the index landscape and the projection selected by the optimizer."
   }
 ]
