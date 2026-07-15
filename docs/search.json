@@ -1377,5 +1377,166 @@
     "title": "Choosing a Projection Pursuit Index",
     "section": "Comparing Projection Pursuit Indices",
     "text": "Comparing Projection Pursuit Indices\nThe following articles provide detailed evaluations of each projection pursuit index."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html",
+    "href": "blog/tourr_skinny/tourr_skinny.html",
+    "title": "Using the skinny index in a guided tour",
+    "section": "",
+    "text": "The skinny scagnostic measures how thin or elongated a two-dimensional point cloud is. Large values are assigned to patterns that form narrow, linear, or filament-like structures with relatively little spread perpendicular to the main direction. This makes skinny a potential projection pursuit index for guiding a tour toward thin or elongated structures hidden in high-dimensional data.\nThis vignette demonstrates how to:\n\nconstruct a four-dimensional dataset containing a hidden polynomial structure;\ncompare the index value of the known signal and noise projections;\nuse skinny with several guided-tour optimizers; and\nexamine how the Jellyfish optimizer behaves as the number of noise dimensions increases.\n\nThe examples use both the original index and a rescaled version that reduces values likely to arise from Gaussian noise.\n\n\nCode\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(spinebil)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(knitr)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#overview",
+    "href": "blog/tourr_skinny/tourr_skinny.html#overview",
+    "title": "Using the skinny index in a guided tour",
+    "section": "",
+    "text": "The skinny scagnostic measures how thin or elongated a two-dimensional point cloud is. Large values are assigned to patterns that form narrow, linear, or filament-like structures with relatively little spread perpendicular to the main direction. This makes skinny a potential projection pursuit index for guiding a tour toward thin or elongated structures hidden in high-dimensional data.\nThis vignette demonstrates how to:\n\nconstruct a four-dimensional dataset containing a hidden polynomial structure;\ncompare the index value of the known signal and noise projections;\nuse skinny with several guided-tour optimizers; and\nexamine how the Jellyfish optimizer behaves as the number of noise dimensions increases.\n\nThe examples use both the original index and a rescaled version that reduces values likely to arise from Gaussian noise.\n\n\nCode\nlibrary(tourr)\nlibrary(cassowaryr)\nlibrary(spinebil)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(purrr)\nlibrary(ggplot2)\nlibrary(knitr)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#generate-a-four-dimensional-dataset",
+    "href": "blog/tourr_skinny/tourr_skinny.html#generate-a-four-dimensional-dataset",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Generate a four-dimensional dataset",
+    "text": "Generate a four-dimensional dataset\nThe example dataset contains four variables. Variables V1 and V2 are Gaussian noise. Variables V3 and V4 contain the true structure.\nA quadratic polynomial is used to create a clear string-like pattern:\n\nV3 is a linear coordinate along the curve,\nV4 is a sinusoidal function of V3.\n\nThe data are not standardized in this example so that the signal remains dominant relative to the noise variables. Standardizing all variables to unit variance would change this relative signal-to-noise magnitude and may alter the projection found by the optimizer.\n\n\nCode\nset.seed(1050)\n\nn &lt;- 500\nt &lt;- seq(-2, 2, length.out = n)\n\npoly_signal &lt;- poly(t, degree = 3, raw = TRUE)\n\nskinny4_raw &lt;- data.frame(\n  V1 = rnorm(n, sd = 0.15),                       \n  V2 = rnorm(n, sd = 0.15),                     \n  V3 = poly_signal[, 1] + rnorm(n, sd = 0.01),  \n  V4 = poly_signal[, 3] + rnorm(n, sd = 0.02)\n)\n\nskinny4 &lt;- as.matrix(skinny4_raw)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#define-the-true-structure-and-a-noise-projection",
+    "href": "blog/tourr_skinny/tourr_skinny.html#define-the-true-structure-and-a-noise-projection",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Define the true structure and a noise projection",
+    "text": "Define the true structure and a noise projection\n\nThe true structured projection is the plane spanned by V3 and V4.\nThe noise projection is the plane spanned by V1 and V2.\n\n\n\nCode\nbasis_true &lt;- spinebil::basis_matrix(3, 4, 4)\nbasis_noise &lt;- spinebil::basis_matrix(1, 2, 4)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#plot-the-signal-and-noise-projections",
+    "href": "blog/tourr_skinny/tourr_skinny.html#plot-the-signal-and-noise-projections",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Plot the signal and noise projections",
+    "text": "Plot the signal and noise projections\nThe signal and noise projections are shown side by side to define the target structure that the guided tour should recover.\n\n\nCode\nplot_projection &lt;- bind_rows(\n  tibble(\n    x = skinny4[, 1],\n    y = skinny4[, 2],\n    projection = \"noise: V1 and V2\"\n  ),\n  tibble(\n    x = skinny4[, 3],\n    y = skinny4[, 4],\n    projection = \"signal: V3 and V4\"\n  )\n)\n\nggplot(plot_projection, aes(x = x, y = y)) +\n  geom_point(size = 0.7, alpha = 0.7) +\n  facet_wrap(~ projection, nrow = 1, scales = \"free\") +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"Noise and signal projections\"\n  )\n\n\n\n\n\n\n\n\n\nThe right panel contains the true stringy structure. The left panel contains only noise."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#explore-the-data-with-a-grand-tour",
+    "href": "blog/tourr_skinny/tourr_skinny.html#explore-the-data-with-a-grand-tour",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Explore the data with a grand tour",
+    "text": "Explore the data with a grand tour\nA grand tour rotates through many two-dimensional projections of the four-dimensional data. It provides an initial visual check that the hidden structure is present and visible from suitable projection angles before an index-guided search is applied.\n\nRun and save the grand tour\n\n\nCode\nrender_gif(\n  data = skinny4,\n  tour_path = grand_tour(),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 500,\n  gif_file = \"skinny4_grand_tour.gif\",\n  width = 500, \n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"skinny4_grand_tour.gif\")\n\n\n\n\n\n\n\n\n\nThe grand tour provides an unguided view of the projection space. The guided tour can then use skinny to search specifically for projections with thin structure."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#define-skinny-as-a-projection-pursuit-index",
+    "href": "blog/tourr_skinny/tourr_skinny.html#define-skinny-as-a-projection-pursuit-index",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Define skinny as a projection pursuit index",
+    "text": "Define skinny as a projection pursuit index\nTwo versions of the index are defined:\n\na raw skinny index; and\na rescaled version.\n\nThe rescaled version uses the estimated Gaussian-noise threshold\n\\[\n\\ell(n)=0.72-0.19\\log(n)+0.02\\{\\log(n)\\}^2,\n\\]\nand maps values likely to arise from Gaussian noise toward zero.\n\n\nCode\nrescale_skinny &lt;- function(z, n) {\n  lb &lt;- 0.72 - 0.19 * log(n) + 0.02 * (log(n)^2)\n  pmax(0, (z - lb) / (1 - lb))\n}\n\nskinny_index &lt;- function(rescale = FALSE) {\n  function(mat) {\n\n    z &lt;- cassowaryr::sc_skinny(mat[, 1], mat[, 2])\n\n    if (rescale) {\n      z &lt;- rescale_skinny(z, nrow(mat))\n    }\n\n    z\n  }\n}\n\nskinny_index_raw &lt;- skinny_index(rescale = FALSE)\nskinny_index_rescaled &lt;- skinny_index(rescale = TRUE)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#check-skinny-on-the-true-structure-and-on-noise",
+    "href": "blog/tourr_skinny/tourr_skinny.html#check-skinny-on-the-true-structure-and-on-noise",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Check skinny on the true structure and on noise",
+    "text": "Check skinny on the true structure and on noise\nBefore optimization, the index is evaluated directly on the known signal and noise planes.\n\n\nCode\ndirect_check &lt;- tibble(\n  projection = c(\"true structure: V3-V4\", \"noise: V1-V2\"),\n  raw_skinny = c(\n    skinny_index_raw(skinny4 %*% basis_true),\n    skinny_index_raw(skinny4 %*% basis_noise)\n  ),\n  rescaled_skinny = c(\n    skinny_index_rescaled(skinny4 %*% basis_true),\n    skinny_index_rescaled(skinny4 %*% basis_noise)\n  )\n)\n\nknitr::kable(\n  direct_check,\n  digits = 3,\n  caption = \"Raw and rescaled skinny values for the true structured projection and a noise projection.\"\n)\n\n\n\nRaw and rescaled skinny values for the true structured projection and a noise projection.\n\n\nprojection\nraw_skinny\nrescaled_skinny\n\n\n\n\ntrue structure: V3-V4\n0.890\n0.84\n\n\nnoise: V1-V2\n0.265\n0.00\n\n\n\n\n\nThe structured projection should receive a substantially larger value than the noise projection. In this example, the rescaling maps the noise value to zero while retaining a large value for the signal."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#guided-tour-using-search_geodesic",
+    "href": "blog/tourr_skinny/tourr_skinny.html#guided-tour-using-search_geodesic",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Guided tour using search_geodesic",
+    "text": "Guided tour using search_geodesic\nThe first guided tour uses the default optimizer, search_geodesic, with the rescaled skinny index.\n\n\nCode\nset.seed(1050)\n\nhist_geodesic &lt;- save_history(\n  data = skinny4,\n  tour_path = guided_tour(\n    index_f = skinny_index_rescaled,\n    search_f = search_geodesic,\n    max.tries = 100,\n    alpha = 0.8,\n    cooling = 0.995\n  ),\n  max_bases = 100,\n  sphere = FALSE,\n  rescale = FALSE\n)\n\nsaveRDS(hist_geodesic, \"hist_geodesic.rds\")\n\n\n\nView the search_geodesic tour interactively\n\n\nCode\nrender_gif(\n  data = skinny4,\n  tour_path = planned_tour(hist_geodesic),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"skinny4_guided_geodesic.gif\",\n  width = 500, \n  height = 300\n  \n)\n\n\n\n\nCode\nknitr::include_graphics(\"skinny4_guided_geodesic.gif\")\n\n\n\n\n\n\n\n\n\nThe animation can be used to assess whether the guided tour moves toward the hidden polynomial structure in variables V3 and V4."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#guided-tour-using-search_better_random",
+    "href": "blog/tourr_skinny/tourr_skinny.html#guided-tour-using-search_better_random",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Guided tour using search_better_random",
+    "text": "Guided tour using search_better_random\nThe search_better_random optimizer provides a more exploratory alternative to the default geodesic search. This can be useful when a scagnostic index produces an irregular optimization surface or several local optima.\n\n\nCode\nset.seed(1050)\n\nhist_better_random &lt;- save_history(\n  data = skinny4,\n  tour_path = guided_tour(\n    index_f = skinny_index_rescaled,\n    search_f = search_better_random,\n    max.tries = 100,\n    alpha = 0.8,\n    cooling = 0.995\n  ),\n  max_bases = 100\n)\n\nsaveRDS(hist_better_random, \"hist_better_random.rds\")\n\n\n\nSave the search_better_random tour as a gif\n\n\nCode\nrender_gif(\n  data = skinny4,\n  tour_path = planned_tour(hist_better_random),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"skinny4_guided_better_random.gif\",\n  width = 500, \n  height = 300\n  \n)\n\n\n\n\nCode\nknitr::include_graphics(\"skinny4_guided_better_random.gif\")\n\n\n\n\n\n\n\n\n\nComparing the two animations shows whether either optimizer recovers the polynomial structure more clearly or more consistently."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#guided-tour-using-search_jellyfish",
+    "href": "blog/tourr_skinny/tourr_skinny.html#guided-tour-using-search_jellyfish",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Guided tour using search_jellyfish",
+    "text": "Guided tour using search_jellyfish\nThe Jellyfish optimizer starts from multiple candidate bases, so the returned object contains several search loops. Each loop represents one path through projection space.\nJellyfish is first applied to the four-dimensional polynomial dataset and the returned search history is saved.\n\n\nCode\nset.seed(1050)\n\njellyfish_res &lt;- animate_xy(\n  skinny4,\n  guided_tour(\n    index_f = skinny_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(jellyfish_res, \"jellyfish_res.rds\")"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#find-the-best-jellyfish-projection",
+    "href": "blog/tourr_skinny/tourr_skinny.html#find-the-best-jellyfish-projection",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Find the best Jellyfish projection",
+    "text": "Find the best Jellyfish projection\nThe projection with the largest index value is selected across all Jellyfish loops and iterations.\nThe loop containing the maximum index value is extracted and replayed. The loop number is determined from the result rather than fixed in advance.\n\n\nCode\njellyfish_res &lt;- readRDS(\"jellyfish_res.rds\")\n\nbest_jelly &lt;- jellyfish_res |&gt;\n  filter(!is.na(index_val)) |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_jelly\n\n\n# A tibble: 1 × 8\n  basis         index_val info         method           alpha tries  loop    id\n  &lt;list&gt;            &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;\n1 &lt;dbl [4 × 2]&gt;     0.883 current_best search_jellyfish    NA    23    14   674\n\n\nExtract the best loop and its sequence of bases:\n\n\nCode\nbest_loop &lt;- best_jelly$loop\nbest_loop\n\n\n[1] 14\n\n\n\n\nCode\nbases_best_loop &lt;- jellyfish_res |&gt;\n  filter(loop == best_loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\n\nOnly the loop containing the best projection is replayed."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#save-and-show-the-best-jellyfish-loop",
+    "href": "blog/tourr_skinny/tourr_skinny.html#save-and-show-the-best-jellyfish-loop",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Save and show the best Jellyfish loop",
+    "text": "Save and show the best Jellyfish loop\n\n\nCode\nrender_gif(\n  data = skinny4,\n  tour_path = planned_tour(bases_best_loop),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"skinny4_jellyfish_best_loop.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"skinny4_jellyfish_best_loop.gif\")"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#visualize-the-best-final-projection",
+    "href": "blog/tourr_skinny/tourr_skinny.html#visualize-the-best-final-projection",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Visualize the best final projection",
+    "text": "Visualize the best final projection\nThe exact best basis can also be extracted and used to plot the corresponding projection directly.\n\n\nCode\nbest_basis &lt;- best_jelly$basis[[1]]\n\nbest_projection &lt;- as.data.frame(skinny4 %*% best_basis)\ncolnames(best_projection) &lt;- c(\"x\", \"y\")\n\nggplot(best_projection, aes(x = x, y = y)) +\n  geom_point(size = 0.7, alpha = 0.7) +\n  coord_equal() +\n  theme_bw() +\n  theme(\n    aspect.ratio = 1,\n    axis.text = element_blank(),\n    axis.ticks = element_blank()\n  ) +\n  labs(\n    x = NULL,\n    y = NULL,\n    title = \"Best projection found by Jellyfish\",\n    subtitle = paste0(\n      \"Best loop = \", best_loop,\n      \", tries = \", best_jelly$tries,\n      \", skinny = \", round(best_jelly$index_val, 3)\n    )\n  )\n\n\n\n\n\n\n\n\n\nThe maximum index value found by Jellyfish is:\n\n\nCode\nbest_jelly$index_val\n\n\n[1] 0.8828881\n\n\nJellyfish can be useful for scagnostic indices because their optimization surfaces may be irregular or contain local optima. Exploring several candidate paths increases the opportunity to locate a projection with a large index value, although it does not guarantee recovery of the global optimum."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#extend-the-example-to-higher-dimensions",
+    "href": "blog/tourr_skinny/tourr_skinny.html#extend-the-example-to-higher-dimensions",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Extend the example to higher dimensions",
+    "text": "Extend the example to higher dimensions\nThe number of noise variables is increased to examine whether Jellyfish can still recover the hidden polynomial structure. In each dataset, the final two variables contain the signal and all preceding variables contain Gaussian noise.\n\n\nCode\nmake_poly_data &lt;- function(n = 500, p = 6, seed = 1050) {\n  set.seed(seed)\n\n  t &lt;- seq(-2, 2, length.out = n)\n\n  poly_signal &lt;- poly(t, degree = 3, raw = TRUE)\n\n  poly_data &lt;- matrix(\n    rnorm(n * p, sd = 0.15),\n    nrow = n,\n    ncol = p\n  )\n\n  poly_data[, p - 1] &lt;- poly_signal[, 1] + rnorm(n, sd = 0.01)\n  poly_data[, p] &lt;- poly_signal[, 3] + rnorm(n, sd = 0.02)\n\n  colnames(poly_data) &lt;- paste0(\"V\", seq_len(p))\n\n  poly_data\n}\n\n\nGenerate the datasets:\n\n\nCode\npoly6 &lt;- make_poly_data(n = 500, p = 6, seed = 1050)\npoly8 &lt;- make_poly_data(n = 500, p = 8, seed = 1050)\npoly12 &lt;- make_poly_data(n = 500, p = 12, seed = 1050)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#define-true-signal-and-noise-bases",
+    "href": "blog/tourr_skinny/tourr_skinny.html#define-true-signal-and-noise-bases",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Define true signal and noise bases",
+    "text": "Define true signal and noise bases\n\n\nCode\nbasis6_true &lt;- spinebil::basis_matrix(5, 6, 6)\nbasis8_true &lt;- spinebil::basis_matrix(7, 8, 8)\nbasis12_true &lt;- spinebil::basis_matrix(11, 12, 12)\n\nbasis6_noise &lt;- spinebil::basis_matrix(1, 2, 6)\nbasis8_noise &lt;- spinebil::basis_matrix(1, 2, 8)\nbasis12_noise &lt;- spinebil::basis_matrix(1, 2, 12)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#check-the-index-value-on-the-true-2d-projection",
+    "href": "blog/tourr_skinny/tourr_skinny.html#check-the-index-value-on-the-true-2d-projection",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Check the index value on the true 2D projection",
+    "text": "Check the index value on the true 2D projection\nBefore running Jellyfish, the index is evaluated on the known signal and noise projections.\n\n\nCode\npoly_direct_check &lt;- tibble(\n  data = c(\"poly6\", \"poly8\", \"poly12\"),\n  true_projection = c(\n    skinny_index_rescaled(poly6 %*% basis6_true),\n    skinny_index_rescaled(poly8 %*% basis8_true),\n    skinny_index_rescaled(poly12 %*% basis12_true)\n  ),\n  noise_projection = c(\n    skinny_index_rescaled(poly6 %*% basis6_noise),\n    skinny_index_rescaled(poly8 %*% basis8_noise),\n    skinny_index_rescaled(poly12 %*% basis12_noise)\n  )\n)\n\nknitr::kable(poly_direct_check, digits = 3)\n\n\n\n\n\ndata\ntrue_projection\nnoise_projection\n\n\n\n\npoly6\n0.871\n0\n\n\npoly8\n0.858\n0\n\n\npoly12\n0.873\n0\n\n\n\n\n\nA large value for the known signal projection confirms that the index recognizes the target structure. If the optimizer does not recover a comparable projection, the limitation is more likely related to search difficulty than to the index definition itself."
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#run-jellyfish-in-higher-dimensions",
+    "href": "blog/tourr_skinny/tourr_skinny.html#run-jellyfish-in-higher-dimensions",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Run Jellyfish in higher dimensions",
+    "text": "Run Jellyfish in higher dimensions\nThe same search procedure is applied to the six-, eight-, and twelve-dimensional datasets.\n\n\nCode\nset.seed(1050)\n\npoly6_jelly &lt;- animate_xy(\n  poly6,\n  guided_tour(\n    index_f = skinny_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly6_jelly, \"poly6_jelly.rds\")\n\n\n\n\nCode\nset.seed(1050)\n\npoly8_jelly &lt;- animate_xy(\n  poly8,\n  guided_tour(\n    index_f = skinny_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly8_jelly, \"poly8_jelly.rds\")\n\n\n\n\nCode\nset.seed(1050)\n\npoly12_jelly &lt;- animate_xy(\n  poly12,\n  guided_tour(\n    index_f = skinny_index_rescaled,\n    search_f = search_jellyfish\n  )\n)\n\nsaveRDS(poly12_jelly, \"poly12_jelly.rds\")\n\n\nRead the saved results:\n\n\nCode\npoly6_jelly &lt;- readRDS(\"poly6_jelly.rds\")\npoly8_jelly &lt;- readRDS(\"poly8_jelly.rds\")\npoly12_jelly &lt;- readRDS(\"poly12_jelly.rds\")"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#find-the-best-jellyfish-projection-in-each-dataset",
+    "href": "blog/tourr_skinny/tourr_skinny.html#find-the-best-jellyfish-projection-in-each-dataset",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Find the best Jellyfish projection in each dataset",
+    "text": "Find the best Jellyfish projection in each dataset\n\n\nCode\nbest_poly6 &lt;- poly6_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_poly8 &lt;- poly8_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\nbest_poly12 &lt;- poly12_jelly |&gt;\n  slice_max(index_val, n = 1, with_ties = FALSE)\n\n\nSummarize the best values:\n\n\nCode\nbest_poly_summary &lt;- tibble(\n  data = c(\"poly6\", \"poly8\", \"poly12\"),\n  best_loop = c(best_poly6$loop, best_poly8$loop, best_poly12$loop),\n  tries = c(best_poly6$tries, best_poly8$tries, best_poly12$tries),\n  max_index_val = c(best_poly6$index_val, best_poly8$index_val, best_poly12$index_val)\n)\n\nknitr::kable(best_poly_summary, digits = 3)\n\n\n\n\n\ndata\nbest_loop\ntries\nmax_index_val\n\n\n\n\npoly6\n6\n24\n0.864\n\n\npoly8\n8\n25\n0.835\n\n\npoly12\n4\n23\n0.653"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#extract-the-best-loop-from-each-search",
+    "href": "blog/tourr_skinny/tourr_skinny.html#extract-the-best-loop-from-each-search",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Extract the best loop from each search",
+    "text": "Extract the best loop from each search\n\n\nCode\nbases_poly6_best &lt;- poly6_jelly |&gt;\n  filter(loop == best_poly6$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_poly8_best &lt;- poly8_jelly |&gt;\n  filter(loop == best_poly8$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)\n\nbases_poly12_best &lt;- poly12_jelly |&gt;\n  filter(loop == best_poly12$loop) |&gt;\n  arrange(tries) |&gt;\n  pull(basis) |&gt;\n  check_dup(0.1)"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#render-the-best-jellyfish-loops",
+    "href": "blog/tourr_skinny/tourr_skinny.html#render-the-best-jellyfish-loops",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Render the best Jellyfish loops",
+    "text": "Render the best Jellyfish loops\n\n6D polynomial data\n\n\nCode\nrender_gif(\n  data = poly6,\n  tour_path = planned_tour(bases_poly6_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly6_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"poly6_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\n\n\n8D polynomial data\n\n\nCode\nrender_gif(\n  data = poly8,\n  tour_path = planned_tour(bases_poly8_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly8_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"poly8_jellyfish_best.gif\")\n\n\n\n\n\n\n\n\n\n\n\n12D polynomial data\n\n\nCode\nrender_gif(\n  data = poly12,\n  tour_path = planned_tour(bases_poly12_best),\n  display = display_xy(\n    axes = \"bottomleft\",\n    center = TRUE,\n    half_range = 3,\n    pch = 16,\n    cex = 0.6\n  ),\n  frames = 200,\n  gif_file = \"poly12_jellyfish_best.gif\",\n  width = 500,\n  height = 300\n)\n\n\n\n\nCode\nknitr::include_graphics(\"poly12_jellyfish_best.gif\")"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#plot-the-best-final-projections",
+    "href": "blog/tourr_skinny/tourr_skinny.html#plot-the-best-final-projections",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Plot the best final projections",
+    "text": "Plot the best final projections\n\n\nCode\nplot_best_proj &lt;- function(data, best_row, title_text) {\n  best_basis &lt;- best_row$basis[[1]]\n\n  proj &lt;- as.data.frame(as.matrix(data) %*% best_basis)\n  colnames(proj) &lt;- c(\"x\", \"y\")\n\n  ggplot(proj, aes(x = x, y = y)) +\n    geom_point(size = 0.6, alpha = 0.7) +\n    coord_equal() +\n    theme_bw() +\n    theme(\n      aspect.ratio = 1,\n      axis.text = element_blank(),\n      axis.ticks = element_blank()\n    ) +\n    labs(\n      x = NULL,\n      y = NULL,\n      title = title_text,\n      subtitle = paste0(\n        \"best loop = \", best_row$loop,\n        \", tries = \", best_row$tries,\n        \", skinny = \", round(best_row$index_val, 3)\n      )\n    )\n}\n\n\n\n\nCode\nplot_best_proj(poly6, best_poly6, \"Best Jellyfish projection for 6D polynomial data\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(poly8, best_poly8, \"Best Jellyfish projection for 8D polynomial data\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nplot_best_proj(poly12, best_poly12, \"Best Jellyfish projection for 12D polynomial data\")"
+  },
+  {
+    "objectID": "blog/tourr_skinny/tourr_skinny.html#summary",
+    "href": "blog/tourr_skinny/tourr_skinny.html#summary",
+    "title": "Using the skinny index in a guided tour",
+    "section": "Summary",
+    "text": "Summary\nThe skinny index assigns large values to the known polynomial projection and substantially smaller values to a Gaussian-noise projection. The rescaled version further suppresses index values that are likely to arise from noise, making it a practical choice for the guided-tour examples presented in this vignette.\nThe optimizer remains an important component of the analysis. search_geodesic, search_better_random, and search_jellyfish explore projection space differently and may therefore identify different projections. Jellyfish performs a broader search by exploring multiple candidate paths simultaneously, although locating the optimal projection becomes increasingly difficult as the dimensionality of the data increases.\nAs with other projection pursuit indices, scaling should be considered carefully. Standardizing all variables changes their relative contribution to the projection pursuit search and may alter the optimization landscape. Consequently, the projection identified by the optimizer can differ depending on whether the data are standardized before analysis."
   }
 ]
