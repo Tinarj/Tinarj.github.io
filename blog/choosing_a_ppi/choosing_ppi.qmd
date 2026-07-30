@@ -157,7 +157,7 @@ Different projection pursuit indices are designed to identify different structur
 | Index | Primary structure | Typical applications | Documentation | Blog |
 |---|---|---|---|---|
 | Stringy | Curves and elongated structures | Hidden nonlinear relationships | [Stringy vignette](https://tinarj.github.io/blog/tourr_stringy/tourr_stringy.html) | [Stringy blog](https://tinarj.github.io/blog/stringy_ppi_suitability.html) |
-
+| Skinny | Thin, elongated, and narrow structures | Hidden linear, filament-like, and approximately one-dimensional structures | [Skinny vignette](https://tinarj.github.io/blog/tourr_skinny/tourr_skinny.html) | [Skinny blog](link) |
 
 
 
