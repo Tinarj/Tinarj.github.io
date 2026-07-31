@@ -1,6 +1,6 @@
 ---
 title: "Exploring the Growth Rate of the stringy05 Index"
-date: 2026-05-26
+date: 2026-07-30
 categories: [scagnostics, minimum spanning tree, stringy05, asymptotic analysis, R]
 description: "A theoretical and empirical exploration of the stringy05 scagnostic index."
 license: "All Rights Reserved"
@@ -560,7 +560,8 @@ ggplot(combined_results, aes(x = n, y = ratio)) +
   theme_bw() +
   theme(aspect.ratio = 1)
 ```
-## I will Continue to Explore .....
+
+## Should use truncated normal so the distribution become bounded
 
 ## References
 

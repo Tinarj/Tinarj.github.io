@@ -39,14 +39,14 @@ library(knitr)
 
 ## Generate a four-dimensional dataset
 
-The example dataset contains four variables. Variables `V1` and `V2` are Gaussian noise. Variables `V3` and `V4` contain the true structure.
+The example dataset contains four variables. Variables `V1` and `V2` are Gaussian noise, while variables `V3` and `V4` contain the underlying quadratic structure.
 
 A quadratic polynomial is used to create a clear string-like pattern:
 
--   `V3` is a linear coordinate along the curve,
--   `V4` is a sinusoidal function of `V3`.
+* `V3` represents the linear coordinate along the curve,
+* `V4` represents the quadratic component of the curve.
 
-The data are not standardized in this example so that the signal remains dominant relative to the noise variables. Standardizing all variables to unit variance would change this relative signal-to-noise magnitude and may alter the projection found by the optimizer.
+After generating the data, only the structural variables, `V3` and `V4`, are rescaled so that their means and standard deviations match those of the noise variables. The noise variables remain unchanged. This removes differences in location and scale between the signal and noise variables while preserving the quadratic relationship between `V3` and `V4`. As a result, the optimizer must identify the projection based on the geometric structure rather than relying on the signal variables having a larger variance than the noise variables.
 
 ```{r}
 set.seed(1050)
@@ -63,9 +63,28 @@ stringy4_raw <- data.frame(
   V4 = poly_signal[, 2] + rnorm(n, sd = 0.02)
 )
 
+match_mean_sd <- function(x, target) {
+  (x - mean(x)) / sd(x) * sd(target) + mean(target)
+}
+
+stringy4_raw$V3 <- match_mean_sd(
+  stringy4_raw$V3,
+  stringy4_raw$V1
+)
+
+stringy4_raw$V4 <- match_mean_sd(
+  stringy4_raw$V4,
+  stringy4_raw$V2
+)
+
 stringy4 <- as.matrix(stringy4_raw)
 
+# colMeans(stringy4_raw)
+# sapply(stringy4_raw, sd)
+
 ```
+
+
 
 ## Define the true structure and a noise projection
 
@@ -82,6 +101,7 @@ basis_noise <- spinebil::basis_matrix(1, 2, 4)
 The signal and noise projections are shown side by side to define the target structure that the guided tour should recover.
 
 ```{r}
+#| fig-align: center
 plot_projection <- bind_rows(
   tibble(
     x = stringy4[, 1],
@@ -127,37 +147,23 @@ render_gif(
   display = display_xy(
     axes = "bottomleft",
     center = TRUE,
-    half_range = 3,
-    pch = 16,
-    cex = 0.6
+    half_range = 0.8
   ),
   frames = 500,
   gif_file = "stringy4_grand_tour.gif",
-  width = 500, 
-  height = 300
+  width = 400, 
+  height = 400
 )
 ```
 
 ```{r}
+#| fig-align: center
 knitr::include_graphics("stringy4_grand_tour.gif")
 ```
 
 The grand tour provides an unguided view of the projection space. The guided tour can then use `stringy05` to search specifically for projections with string-like structure.
 
-## Define `stringy05` as a projection pursuit index
-
-Two versions of the index are defined:
-
--   a **raw** `stringy05` index, and
--   a **rescaled** version.
-
-The rescaled version uses the estimated Gaussian-noise threshold
-
-$$
-\ell(n) = 0.05 + \frac{3.86}{\sqrt{n}}
-$$
-
-and maps values likely to arise from noise toward zero.
+## Define and check `stringy05` as a projection pursuit index 
 
 ```{r}
 # Define the index
@@ -183,18 +189,12 @@ stringy05_index_raw <- stringy05_raw(rescale = FALSE)
 stringy05_index_rescaled <- stringy05_raw(rescale = TRUE)
 ```
 
-## Check `stringy05` on the true structure and on noise
-
 Before optimization, the index is evaluated directly on the known signal and noise planes.
 
 ```{r}
 direct_check <- tibble(
   projection = c("true structure: V3-V4", "noise: V1-V2"),
-  raw_stringy05 = c(
-    stringy05_index_raw(stringy4 %*% basis_true),
-    stringy05_index_raw(stringy4 %*% basis_noise)
-  ),
-  rescaled_stringy05 = c(
+  stringy05_values = c(
     stringy05_index_rescaled(stringy4 %*% basis_true),
     stringy05_index_rescaled(stringy4 %*% basis_noise)
   )
@@ -203,11 +203,11 @@ direct_check <- tibble(
 knitr::kable(
   direct_check,
   digits = 3,
-  caption = "Raw and rescaled stringy05 values for the true structured projection and a noise projection."
+  align = "c",
+  caption = "stringy05 values for the true structured projection and a noise projection."
 )
 ```
 
-The structured projection should receive a substantially larger value than the noise projection. In this example, the rescaling maps the noise value to zero while retaining a large value for the signal.
 
 ## Guided tour using `search_geodesic`
 
@@ -243,19 +243,18 @@ render_gif(
   display = display_xy(
     axes = "bottomleft",
     center = TRUE,
-    half_range = 3,
-    pch = 16,
-    cex = 0.6
+    half_range = 0.8
   ),
-  frames = 200,
+  frames = 500,
   gif_file = "stringy4_guided_geodesic.gif",
-  width = 500, 
-  height = 300
+  width = 400, 
+  height = 400
   
 )
 ```
 
 ```{r}
+#| fig-align: center
 knitr::include_graphics("stringy4_guided_geodesic.gif")
 ```
 
@@ -293,32 +292,33 @@ render_gif(
   display = display_xy(
     axes = "bottomleft",
     center = TRUE,
-    half_range = 3,
-    pch = 16,
-    cex = 0.6
+    half_range = 0.8
   ),
-  frames = 200,
+  frames = 500,
   gif_file = "stringy4_guided_better_random.gif",
-  width = 500, 
-  height = 300
+  width = 400, 
+  height = 400
   
 )
 ```
 
 
 ```{r}
+#| fig-align: center
 knitr::include_graphics("stringy4_guided_better_random.gif")
 ```
 
 Comparing the two animations shows whether either optimizer recovers the polynomial structure more clearly or more consistently.
 
-
-
 ## Guided tour using `search_jellyfish`
 
-The Jellyfish optimizer starts from multiple candidate bases, so the returned object contains several search loops. Each loop represents one path through projection space.
+Unlike local search methods, the Jellyfish optimizer begins from multiple candidate projection bases (jellies), with each jelly exploring projection space independently. The returned object therefore contains multiple search loops, where each loop represents one path through projection space.
 
-Jellyfish is first applied to the four-dimensional polynomial dataset and the returned search history is saved.
+
+To increase the likelihood of finding the global optimum, the optimizer is run with **40 jellies** and **40 maximum search iterations** per jelly. Increasing the number of jellies allows the algorithm to explore a wider range of starting projections, while increasing `max.tries` gives each jelly more opportunities to refine its search toward a higher projection pursuit index.
+
+The Jellyfish search is first applied to the four-dimensional polynomial dataset, and the resulting search history is saved for later visualization and analysis.
+
 
 ```{r eval=FALSE}
 set.seed(1050)
@@ -327,7 +327,9 @@ jellyfish_res <- animate_xy(
   stringy4,
   guided_tour(
     index_f = stringy05_index_rescaled,
-    search_f = search_jellyfish
+    search_f = search_jellyfish,
+    n_jellies = 40,
+    max.tries = 40
   )
 )
 
@@ -363,6 +365,8 @@ bases_best_loop <- jellyfish_res |>
   arrange(tries) |>
   pull(basis) |>
   check_dup(0.1)
+
+animate_xy(stringy4, planned_tour(bases_best_loop))
 ```
 
 Only the loop containing the best projection is replayed.
@@ -376,18 +380,18 @@ render_gif(
   display = display_xy(
     axes = "bottomleft",
     center = TRUE,
-    half_range = 3,
-    pch = 16,
-    cex = 0.6
+    half_range = 0.8
   ),
-  frames = 200,
+  frames = 500,
   gif_file = "stringy4_jellyfish_best_loop.gif",
-  width = 500,
-  height = 300
+  width = 400,
+  height = 400
 )
+
 ```
 
 ```{r}
+#| fig-align: center
 knitr::include_graphics("stringy4_jellyfish_best_loop.gif")
 ```
 
@@ -428,6 +432,105 @@ The maximum index value found by Jellyfish is:
 best_jelly$index_val
 ```
 
+Although the Jellyfish optimizer successfully identifies a projection that is extremely close to the optimal projection, the corresponding animation does not clearly show how the search reaches this view. The full search path contains many intermediate projection bases, making it difficult to visualise the progression toward the optimum.
+
+To better illustrate the final stage of the search, we extract only the last ten projection bases from the loop containing the highest projection pursuit index. These represent the final refinements made by the optimizer before reaching its best solution. 
+
+
+```{r, eval=FALSE}
+best_10 <- jellyfish_res |>
+  filter(loop == best_loop, !is.na(index_val)) |>
+  slice_max(
+    order_by = index_val,
+    n = 10,
+    with_ties = FALSE
+  ) |>
+  arrange(index_val)
+
+bases_best_10 <- best_10$basis
+
+render_gif(
+  data = stringy4,
+  tour_path = planned_tour(
+    bases_best_10
+  ),
+  display = display_xy(
+    axes = "bottomleft",
+    center = TRUE,
+    half_range = 0.5,
+    cex = 0.9
+  ),
+  frames = 500,
+  gif_file = "stringy4_jellyfish_best_10.gif",
+  width = 400,
+  height = 400
+)
+
+```
+
+```{r}
+#| fig-align: center
+knitr::include_graphics(
+  "stringy4_jellyfish_best_10.gif"
+)
+```
+
+
+Interestingly, using only the last ten projection bases produces an almost static plot rather than an animation. This happens because the final projection bases are extremely similar to one another. Since there is very little difference between consecutive bases, the planned tour has almost no movement to interpolate, so the animation appears nearly static.
+
+Another observation is that several consecutive projection bases have similar projection pursuit index value. These repeated index values usually correspond to very similar projection bases, contributing little additional information to the animation.
+
+To obtain a more informative visualization, we instead keep only the projection bases where the index value changes from the previous step. In other words, consecutive bases with identical index values are removed. This preserves the main stages of the optimizer's progress while eliminating redundant intermediate steps, making it much easier to see how the search moves toward the optimal projection.
+
+
+
+```{r, eval=FALSE}
+
+best_loop_data <- jellyfish_res |>
+  filter(loop == best_loop)
+
+best_loop_improving <- best_loop_data |>
+  filter(
+    row_number() == 1 |
+      index_val != lag(index_val)
+  )
+
+bases_improved <- best_loop_improving |>
+  pull(basis)
+
+final_basis <- tail(bases_improved, 1)[[1]]
+
+bases_improved <- c(
+  bases_improved,
+  rep(list(final_basis), 15)
+)
+
+render_gif(
+  data = stringy4,
+  tour_path = planned_tour(
+    bases_improved
+  ),
+  display = display_xy(
+    axes = "bottomleft",
+    center = TRUE,
+    half_range = 0.45,
+    cex = 0.9
+  ),
+  frames = 500,
+  gif_file = "stringy4_jellyfish_improved_loop.gif",
+  width = 400,
+  height = 400
+)
+
+```
+```{r}
+#| fig-align: center
+knitr::include_graphics(
+  "stringy4_jellyfish_improved_loop.gif"
+)
+```
+
+
 Jellyfish can be useful for scagnostic indices because their optimization surfaces may be irregular or contain local optima. Exploring several candidate paths increases the opportunity to locate a projection with a large index value, although it does not guarantee recovery of the global optimum.
 
 
@@ -436,36 +539,53 @@ Jellyfish can be useful for scagnostic indices because their optimization surfac
 The number of noise variables is increased to examine whether Jellyfish can still recover the hidden polynomial structure. In each dataset, the final two variables contain the signal and all preceding variables contain Gaussian noise.
 
 
+Generate the datasets:
+
 ```{r}
+match_mean_sd <- function(x, target) {
+  (x - mean(x)) / sd(x) * sd(target) + mean(target)
+}
+
 make_poly_data <- function(n = 500, p = 6, seed = 1050) {
+
   set.seed(seed)
 
   t <- seq(-2, 2, length.out = n)
-
   poly_signal <- poly(t, degree = 2, raw = TRUE)
 
-  poly_data <- matrix(
-    rnorm(n * p, sd = 0.15),
+  # Same structural variables for every p
+  signal_1 <- poly_signal[, 1] + rnorm(n, sd = 0.01)
+  signal_2 <- poly_signal[, 2] + rnorm(n, sd = 0.02)
+
+  # Noise variables
+  noise <- matrix(
+    rnorm(n * (p - 2), sd = 0.15),
     nrow = n,
-    ncol = p
+    ncol = p - 2
   )
 
-  poly_data[, p - 1] <- poly_signal[, 1] + rnorm(n, sd = 0.01)
-  poly_data[, p] <- poly_signal[, 2] + rnorm(n, sd = 0.02)
+  # Match the structural variables to the noise distribution
+  target <- as.vector(noise)
+
+  signal_1 <- match_mean_sd(signal_1, target)
+  signal_2 <- match_mean_sd(signal_2, target)
+
+  poly_data <- cbind(
+    noise,
+    signal_1,
+    signal_2
+  )
 
   colnames(poly_data) <- paste0("V", seq_len(p))
 
   poly_data
 }
-```
 
-Generate the datasets:
-
-```{r}
-poly6 <- make_poly_data(n = 500, p = 6, seed = 1050)
-poly8 <- make_poly_data(n = 500, p = 8, seed = 1050)
+poly6  <- make_poly_data(n = 500, p = 6, seed = 1050)
+poly8  <- make_poly_data(n = 500, p = 8, seed = 1050)
 poly12 <- make_poly_data(n = 500, p = 12, seed = 1050)
 ```
+
 
 ## Define true signal and noise bases
 
@@ -515,7 +635,9 @@ poly6_jelly <- animate_xy(
   poly6,
   guided_tour(
     index_f = stringy05_index_rescaled,
-    search_f = search_jellyfish
+    search_f = search_jellyfish,
+    n_jellies = 40,
+    max.tries = 40
   )
 )
 
@@ -529,7 +651,9 @@ poly8_jelly <- animate_xy(
   poly8,
   guided_tour(
     index_f = stringy05_index_rescaled,
-    search_f = search_jellyfish
+    search_f = search_jellyfish,
+    n_jellies = 40,
+    max.tries = 40
   )
 )
 
@@ -543,7 +667,9 @@ poly12_jelly <- animate_xy(
   poly12,
   guided_tour(
     index_f = stringy05_index_rescaled,
-    search_f = search_jellyfish
+    search_f = search_jellyfish,
+    n_jellies = 40,
+    max.tries = 40
   )
 )
 
@@ -617,18 +743,18 @@ render_gif(
   display = display_xy(
     axes = "bottomleft",
     center = TRUE,
-    half_range = 3,
-    pch = 16,
+    half_range = 0.5,
     cex = 0.6
   ),
-  frames = 200,
+  frames = 500,
   gif_file = "poly6_jellyfish_best.gif",
-  width = 500,
-  height = 300
+  width = 400,
+  height = 400
 )
 ```
 
 ```{r}
+#| fig-align: center
 knitr::include_graphics("poly6_jellyfish_best.gif")
 ```
 
@@ -641,18 +767,18 @@ render_gif(
   display = display_xy(
     axes = "bottomleft",
     center = TRUE,
-    half_range = 3,
-    pch = 16,
+    half_range = 0.5,
     cex = 0.6
   ),
-  frames = 200,
+  frames = 500,
   gif_file = "poly8_jellyfish_best.gif",
-  width = 500,
-  height = 300
+  width = 400,
+  height = 400
 )
 ```
 
 ```{r}
+#| fig-align: center
 knitr::include_graphics("poly8_jellyfish_best.gif")
 ```
 
@@ -665,18 +791,18 @@ render_gif(
   display = display_xy(
     axes = "bottomleft",
     center = TRUE,
-    half_range = 3,
-    pch = 16,
+    half_range = 0.5,
     cex = 0.6
   ),
-  frames = 200,
+  frames = 500,
   gif_file = "poly12_jellyfish_best.gif",
-  width = 500,
-  height = 300
+  width = 400,
+  height = 400
 )
 ```
 
 ```{r}
+#| fig-align: center
 knitr::include_graphics("poly12_jellyfish_best.gif")
 ```
 
@@ -723,12 +849,76 @@ plot_best_proj(poly8, best_poly8, "Best Jellyfish projection for 8D polynomial d
 plot_best_proj(poly12, best_poly12, "Best Jellyfish projection for 12D polynomial data")
 ```
 
+The true projection containing the quadratic signal has a Stringy index value of approximately **0.996**. However, as the number of dimensions increases, the Jellyfish optimizer appears to struggle to locate this optimal projection. In the six-dimensional example, the best projection found by Jellyfish has a much lower index value, suggesting that the optimizer may have converged to a local optimum or failed to reach the neighbourhood of the true signal.
 
-## Summary
+To investigate this further, we first extract the best basis found by Jellyfish. We then use this basis as the starting point for `search_polish`. Since `search_polish` performs a very local search around the current projection, this experiment allows us to determine whether Jellyfish has already moved into a promising region of the projection space. We can then observe whether polishing continues to improve the projection and moves toward the true optimum of 0.996, or whether it produces only a small improvement, indicating that the Jellyfish solution is still far from the optimal projection.
 
-The `stringy05` index assigns large values to the known polynomial projection and smaller values to a Gaussian-noise projection. The rescaled version further reduces index values that are likely to arise from noise, making it a practical choice for the guided-tour examples in this vignette.
 
-The optimizer remains an important part of the analysis. `search_geodesic`, `search_better_random`, and `search_jellyfish` explore projection space differently and may therefore return different results. Jellyfish provides broader exploration through multiple search loops, but the higher-dimensional examples show that recovering a known optimum becomes more difficult as the projection space grows.
+```{r, eval=FALSE}
+# Extract the projection basis
+best_basis_poly6 <- best_poly6$basis[[1]]
 
-These examples also illustrate why scaling should be considered carefully. Standardization changes the relative magnitude of the signal and noise variables. Although scaling makes variables comparable in variance, it may weaken a deliberately dominant signal or amplify nuisance variation, changing both the index landscape and the projection selected by the optimizer.
+set.seed(1050)
 
+poly6_polish_history <- save_history(
+  data = poly6,
+  tour_path = guided_tour(
+    index_f = stringy05_index_rescaled,
+    search_f = search_polish,
+    polish_max_tries = 50,
+    n_sample = 200,
+  ),
+  start = best_basis_poly6
+)
+
+saveRDS(
+  poly6_polish_history,
+  file = "poly6_polish_history.rds"
+)
+```
+
+Now, let's examine the index values found by `search_polish`.
+
+```{r}
+poly6_polish_history <- readRDS(
+  "poly6_polish_history.rds"
+)
+# Compute the index values along the polishing path
+poly6_polish_index <- path_index(
+  history = poly6_polish_history,
+  data = poly6,
+  index_f = stringy05_index_rescaled
+)
+
+poly6_polish_index
+```
+
+
+```{r,eval=FALSE}
+
+render_gif(
+  data = poly6,
+  tour_path = planned_tour(poly6_polish_history),
+  display = display_xy(
+    axes = "bottomleft",
+    center = TRUE,
+    half_range = 0.5,
+    cex = 0.6
+  ),
+  frames = 500,
+  gif_file = "poly6_search_polish.gif",
+  width = 400,
+  height = 400
+)
+```
+
+```{r}
+#| fig-align: center
+knitr::include_graphics("poly6_search_polish.gif")
+```
+
+
+# Refrences
+
+1. [tourr: An R Package for Exploring Multivariate Data with Projections](https://doi.org/10.18637/jss.v040.i02)
+2. [A Slice Tour for Finding Hollowness in High-Dimensional Data](https://doi.org/10.1080/10618600.2020.1777140)
