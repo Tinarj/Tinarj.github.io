@@ -35,6 +35,8 @@ library(tidyr)
 library(purrr)
 library(ggplot2)
 library(knitr)
+library(patchwork)
+library(purrr)
 ```
 
 ## Generate a four-dimensional dataset
@@ -345,29 +347,21 @@ The loop containing the maximum index value is extracted and replayed. The loop 
 ```{r}
 jellyfish_res <- readRDS("jellyfish_res.rds")
 
-best_jelly <- jellyfish_res |>
-  filter(!is.na(index_val)) |>
-  slice_max(index_val, n = 1, with_ties = FALSE)
 
-best_jelly
+best_loop <- jellyfish_res |> ferrn::get_best() |> pull(loop)
+
 ```
 
 Extract the best loop and its sequence of bases:
 
 ```{r}
-best_loop <- best_jelly$loop
-best_loop
-```
-
-```{r}
 bases_best_loop <- jellyfish_res |>
   filter(loop == best_loop) |>
-  arrange(tries) |>
-  pull(basis) |>
+  pull(basis) |> 
   check_dup(0.1)
 
-animate_xy(stringy4, planned_tour(bases_best_loop))
 ```
+
 
 Only the loop containing the best projection is replayed.
 
@@ -400,6 +394,7 @@ knitr::include_graphics("stringy4_jellyfish_best_loop.gif")
 The exact best basis can also be extracted and used to plot the corresponding projection directly.
 
 ```{r}
+best_jelly <-  jellyfish_res |> ferrn::get_best()
 best_basis <- best_jelly$basis[[1]]
 
 best_projection <- as.data.frame(stringy4 %*% best_basis)
@@ -430,104 +425,6 @@ The maximum index value found by Jellyfish is:
 
 ```{r}
 best_jelly$index_val
-```
-
-Although the Jellyfish optimizer successfully identifies a projection that is extremely close to the optimal projection, the corresponding animation does not clearly show how the search reaches this view. The full search path contains many intermediate projection bases, making it difficult to visualise the progression toward the optimum.
-
-To better illustrate the final stage of the search, we extract only the last ten projection bases from the loop containing the highest projection pursuit index. These represent the final refinements made by the optimizer before reaching its best solution. 
-
-
-```{r, eval=FALSE}
-best_10 <- jellyfish_res |>
-  filter(loop == best_loop, !is.na(index_val)) |>
-  slice_max(
-    order_by = index_val,
-    n = 10,
-    with_ties = FALSE
-  ) |>
-  arrange(index_val)
-
-bases_best_10 <- best_10$basis
-
-render_gif(
-  data = stringy4,
-  tour_path = planned_tour(
-    bases_best_10
-  ),
-  display = display_xy(
-    axes = "bottomleft",
-    center = TRUE,
-    half_range = 0.5,
-    cex = 0.9
-  ),
-  frames = 500,
-  gif_file = "stringy4_jellyfish_best_10.gif",
-  width = 400,
-  height = 400
-)
-
-```
-
-```{r}
-#| fig-align: center
-knitr::include_graphics(
-  "stringy4_jellyfish_best_10.gif"
-)
-```
-
-
-Interestingly, using only the last ten projection bases produces an almost static plot rather than an animation. This happens because the final projection bases are extremely similar to one another. Since there is very little difference between consecutive bases, the planned tour has almost no movement to interpolate, so the animation appears nearly static.
-
-Another observation is that several consecutive projection bases have similar projection pursuit index value. These repeated index values usually correspond to very similar projection bases, contributing little additional information to the animation.
-
-To obtain a more informative visualization, we instead keep only the projection bases where the index value changes from the previous step. In other words, consecutive bases with identical index values are removed. This preserves the main stages of the optimizer's progress while eliminating redundant intermediate steps, making it much easier to see how the search moves toward the optimal projection.
-
-
-
-```{r, eval=FALSE}
-
-best_loop_data <- jellyfish_res |>
-  filter(loop == best_loop)
-
-best_loop_improving <- best_loop_data |>
-  filter(
-    row_number() == 1 |
-      index_val != lag(index_val)
-  )
-
-bases_improved <- best_loop_improving |>
-  pull(basis)
-
-final_basis <- tail(bases_improved, 1)[[1]]
-
-bases_improved <- c(
-  bases_improved,
-  rep(list(final_basis), 15)
-)
-
-render_gif(
-  data = stringy4,
-  tour_path = planned_tour(
-    bases_improved
-  ),
-  display = display_xy(
-    axes = "bottomleft",
-    center = TRUE,
-    half_range = 0.45,
-    cex = 0.9
-  ),
-  frames = 500,
-  gif_file = "stringy4_jellyfish_improved_loop.gif",
-  width = 400,
-  height = 400
-)
-
-```
-```{r}
-#| fig-align: center
-knitr::include_graphics(
-  "stringy4_jellyfish_improved_loop.gif"
-)
 ```
 
 
@@ -687,14 +584,13 @@ poly12_jelly <- readRDS("poly12_jelly.rds")
 ## Find the best Jellyfish projection in each dataset
 
 ```{r}
-best_poly6 <- poly6_jelly |>
-  slice_max(index_val, n = 1, with_ties = FALSE)
 
-best_poly8 <- poly8_jelly |>
-  slice_max(index_val, n = 1, with_ties = FALSE)
 
-best_poly12 <- poly12_jelly |>
-  slice_max(index_val, n = 1, with_ties = FALSE)
+best_poly6 <- poly6_jelly |> ferrn::get_best()
+
+best_poly8 <- poly8_jelly |> ferrn::get_best()
+
+best_poly12 <- poly12_jelly |> ferrn::get_best()
 ```
 
 Summarize the best values:
@@ -918,7 +814,305 @@ knitr::include_graphics("poly6_search_polish.gif")
 ```
 
 
+## Exploration of Jellyfish performance across repeated runs
+
+The Jellyfish Search Optimizer is stochastic, so a single optimization run is not sufficient to assess how reliably it can recover the known Stringy structure. We therefore repeat the optimization 20 times using different random seeds and retain the best projection found in each run. For every run, the Jellyfish search is performed using the same projection pursuit index and optimization settings, and the projection corresponding to the maximum index value returned by Jellyfish is stored.
+
+Our first experiment investigates the effect of increasing the dimensionality of the data while keeping the optimization budget fixed. The same underlying two-dimensional polynomial signal is embedded in datasets of increasing dimension, with the additional variables containing Gaussian noise. The signal variables are kept the same across dimensions, and the noise variables are nested so that increasing the dimension only introduces additional irrelevant variables.
+
+For the initial comparison, we use **40 jellyfish and a maximum of 40 tries** for every dataset and repeat the search **20 times**. We consider the 4D, 6D, 8D, and 12D datasets. Keeping the optimizer settings fixed provides a fair comparison: if Jellyfish performance deteriorates as the dimension increases, this indicates that recovering the Stringy projection becomes more difficult as the search space grows under a fixed optimization budget.
+
+After establishing this baseline, the number of jellyfish can be varied in a second experiment to investigate whether increasing the amount of search improves recovery in the higher-dimensional problems. This will help distinguish between deterioration caused by insufficient search effort and a more fundamental difficulty associated with optimization in higher dimensions.
+
+### Plotting the best projection from each run
+
+For each of the 20 repeated runs, the following function extracts the best projection found by Jellyfish and displays it in a separate panel. The Stringy index value obtained in the run is also displayed above each projection. The panels are arranged in run order from 1 to 20.
+
+```{r}
+#| label: function-plot-jellyfish-runs
+
+plot_jellyfish_runs <- function(
+    results,
+    ncol = 5,
+    nrow = 4
+) {
+  
+  all_values <- unlist(
+    lapply(
+      results$jellyfish_projection,
+      as.numeric
+    )
+  )
+  
+  plot_limit <- max(abs(all_values), na.rm = TRUE)
+  
+  
+  plots <- purrr::map(
+    seq_len(nrow(results)),
+    
+    function(i) {
+      
+      best_projection <- as.data.frame(
+        results$jellyfish_projection[[i]]
+      )
+      
+      colnames(best_projection) <- c("x", "y")
+      
+      
+      ggplot(
+        best_projection,
+        aes(x = x, y = y)
+      ) +
+        geom_point(
+          size = 0.6,
+          alpha = 0.7
+        ) +
+        coord_equal(
+          xlim = c(-plot_limit, plot_limit),
+          ylim = c(-plot_limit, plot_limit)
+        ) +
+        theme_bw() +
+        theme(
+          aspect.ratio = 1,
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title = element_blank(),
+          panel.grid = element_blank(),
+          
+          plot.title = element_text(
+            size = 9,
+            hjust = 0.5
+          ),
+          
+          plot.subtitle = element_text(
+            size = 8,
+            hjust = 0.5
+          )
+        ) +
+        labs(
+          title = paste0(
+            "Run ", results$run[i]
+          ),
+          
+          subtitle = paste0(
+            "J = ",
+            round(
+              results$jellyfish_index[i],
+              3
+            )
+          )
+        )
+    }
+  )
+  
+  
+  patchwork::wrap_plots(
+    plots,
+    ncol = ncol,
+    nrow = nrow
+  ) +
+    patchwork::plot_annotation(
+      title = paste0(
+        unique(results$dimension),
+        "D: Best Jellyfish projection from 20 runs"
+      ),
+      
+      subtitle = paste0(
+        unique(results$n_jellies),
+        " jellyfish, ",
+        unique(results$max_tries),
+        " maximum tries | ",
+        "Known signal index = ",
+        round(
+          unique(results$true_2d_index),
+          3
+        )
+      ),
+      
+      theme = theme(
+        plot.title = element_text(
+          size = 14,
+          face = "bold"
+        ),
+        
+        plot.subtitle = element_text(
+          size = 10
+        )
+      )
+    )
+}
+```
+
+### Four-dimensional dataset
+
+We first examine the 4D problem. Each panel below represents one independent Jellyfish run. The points correspond to the best two-dimensional projection found during that run, and (J) gives its rescaled Stringy index value.
+
+```{r}
+#| label: plot-jellyfish-4d
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_4d_40 <- readRDS("simulation_results/sim_res_4d_40.rds")
+
+plot_jellyfish_runs(
+  results_4d_40
+)
+```
+
+
+
+## Comparing dimensions with 40 jellyfish
+
+### 6D data
+
+```{r}
+#| label: plot-jellyfish-6d
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_6d_40 <- readRDS("simulation_results/sim_res_6d_40.rds")
+
+plot_jellyfish_runs(
+  results_6d_40
+)
+```
+
+### 8D
+
+```{r}
+#| label: plot-jellyfish-8d
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_8d_40 <- readRDS("simulation_results/sim_res_8d_40.rds") 
+
+plot_jellyfish_runs(
+  results_8d_40
+)
+```
+
+
+### 12D
+
+```{r}
+#| label: plot-jellyfish-12d
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_12d_40 <- readRDS("simulation_results/sim_res_12d_40.rds")
+
+plot_jellyfish_runs(
+  results_12d_40
+)
+```
+
+### Comparing dimensions using 60 jellyfish
+
+Next, we increase the number of jellyfish from 40 to **60** while keeping the other settings unchanged. We again compare the 6D, 8D, and 12D datasets over 20 repeated runs.
+
+
+### 6D data
+
+```{r}
+#| label: plot-jellyfish-6d-60
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_6d_60 <- readRDS("simulation_results/sim_res_6d_60.rds")
+
+plot_jellyfish_runs(
+  results_6d_60
+)
+```
+
+
+### 8D
+
+```{r}
+#| label: plot-jellyfish-8d-60
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_8d_60 <- readRDS("simulation_results/sim_res_8d_60.rds") 
+
+plot_jellyfish_runs(
+  results_8d_60
+)
+```
+
+### 12D
+
+```{r}
+#| label: plot-jellyfish-12d-60
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_12d_60 <- readRDS("simulation_results/sim_res_12d_60.rds")
+
+plot_jellyfish_runs(
+  results_12d_60
+)
+```
+
+### Increasing the number of jellyfish to 100
+
+Finally, we increase the number of jellyfish to **100** while keeping the remaining settings unchanged. We again compare the 6D, 8D, and 12D datasets over 20 repeated runs. 
+
+
+### 6D data
+
+```{r}
+#| label: plot-jellyfish-6d-100
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_6d_100 <- readRDS("simulation_results/sim_res_6d_100.rds")
+
+plot_jellyfish_runs(
+  results_6d_100
+)
+```
+
+### 8D
+
+```{r}
+#| label: plot-jellyfish-8d-100
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_8d_100 <- readRDS("simulation_results/sim_res_8d_100.rds") 
+
+plot_jellyfish_runs(
+  results_8d_100
+)
+```
+
+### 12D
+
+```{r}
+#| label: plot-jellyfish-12d-100
+#| fig-width: 10
+#| fig-height: 8
+#| fig-align: center
+
+results_12d_100 <- readRDS("simulation_results/sim_res_12d_100.rds")
+
+plot_jellyfish_runs(
+  results_12d_100
+)
+```
+
 # Refrences
 
 1. [tourr: An R Package for Exploring Multivariate Data with Projections](https://doi.org/10.18637/jss.v040.i02)
 2. [A Slice Tour for Finding Hollowness in High-Dimensional Data](https://doi.org/10.1080/10618600.2020.1777140)
+
