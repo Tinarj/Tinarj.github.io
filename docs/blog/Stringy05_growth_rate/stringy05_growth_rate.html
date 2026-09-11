@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-07-30">
+<meta name="dcterms.date" content="2026-08-30">
 <meta name="description" content="A theoretical and empirical exploration of the stringy05 scagnostic index.">
 
 <title>Exploring the Growth Rate of the stringy05 Index – Tina Rashid Jafari</title>
@@ -57,7 +57,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -206,7 +226,34 @@ window.Quarto = {
   <li><a href="#empirical-check-of-the-longest-mst-edge" id="toc-empirical-check-of-the-longest-mst-edge" class="nav-link" data-scroll-target="#empirical-check-of-the-longest-mst-edge">Empirical check of the longest MST edge</a></li>
   <li><a href="#does-the-stringy05-numerator-follow-the-penrose-rate" id="toc-does-the-stringy05-numerator-follow-the-penrose-rate" class="nav-link" data-scroll-target="#does-the-stringy05-numerator-follow-the-penrose-rate">Does the stringy05 numerator follow the Penrose rate?</a></li>
   <li><a href="#addario-berry-broutin-and-reed-an-n13-mst-diameter-benchmark" id="toc-addario-berry-broutin-and-reed-an-n13-mst-diameter-benchmark" class="nav-link" data-scroll-target="#addario-berry-broutin-and-reed-an-n13-mst-diameter-benchmark">Addario-Berry, Broutin and Reed: an <span class="math inline">\(n^{1/3}\)</span> MST-diameter benchmark</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#empirical-check-of-the-addario-berry-hop-diameter-growth-rate" id="toc-empirical-check-of-the-addario-berry-hop-diameter-growth-rate" class="nav-link" data-scroll-target="#empirical-check-of-the-addario-berry-hop-diameter-growth-rate">Empirical check of the Addario-Berry hop-diameter growth rate</a>
+  <ul class="collapse">
+  <li><a href="#fit-the-n13-growth-rate" id="toc-fit-the-n13-growth-rate" class="nav-link" data-scroll-target="#fit-the-n13-growth-rate">Fit the <span class="math inline">\(n^{1/3}\)</span> growth rate</a></li>
+  </ul></li>
+  <li><a href="#plotting-hop-diameter-and-n13-growth" id="toc-plotting-hop-diameter-and-n13-growth" class="nav-link" data-scroll-target="#plotting-hop-diameter-and-n13-growth">Plotting hop diameter and <span class="math inline">\(n^{1/3}\)</span> growth</a></li>
+  <li><a href="#combining-the-penrose-and-addario-berry-rates" id="toc-combining-the-penrose-and-addario-berry-rates" class="nav-link" data-scroll-target="#combining-the-penrose-and-addario-berry-rates">Combining the Penrose and Addario-Berry rates</a></li>
+  <li><a href="#exploring-the-ratio-after-normalizing-the-denominator" id="toc-exploring-the-ratio-after-normalizing-the-denominator" class="nav-link" data-scroll-target="#exploring-the-ratio-after-normalizing-the-denominator">Exploring the ratio after normalizing the denominator</a></li>
+  <li><a href="#plot-the-normalized-ratio-and-the-original-ratio-side-by-side" id="toc-plot-the-normalized-ratio-and-the-original-ratio-side-by-side" class="nav-link" data-scroll-target="#plot-the-normalized-ratio-and-the-original-ratio-side-by-side">Plot the normalized ratio and the original ratio side by side</a>
+  <ul class="collapse">
+  <li><a href="#normalized-weighted-diameter" id="toc-normalized-weighted-diameter" class="nav-link" data-scroll-target="#normalized-weighted-diameter">Normalized weighted diameter</a></li>
+  <li><a href="#plot-all-candidate-normalizations" id="toc-plot-all-candidate-normalizations" class="nav-link" data-scroll-target="#plot-all-candidate-normalizations">Plot all candidate normalizations</a></li>
+  <li><a href="#compare-slopes-after-n1000" id="toc-compare-slopes-after-n1000" class="nav-link" data-scroll-target="#compare-slopes-after-n1000">1. Compare slopes after <span class="math inline">\(n=1000\)</span></a></li>
+  <li><a href="#compare-relative-change-over-large-n" id="toc-compare-relative-change-over-large-n" class="nav-link" data-scroll-target="#compare-relative-change-over-large-n">2. Compare relative change over large <span class="math inline">\(n\)</span></a></li>
+  </ul></li>
+  <li><a href="#distributional-behaviour-of-the-normalized-ratio" id="toc-distributional-behaviour-of-the-normalized-ratio" class="nav-link" data-scroll-target="#distributional-behaviour-of-the-normalized-ratio">Distributional behaviour of the normalized ratio</a>
+  <ul class="collapse">
+  <li><a href="#summarise-the-distribution-of-the-normalized-ratio" id="toc-summarise-the-distribution-of-the-normalized-ratio" class="nav-link" data-scroll-target="#summarise-the-distribution-of-the-normalized-ratio">Summarise the distribution of the normalized ratio</a></li>
+  </ul></li>
+  <li><a href="#examine-whether-the-spread-stabilizes" id="toc-examine-whether-the-spread-stabilizes" class="nav-link" data-scroll-target="#examine-whether-the-spread-stabilizes">Examine whether the spread stabilizes</a></li>
+  <li><a href="#compare-the-centre-and-the-95th-percentile" id="toc-compare-the-centre-and-the-95th-percentile" class="nav-link" data-scroll-target="#compare-the-centre-and-the-95th-percentile">Compare the centre and the 95th percentile</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a>
+  <ul class="collapse">
+  <li><a href="#alternative-way" id="toc-alternative-way" class="nav-link" data-scroll-target="#alternative-way">Alternative way</a>
+  <ul class="collapse">
+  <li><a href="#scaling-limits-of-the-euclidean-minimum-spanning-tree" id="toc-scaling-limits-of-the-euclidean-minimum-spanning-tree" class="nav-link" data-scroll-target="#scaling-limits-of-the-euclidean-minimum-spanning-tree">Scaling limits of the Euclidean minimum spanning tree</a></li>
+  <li><a href="#main-findings" id="toc-main-findings" class="nav-link" data-scroll-target="#main-findings">Main findings</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -238,7 +285,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">30 Jul 2026</p>
+      <p class="date">30 Aug 2026</p>
     </div>
   </div>
   
@@ -290,13 +337,13 @@ R_n \to \rho &gt; 0.
 <section id="denominator-theoretical-growth-rate-of-total-mst-length" class="level2">
 <h2 class="anchored" data-anchor-id="denominator-theoretical-growth-rate-of-total-mst-length">Denominator: theoretical growth rate of total MST length</h2>
 <p>The denominator <span class="math inline">\(L_n\)</span> is the part of the problem for which we do have strong theoretical guidance.</p>
-<p>Steele studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points <span class="math inline">\(x_1,\dots,x_n\)</span>, the MST functional is</p>
+<p><span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points <span class="math inline">\(x_1,\dots,x_n\)</span>, the MST functional is</p>
 <p><span class="math display">\[
 M(x_1,\dots,x_n)
 =
 \min_T \sum_{e\in T}\psi(|e|),
 \]</span></p>
-<p>where the minimum is over spanning trees <span class="math inline">\(T\)</span>, and <span class="math inline">\(\psi\)</span> is an edge-weighting function [Steele, 1988].</p>
+<p>where the minimum is over spanning trees <span class="math inline">\(T\)</span>, and <span class="math inline">\(\psi\)</span> is an edge-weighting function <span class="citation" data-cites="steele1988growth">(<a href="#ref-steele1988growth" role="doc-biblioref">Steele 1988</a>)</span>.</p>
 <p>For the ordinary Euclidean MST length, we take</p>
 <p><span class="math display">\[
 \psi(t)=t.
@@ -309,11 +356,11 @@ M(X_1,\dots,X_n)
 =
 L_n.
 \]</span></p>
-<p>So Steele’s <span class="math inline">\(M_n\)</span> is exactly the denominator of the stringy05 index.</p>
+<p>So Steele’s <span class="math inline">\(M_n\)</span> <span class="citation" data-cites="steele1988growth">(<a href="#ref-steele1988growth" role="doc-biblioref">Steele 1988</a>)</span> is exactly the denominator of the stringy05 index.</p>
 </section>
 <section id="steeles-growth-theorem" class="level2">
 <h2 class="anchored" data-anchor-id="steeles-growth-theorem">Steele’s growth theorem</h2>
-<p>Steele considers weight functions satisfying</p>
+<p><span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> considers weight functions satisfying</p>
 <p><span class="math display">\[
 \psi(t)\sim t^\alpha
 \quad\text{as } t\to 0,
@@ -365,7 +412,7 @@ c(1,2)
 L_n= O(\sqrt n).
 }
 \]</span></p>
-<p>Steele first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. Steele then extends the result beyond the uniform case by adding a density correction. For a more general distribution with density <span class="math inline">\(f\)</span>, the limiting constant is modified by a factor of the form</p>
+<p><span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. The result is then extended beyond the uniform case by adding a density correction. For a more general distribution with density <span class="math inline">\(f\)</span>, the limiting constant is modified by a factor of the form</p>
 <p><span class="math display">\[
 \int f(x)^{(d-\alpha)/d}\,dx.
 \]</span></p>
@@ -374,7 +421,7 @@ L_n= O(\sqrt n).
 \int f(x)^{1/2}\,dx.
 \]</span></p>
 <p>This extension is important for my project because the simulations are based on bivariate noise distributions rather than only uniform samples.</p>
-<p>However, there is one important technical caveat. Steele’s theorem is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use Steele’s<span class="math inline">\(\sqrt n\)</span> scaling as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work.</p>
+<p>However, there is one important technical caveat. The theorem in <span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use the <span class="math inline">\(\sqrt n\)</span> scaling from <span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work.</p>
 </section>
 <section id="numerator-what-is-known-about-the-mst-diameter" class="level2">
 <h2 class="anchored" data-anchor-id="numerator-what-is-known-about-the-mst-diameter">Numerator: what is known about the MST diameter?</h2>
@@ -386,23 +433,23 @@ D_n
 \]</span></p>
 <p>This is the weighted longest shortest path in the MST. It is a global path functional: it depends on how many edges lie along the longest path and how their lengths accumulate.</p>
 <p>This is different from the total MST length <span class="math inline">\(L_n\)</span>, which is a sum over all edges. It is also different from the longest single edge of the MST.</p>
-<p>At this point, the exact theoretical growth rate of <span class="math inline">\(D_n\)</span> is not given by the Steele MST length theorem.</p>
+<p>At this point, the exact theoretical growth rate of <span class="math inline">\(D_n\)</span> is not given by the MST length theorem in <span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span>.</p>
 </section>
 <section id="penroses-longest-edge-theorem-and-its-limitation" class="level2">
 <h2 class="anchored" data-anchor-id="penroses-longest-edge-theorem-and-its-limitation">Penrose’s longest-edge theorem and its limitation</h2>
-<p>Penrose studies the longest edge of the random Euclidean MST. Let</p>
+<p><span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> studies the longest edge of the random Euclidean MST. Let</p>
 <p><span class="math display">\[
 E_n
 =
 \max_{e\in T_n}|e|.
 \]</span></p>
-<p>For uniform random points in the unit square, Penrose shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension <span class="math inline">\(2\)</span>, the result implies that</p>
+<p>For uniform random points in the unit square, <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension <span class="math inline">\(2\)</span>, the result implies that</p>
 <p><span class="math display">\[
 n\pi E_n^2-\log n
 \]</span></p>
-<p>converges in distribution to a double-exponential limiting law [Penrose, 1997].</p>
-<p>Penrose also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.</p>
-<p>This matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So Penrose’s result suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.</p>
+<p>converges in distribution to a double-exponential limiting law <span class="citation" data-cites="penrose1997longest">(<a href="#ref-penrose1997longest" role="doc-biblioref">Penrose 1997</a>)</span>.</p>
+<p><span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.</p>
+<p>This matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So the result in <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.</p>
 <p>The longest edge scale is therefore approximately</p>
 <p><span class="math display">\[
 E_n
@@ -414,7 +461,7 @@ E_n
 D_n =
 \max_{u,v} d_{T_n}(u,v),
 \]</span></p>
-<p>which is the length of an entire path. This path may contain many MST edges. Therefore, Penrose’s theorem does not give the growth rate of <span class="math inline">\(D_n\)</span>. It only gives the scale of the largest individual edge.</p>
+<p>which is the length of an entire path. This path may contain many MST edges. Therefore, the theorem in <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> does not give the growth rate of <span class="math inline">\(D_n\)</span>. It only gives the scale of the largest individual edge.</p>
 </section>
 <section id="a-simple-example-longest-edge-versus-mst-diameter" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-example-longest-edge-versus-mst-diameter">A simple example: longest edge versus MST diameter</h2>
@@ -643,14 +690,14 @@ D_n = |AB|+|BC|+|CD|+|DE| =
 </div>
 </div>
 </div>
-<p>This shows why Penrose’s result is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:</p>
+<p>This shows why the result in <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:</p>
 <p><span class="math display">\[
 E_n\le D_n.
 \]</span></p>
 </section>
 <section id="upper-and-lower-bound-for-the-mst-diameter" class="level2">
 <h2 class="anchored" data-anchor-id="upper-and-lower-bound-for-the-mst-diameter">Upper and lower bound for the MST diameter</h2>
-<p>Even though Penrose’s longest-edge theorem does not solve the diameter problem, it provides a weak lower bound.</p>
+<p>Even though the longest-edge theorem in <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> does not solve the diameter problem, it provides a weak lower bound.</p>
 <p>For every weighted tree,</p>
 <p><span class="math display">\[
 \boxed{
@@ -658,7 +705,7 @@ E_n\le D_n\le L_n.
 }
 \]</span></p>
 <p>The first inequality holds because the longest edge is itself the path between its endpoints in the tree. The second inequality holds because any path in the tree uses only a subset of the edges of the tree.</p>
-<p>Combining Penrose’s longest-edge scale with Steele’s total-length scale gives</p>
+<p>Combining the longest-edge scale from <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> with the total-length scale from <span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> gives</p>
 <p><span class="math display">\[
 \sqrt{\frac{\log n}{n}}
 \lesssim
@@ -703,7 +750,7 @@ D_n=\operatorname{diameter}(T_n)
 <p><span class="math display">\[
 R_n=\frac{D_n}{L_n}.
 \]</span></p>
-<p>For the denominator, Steele’s theorem suggests checking whether</p>
+<p>For the denominator, the theorem in <span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> suggests checking whether</p>
 <p><span class="math display">\[
 \frac{L_n}{\sqrt n}
 \]</span></p>
@@ -727,7 +774,7 @@ R_n
 </section>
 <section id="empirical-check-of-the-denominator-growth-rate" class="level2">
 <h2 class="anchored" data-anchor-id="empirical-check-of-the-denominator-growth-rate">Empirical check of the denominator growth rate</h2>
-<p>To check the theoretical growth rate of the denominator, I simulated independent bivariate observations from the uniform distribution on the unit square, which matches the setting used in Steele’s theoretical result. For each sample size, I repeated the simulation 100 times (just for testing), constructed the Euclidean minimum spanning tree, and recorded its total edge length,</p>
+<p>To check the theoretical growth rate of the denominator, I simulated independent bivariate observations from the uniform distribution on the unit square, which matches the setting used in <span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span>. For each sample size, I repeated the simulation 100 times (just for testing), constructed the Euclidean minimum spanning tree, and recorded its total edge length,</p>
 <p><span class="math display">\[
 L_n = \sum_{e\in T_n}|e|.
 \]</span></p>
@@ -756,7 +803,7 @@ L_n = \sum_{e\in T_n}|e|.
 <span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n, simulation_run)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Steele’s result implies that, for bivariate uniform data, the total MST length grows at rate</p>
+<p>The result in <span class="citation" data-cites="steele1988growth">Steele (<a href="#ref-steele1988growth" role="doc-biblioref">1988</a>)</span> implies that, for bivariate uniform data, the total MST length grows at rate</p>
 <p><span class="math display">\[
 L_n \sim C\sqrt n,
 \]</span></p>
@@ -984,7 +1031,7 @@ L_n \sim C\sqrt n,
 </section>
 <section id="empirical-check-of-the-longest-mst-edge" class="level2">
 <h2 class="anchored" data-anchor-id="empirical-check-of-the-longest-mst-edge">Empirical check of the longest MST edge</h2>
-<p>The theoretical result for the numerator is not directly available for the weighted MST diameter used by <code>stringy05</code>. However, Penrose studies the longest <strong>single edge</strong> of the Euclidean minimum spanning tree. Let</p>
+<p>The theoretical result for the numerator is not directly available for the weighted MST diameter used by <code>stringy05</code>. However, <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> studies the longest <strong>single edge</strong> of the Euclidean minimum spanning tree. Let</p>
 <p><span class="math display">\[
 E_n = \max_{e \in T_n} |e|.
 \]</span></p>
@@ -992,7 +1039,7 @@ E_n = \max_{e \in T_n} |e|.
 <p><span class="math display">\[
 E_n \asymp \sqrt{\frac{\log n}{n}}.
 \]</span></p>
-<p>This is different from the actual <code>stringy05</code> numerator, which is the weighted length of an entire path through the MST. Therefore, in the simulations I use the stored <code>penrose_diameter</code> variable to check Penrose’s longest-edge result separately.</p>
+<p>This is different from the actual <code>stringy05</code> numerator, which is the weighted length of an entire path through the MST. Therefore, in the simulations I use the stored <code>penrose_diameter</code> variable to check the longest-edge result in <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> separately.</p>
 <p>For each sample size, the simulation was repeated 100 times. I first calculate the empirical mean longest-edge length for each value of <span class="math inline">\(n\)</span>.</p>
 <div class="cell">
 <details class="code-fold">
@@ -1005,7 +1052,7 @@ E_n \asymp \sqrt{\frac{\log n}{n}}.
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Penrose’s result suggests a relationship of the form</p>
+<p>The result in <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span> suggests a relationship of the form</p>
 <p><span class="math display">\[
 E_n \approx A
 \sqrt{\frac{\log n}{n}},
@@ -1054,7 +1101,7 @@ E_n \approx A
 \widehat A
 \sqrt{\frac{\log n}{n}}.
 \]</span></p>
-<p>If the simulations are consistent with Penrose’s result, the empirical longest-edge values should decrease with approximately the same shape as the theoretical curve.</p>
+<p>If the simulations are consistent with <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span>, the empirical longest-edge values should decrease with approximately the same shape as the theoretical curve.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1152,13 +1199,13 @@ B\sqrt{\frac{\log n}{n}},
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>To compare the weighted diameter with the Penrose functional form, I fit</p>
+<p>To compare the weighted diameter with the functional form from <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span>, I fit</p>
 <p><span class="math display">\[
 D_n
 \approx
 B\sqrt{\frac{\log n}{n}}
 \]</span></p>
-<p>The purpose is to test whether the <strong>shape and rate</strong> of the weighted diameter are consistent with the Penrose rate.</p>
+<p>The purpose is to test whether the <strong>shape and rate</strong> of the weighted diameter are consistent with the rate from <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1191,7 +1238,7 @@ B\sqrt{\frac{\log n}{n}}
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>The following plot compares all simulated weighted MST diameters with the Penrose’s theoretical boundary.</p>
+<p>The following plot compares all simulated weighted MST diameters with the theoretical boundary from <span class="citation" data-cites="penrose1997longest">Penrose (<a href="#ref-penrose1997longest" role="doc-biblioref">1997</a>)</span>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1269,7 +1316,7 @@ B\sqrt{\frac{\log n}{n}}
 </section>
 <section id="addario-berry-broutin-and-reed-an-n13-mst-diameter-benchmark" class="level2">
 <h2 class="anchored" data-anchor-id="addario-berry-broutin-and-reed-an-n13-mst-diameter-benchmark">Addario-Berry, Broutin and Reed: an <span class="math inline">\(n^{1/3}\)</span> MST-diameter benchmark</h2>
-<p>Addario-Berry, Broutin and Reed study a different random minimum-spanning-tree model. They begin with the complete graph <span class="math inline">\(K_n\)</span>, assign independent and identically distributed continuous weights to all edges, and construct the minimum-weight spanning tree. Their main result is</p>
+<p><span class="citation" data-cites="addarioberry2006diameter">Addario-Berry, Broutin, and Reed (<a href="#ref-addarioberry2006diameter" role="doc-biblioref">2006</a>)</span> study a different random minimum-spanning-tree model. They begin with the complete graph <span class="math inline">\(K_n\)</span>, assign independent and identically distributed continuous weights to all edges, and construct the minimum-weight spanning tree. Their main result is</p>
 <p><span class="math display">\[
 \mathbb{E}\{\operatorname{diam}(T_n)\}
 =
@@ -1277,7 +1324,7 @@ B\sqrt{\frac{\log n}{n}}
 \]</span></p>
 <p>There are two important differences from my setting:</p>
 <ol type="1">
-<li><strong>Randomness of the edge weights.</strong> In Addario-Berry et al., the edge weights of <span class="math inline">\(K_n\)</span> are i.i.d. In my Euclidean MST, the edge weights are distances between random points in <span class="math inline">\(\mathbb{R}^2\)</span>, so the pairwise edge weights are geometrically constrained and are not independent.</li>
+<li><strong>Randomness of the edge weights.</strong> In <span class="citation" data-cites="addarioberry2006diameter">Addario-Berry, Broutin, and Reed (<a href="#ref-addarioberry2006diameter" role="doc-biblioref">2006</a>)</span>, the edge weights of <span class="math inline">\(K_n\)</span> are i.i.d. In my Euclidean MST, the edge weights are distances between random points in <span class="math inline">\(\mathbb{R}^2\)</span>, so the pairwise edge weights are geometrically constrained and are not independent.</li>
 <li><strong>Definition of diameter.</strong> Their diameter is the ordinary graph diameter, based on graph distance along the tree. My <code>stringy05</code> numerator is a <strong>weighted Euclidean diameter</strong>, where the Euclidean edge lengths are summed along the longest weighted path.</li>
 </ol>
 <p>To see whether the empirical weighted diameter has anything resembling the same growth shape, I fit the benchmark</p>
@@ -1310,7 +1357,7 @@ C_{\mathrm{ABR}} n^{1/3},
 <span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>The following plot shows the same simulated weighted MST diameters used in the previous section, but now compares them with the fitted <span class="math inline">\(n^{1/3}\)</span> benchmark from Addario-Berry et al.</p>
+<p>The following plot shows the same simulated weighted MST diameters used in the previous section, but now compares them with the fitted <span class="math inline">\(n^{1/3}\)</span> benchmark from <span class="citation" data-cites="addarioberry2006diameter">Addario-Berry, Broutin, and Reed (<a href="#ref-addarioberry2006diameter" role="doc-biblioref">2006</a>)</span>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1386,16 +1433,1262 @@ C_{\mathrm{ABR}} n^{1/3},
 </div>
 </div>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<p>Steele, J. M. (1988). <em>Growth Rates of Euclidean Minimal Spanning Trees with Power Weighted Edges</em>. The Annals of Probability, 16(4), 1767–1787.</p>
-<p>Penrose, M. D. (1997). <em>The Longest Edge of the Random Minimal Spanning Tree</em>. The Annals of Applied Probability, 7(2), 340–361.</p>
-<p>Addario-Berry, L., Broutin, N., &amp; Reed, B. (2006). <em>The Diameter of the Minimum Spanning Tree of a Complete Graph</em>. Discrete Mathematics &amp; Theoretical Computer Science, DMTCS Proceedings vol.&nbsp;AG, 237–248. https://doi.org/10.46298/dmtcs.3513</p>
+<section id="empirical-check-of-the-addario-berry-hop-diameter-growth-rate" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-check-of-the-addario-berry-hop-diameter-growth-rate">Empirical check of the Addario-Berry hop-diameter growth rate</h2>
+<p><span class="citation" data-cites="addarioberry2006diameter">Addario-Berry, Broutin, and Reed (<a href="#ref-addarioberry2006diameter" role="doc-biblioref">2006</a>)</span> study the graph diameter of a random minimum spanning tree, where distance is measured by the number of edges along a path. They show that the expected diameter grows at rate</p>
+<p><span class="math display">\[
+E(H_n) = \Theta(n^{1/3}),
+\]</span></p>
+<p>where <span class="math inline">\(H_n\)</span> denotes the hop diameter.</p>
+<p>Although their random-MST model differs from the Euclidean MST considered here, the <span class="math inline">\(n^{1/3}\)</span> rate can be used as a comparison benchmark.</p>
+<p>For each sample size, I simulated 100 independent bivariate uniform samples and recorded the unweighted hop diameter of the resulting Euclidean MST.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>addario_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"addario_uniform_50_175.csv"</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"addario_uniform_200_500.csv"</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"addario_uniform_550_800.csv"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"addario_uniform_850_1000.csv"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"addario_uniform_1100_2000.csv"</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"addario_uniform_3000_5000.csv"</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>addario_results <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  addario_files,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">read_csv</span>(.x, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n, simulation_run)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>For each value of <span class="math inline">\(n\)</span>, the empirical mean hop diameter is</p>
+<p><span class="math display">\[
+\overline H_n
+=
+\frac{1}{100}
+\sum_{b=1}^{100} H_{n,b}.
+\]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>addario_summary <span class="ot">&lt;-</span> addario_results <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_hop_diameter =</span> <span class="fu">mean</span>(addario_hop_diameter),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="fit-the-n13-growth-rate" class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-n13-growth-rate">Fit the <span class="math inline">\(n^{1/3}\)</span> growth rate</h3>
+<p>The theorem specifies the growth rate but not an exact multiplicative constant. Therefore, I estimate the constant <span class="math inline">\(C\)</span> in</p>
+<p><span class="math display">\[
+E(H_n) \approx Cn^{1/3}
+\]</span></p>
+<p>from the simulated mean diameters.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>addario_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  mean_hop_diameter <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">I</span>(n<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)),</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> addario_summary</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>C_addario <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(addario_fit)[<span class="dv">1</span>])</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>C_addario</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 21.33516</code></pre>
+</div>
+</div>
+<p>Then create the theoretical curve:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>addario_curve <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">seq</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">min</span>(addario_results<span class="sc">$</span>n),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(addario_results<span class="sc">$</span>n),</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">length.out =</span> <span class="dv">500</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">theoretical_hop_diameter =</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>      C_addario <span class="sc">*</span> n<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="plotting-hop-diameter-and-n13-growth" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-hop-diameter-and-n13-growth">Plotting hop diameter and <span class="math inline">\(n^{1/3}\)</span> growth</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> addario_results,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> addario_hop_diameter,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Simulation values"</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.35</span>,</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.6</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> addario_summary,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_hop_diameter,</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> addario_summary,</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_hop_diameter,</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.4</span></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> addario_curve,</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> theoretical_hop_diameter,</span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Fitted n^(1/3) rate"</span></span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span></span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simulation values"</span> <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Empirical mean"</span> <span class="ot">=</span> <span class="st">"royalblue"</span>,</span>
+<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Fitted n^(1/3) rate"</span> <span class="ot">=</span> <span class="st">"violetred"</span></span>
+<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Hop diameter"</span>,</span>
+<span id="cb33-56"><a href="#cb33-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Growth of the hop diameter"</span>,</span>
+<span id="cb33-57"><a href="#cb33-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(</span>
+<span id="cb33-58"><a href="#cb33-58" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Dashed curve: "</span>,</span>
+<span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(C_addario, <span class="dv">4</span>),</span>
+<span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a>      <span class="st">" n^(1/3)"</span></span>
+<span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-63"><a href="#cb33-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb33-64"><a href="#cb33-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb33-65"><a href="#cb33-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb33-66"><a href="#cb33-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb33-67"><a href="#cb33-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb33-68"><a href="#cb33-68" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="combining-the-penrose-and-addario-berry-rates" class="level2">
+<h2 class="anchored" data-anchor-id="combining-the-penrose-and-addario-berry-rates">Combining the Penrose and Addario-Berry rates</h2>
+<p>For a weighted tree,</p>
+<p><span class="math display">\[
+D_n \le H_n M_n,
+\]</span></p>
+<p>where <span class="math inline">\(H_n\)</span> is the hop diameter and <span class="math inline">\(M_n\)</span> is the largest edge weight. This motivates combining the <span class="math inline">\(n^{1/3}\)</span> rate from <span class="citation" data-cites="addarioberry2006diameter">Addario-Berry, Broutin, and Reed (<a href="#ref-addarioberry2006diameter" role="doc-biblioref">2006</a>)</span> with the Penrose rate <span class="math inline">\(\sqrt{\log(n)/n}\)</span>:</p>
+<p><span class="math display">\[
+g(n)
+=
+n^{1/3}\sqrt{\frac{\log n}{n}}
+=
+n^{-1/6}\sqrt{\log n}.
+\]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>comparison_summary <span class="ot">&lt;-</span> combined_results <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_stringy_diameter =</span> <span class="fu">mean</span>(stringy_diameter),</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">combined_rate =</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>      n<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">log</span>(n) <span class="sc">/</span> n)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Estimate one constant <span class="math inline">\(C\)</span> so that</p>
+<p><span class="math display">\[
+D_n \approx Cg(n).
+\]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>multiplied_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  mean_stringy_diameter <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> combined_rate,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> comparison_summary</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>C_multiplied <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(multiplied_fit)[<span class="dv">1</span>])</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>C_multiplied</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.424021</code></pre>
+</div>
+</div>
+<p>Create the smooth benchmark curve:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>multiplied_curve <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">seq</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">min</span>(combined_results<span class="sc">$</span>n),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(combined_results<span class="sc">$</span>n),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">length.out =</span> <span class="dv">500</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">theoretical_product =</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>      C_multiplied <span class="sc">*</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>      n<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">*</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sqrt</span>(<span class="fu">log</span>(n) <span class="sc">/</span> n)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Then plot only the simulations, their mean, and the combined rate:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> combined_results,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> stringy_diameter,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Simulation values"</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.5</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> comparison_summary,</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_stringy_diameter,</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> comparison_summary,</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_stringy_diameter,</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span></span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> multiplied_curve,</span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> theoretical_product,</span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Combined rate"</span></span>
+<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
+<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span></span>
+<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simulation values"</span> <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Empirical mean"</span> <span class="ot">=</span> <span class="st">"royalblue"</span>,</span>
+<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Combined rate"</span> <span class="ot">=</span> <span class="st">"violetred"</span></span>
+<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Weighted MST diameter"</span>,</span>
+<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Stringy diameter and combined growth rate"</span>,</span>
+<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(</span>
+<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Dashed curve: "</span>,</span>
+<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(C_multiplied, <span class="dv">4</span>),</span>
+<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>      <span class="st">" n^(-1/6) sqrt(log(n))"</span></span>
+<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb38-70"><a href="#cb38-70" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exploring-the-ratio-after-normalizing-the-denominator" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-ratio-after-normalizing-the-denominator">Exploring the ratio after normalizing the denominator</h2>
+<p>For bivariate uniform data, the total Euclidean MST length <span class="math inline">\(L_n\)</span>, has a theoretically established <span class="math inline">\(\sqrt{n}\)</span> growth rate. More specifically, the result gives almost-sure convergence of <span class="math inline">\(L_n/\sqrt{n}\)</span> to a positive constant. We therefore use this known rate to remove the sample-size growth of the denominator while leaving the weighted MST diameter <span class="math inline">\(D_n\)</span> unchanged, since no corresponding theoretical growth rate is currently available for the numerator. For each individual simulation, we calculate</p>
+<p><span class="math display">\[
+R_n^*
+=
+\frac{D_n}{L_n/\sqrt{n}}.
+\]</span></p>
+<p>The purpose is to examine how the numerator behaves relative to the theoretically normalized denominator and whether the resulting empirical distribution shows any tendency to stabilize as <span class="math inline">\(n\)</span> increases.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>uniform_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_uniform_50_175.csv"</span>,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_uniform_200_500.csv"</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_uniform_550_800.csv"</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_uniform_850_1000.csv"</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_uniform_1100_2000.csv"</span>,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringy05_uniform_3000_5000.csv"</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>uniform_results <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  uniform_files,</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">read_csv</span>(.x, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n, simulation_run)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>uniform_ratio_results <span class="ot">&lt;-</span> uniform_results <span class="sc">|&gt;</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Theoretical normalization of denominator</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">normalized_mst_length =</span> total_mst_length <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Numerator remains same</span></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio_denominator_scaled =</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>      stringy_diameter <span class="sc">/</span> normalized_mst_length</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>ratio_summary <span class="ot">&lt;-</span> uniform_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_ratio =</span> <span class="fu">mean</span>(</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>      ratio_denominator_scaled,</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize the denominator by sqrt(n)</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>length_scaled_results <span class="ot">&lt;-</span> uniform_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">length_over_sqrtn =</span> total_mst_length <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>length_scaled_summary <span class="ot">&lt;-</span> length_scaled_results <span class="sc">|&gt;</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_length_sqrtn =</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(length_over_sqrtn, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot L_n / sqrt(n)</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> length_scaled_results,</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> length_over_sqrtn,</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Simulation values"</span></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.6</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> length_scaled_summary,</span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_length_sqrtn,</span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> length_scaled_summary,</span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_length_sqrtn,</span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span></span>
+<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb40-46"><a href="#cb40-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb40-47"><a href="#cb40-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb40-48"><a href="#cb40-48" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simulation values"</span> <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb40-49"><a href="#cb40-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Empirical mean"</span> <span class="ot">=</span> <span class="st">"steelblue"</span></span>
+<span id="cb40-50"><a href="#cb40-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb40-51"><a href="#cb40-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-52"><a href="#cb40-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb40-53"><a href="#cb40-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb40-54"><a href="#cb40-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(L[n] <span class="sc">/</span> <span class="fu">sqrt</span>(n)),</span>
+<span id="cb40-55"><a href="#cb40-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">expression</span>(</span>
+<span id="cb40-56"><a href="#cb40-56" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Total MST length normalized by "</span> <span class="sc">*</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb40-57"><a href="#cb40-57" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb40-58"><a href="#cb40-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-59"><a href="#cb40-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb40-60"><a href="#cb40-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb40-61"><a href="#cb40-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb40-62"><a href="#cb40-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb40-63"><a href="#cb40-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb40-64"><a href="#cb40-64" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-the-normalized-ratio-and-the-original-ratio-side-by-side" class="level2">
+<h2 class="anchored" data-anchor-id="plot-the-normalized-ratio-and-the-original-ratio-side-by-side">Plot the normalized ratio and the original ratio side by side</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># original Stringy05 ratio</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>uniform_ratio_results <span class="ot">&lt;-</span> uniform_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">original_ratio =</span> stringy_diameter <span class="sc">/</span> total_mst_length</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>original_ratio_summary <span class="ot">&lt;-</span> uniform_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_original_ratio =</span> <span class="fu">mean</span>(original_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Left: ratio after normalizing denominator</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>p_scaled <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> uniform_ratio_results,</span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> ratio_denominator_scaled,</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Simulation values"</span></span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.6</span></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> ratio_summary,</span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_ratio,</span>
+<span id="cb41-33"><a href="#cb41-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb41-34"><a href="#cb41-34" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb41-35"><a href="#cb41-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb41-36"><a href="#cb41-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-37"><a href="#cb41-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb41-38"><a href="#cb41-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> ratio_summary,</span>
+<span id="cb41-39"><a href="#cb41-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb41-40"><a href="#cb41-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb41-41"><a href="#cb41-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_ratio,</span>
+<span id="cb41-42"><a href="#cb41-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb41-43"><a href="#cb41-43" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb41-44"><a href="#cb41-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span></span>
+<span id="cb41-45"><a href="#cb41-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-46"><a href="#cb41-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb41-47"><a href="#cb41-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb41-48"><a href="#cb41-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb41-49"><a href="#cb41-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simulation values"</span> <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb41-50"><a href="#cb41-50" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Empirical mean"</span> <span class="ot">=</span> <span class="st">"steelblue"</span></span>
+<span id="cb41-51"><a href="#cb41-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb41-52"><a href="#cb41-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-53"><a href="#cb41-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb41-54"><a href="#cb41-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb41-55"><a href="#cb41-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(</span>
+<span id="cb41-56"><a href="#cb41-56" aria-hidden="true" tabindex="-1"></a>      D[n] <span class="sc">/</span> (L[n] <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb41-57"><a href="#cb41-57" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb41-58"><a href="#cb41-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Ratio after normalizing denominator"</span></span>
+<span id="cb41-59"><a href="#cb41-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-60"><a href="#cb41-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb41-61"><a href="#cb41-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb41-62"><a href="#cb41-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb41-63"><a href="#cb41-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb41-64"><a href="#cb41-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb41-65"><a href="#cb41-65" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-66"><a href="#cb41-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-67"><a href="#cb41-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-68"><a href="#cb41-68" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------</span></span>
+<span id="cb41-69"><a href="#cb41-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Right: original Stringy05 ratio</span></span>
+<span id="cb41-70"><a href="#cb41-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-71"><a href="#cb41-71" aria-hidden="true" tabindex="-1"></a>p_original <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb41-72"><a href="#cb41-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb41-73"><a href="#cb41-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> uniform_ratio_results,</span>
+<span id="cb41-74"><a href="#cb41-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb41-75"><a href="#cb41-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb41-76"><a href="#cb41-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> original_ratio,</span>
+<span id="cb41-77"><a href="#cb41-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Simulation values"</span></span>
+<span id="cb41-78"><a href="#cb41-78" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb41-79"><a href="#cb41-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb41-80"><a href="#cb41-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.6</span></span>
+<span id="cb41-81"><a href="#cb41-81" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-82"><a href="#cb41-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb41-83"><a href="#cb41-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> original_ratio_summary,</span>
+<span id="cb41-84"><a href="#cb41-84" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb41-85"><a href="#cb41-85" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb41-86"><a href="#cb41-86" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_original_ratio,</span>
+<span id="cb41-87"><a href="#cb41-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb41-88"><a href="#cb41-88" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb41-89"><a href="#cb41-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb41-90"><a href="#cb41-90" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-91"><a href="#cb41-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb41-92"><a href="#cb41-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> original_ratio_summary,</span>
+<span id="cb41-93"><a href="#cb41-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb41-94"><a href="#cb41-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb41-95"><a href="#cb41-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_original_ratio,</span>
+<span id="cb41-96"><a href="#cb41-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb41-97"><a href="#cb41-97" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb41-98"><a href="#cb41-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span></span>
+<span id="cb41-99"><a href="#cb41-99" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-100"><a href="#cb41-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb41-101"><a href="#cb41-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb41-102"><a href="#cb41-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb41-103"><a href="#cb41-103" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simulation values"</span> <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb41-104"><a href="#cb41-104" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Empirical mean"</span> <span class="ot">=</span> <span class="st">"steelblue"</span></span>
+<span id="cb41-105"><a href="#cb41-105" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb41-106"><a href="#cb41-106" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-107"><a href="#cb41-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb41-108"><a href="#cb41-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb41-109"><a href="#cb41-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(D[n] <span class="sc">/</span> L[n]),</span>
+<span id="cb41-110"><a href="#cb41-110" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Original Stringy05 ratio"</span></span>
+<span id="cb41-111"><a href="#cb41-111" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-112"><a href="#cb41-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb41-113"><a href="#cb41-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb41-114"><a href="#cb41-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb41-115"><a href="#cb41-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb41-116"><a href="#cb41-116" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb41-117"><a href="#cb41-117" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-118"><a href="#cb41-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-119"><a href="#cb41-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-120"><a href="#cb41-120" aria-hidden="true" tabindex="-1"></a>p_scaled <span class="sc">+</span> p_original <span class="sc">+</span></span>
+<span id="cb41-121"><a href="#cb41-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb41-122"><a href="#cb41-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Next, we examine the weighted MST diameter <span class="math inline">\(D_n\)</span>, which forms the numerator of <code>stringy05</code>, relative to the same <span class="math inline">\(\sqrt{n}\)</span> scale used for the denominator. Since no theoretical growth rate is currently available for <span class="math inline">\(D_n\)</span>, dividing it by <span class="math inline">\(\sqrt{n}\)</span> is used only as an empirical comparison to determine whether the numerator grows on the same scale as the total MST length.</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize the numerator by sqrt(n)</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>uniform_ratio_results <span class="ot">&lt;-</span> uniform_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">normalized_diameter =</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>      stringy_diameter <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>diameter_scaled_summary <span class="ot">&lt;-</span> uniform_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_normalized_diameter =</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(normalized_diameter, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="normalized-weighted-diameter" class="level3">
+<h3 class="anchored" data-anchor-id="normalized-weighted-diameter">Normalized weighted diameter</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>p_diameter_scaled <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> uniform_ratio_results,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> normalized_diameter,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Simulation values"</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.6</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> diameter_scaled_summary,</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized_diameter,</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> diameter_scaled_summary,</span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized_diameter,</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simulation values"</span> <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Empirical mean"</span> <span class="ot">=</span> <span class="st">"steelblue"</span></span>
+<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb43-39"><a href="#cb43-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(D[n] <span class="sc">/</span> <span class="fu">sqrt</span>(n)),</span>
+<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Weighted diameter normalized by sqrt(n)"</span></span>
+<span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-48"><a href="#cb43-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-49"><a href="#cb43-49" aria-hidden="true" tabindex="-1"></a>p_diameter_scaled</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Since normalizing the weighted MST diameter by <span class="math inline">\(\sqrt n\)</span> produces a clear decreasing trend, the simulations suggest that the diameter grows more slowly than <span class="math inline">\(\sqrt n\)</span>. We therefore compare several slower candidate functions of sample size. For each candidate rate <span class="math inline">\(g(n)\)</span>, the weighted diameter is normalized as <span class="math inline">\(D_n/g(n)\)</span>. A suitable empirical scaling should remove most of the sample-size trend, so that the normalized diameter becomes approximately stable for large <span class="math inline">\(n\)</span>.</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare candidate growth rates for the diameter</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>diameter_rate_results <span class="ot">&lt;-</span> uniform_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    n,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    simulation_run,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    stringy_diameter,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">sqrt(n)</span><span class="st">`</span>      <span class="ot">=</span> stringy_diameter <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">n^(1/3)</span><span class="st">`</span>      <span class="ot">=</span> stringy_diameter <span class="sc">/</span> n<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>),</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">n^(1/4)</span><span class="st">`</span>      <span class="ot">=</span> stringy_diameter <span class="sc">/</span> n<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>),</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">n^(1/5)</span><span class="st">`</span>      <span class="ot">=</span> stringy_diameter <span class="sc">/</span> n<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>),</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">log(n)</span><span class="st">`</span>       <span class="ot">=</span> stringy_diameter <span class="sc">/</span> <span class="fu">log</span>(n),</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">sqrt(log(n))</span><span class="st">`</span> <span class="ot">=</span> stringy_diameter <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">log</span>(n))</span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(n, simulation_run, stringy_diameter),</span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"normalization"</span>,</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"normalized_diameter"</span></span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>diameter_rate_results <span class="ot">&lt;-</span> diameter_rate_results <span class="sc">|&gt;</span></span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">normalization =</span> <span class="fu">factor</span>(</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>      normalization,</span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"sqrt(n)"</span>,</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n^(1/3)"</span>,</span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n^(1/4)"</span>,</span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n^(1/5)"</span>,</span>
+<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"log(n)"</span>,</span>
+<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"sqrt(log(n))"</span></span>
+<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Calculate the mean after normalizing each individual simulation:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>diameter_rate_summary <span class="ot">&lt;-</span> diameter_rate_results <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n, normalization) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_normalized_diameter =</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(normalized_diameter, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="plot-all-candidate-normalizations" class="level3">
+<h3 class="anchored" data-anchor-id="plot-all-candidate-normalizations">Plot all candidate normalizations</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> diameter_rate_results,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> normalized_diameter</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.15</span>,</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.45</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> diameter_rate_summary,</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized_diameter</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> diameter_rate_summary,</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized_diameter</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.1</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> normalization,</span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">scales =</span> <span class="st">"free_y"</span>,</span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">3</span></span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(D[n] <span class="sc">/</span> <span class="fu">g</span>(n)),</span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Candidate normalizations for the weighted MST diameter"</span>,</span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Blue line shows the empirical mean"</span></span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The normalized diameter continues to decrease under <span class="math inline">\(\sqrt{n}\)</span>, <span class="math inline">\(n^{1/3}\)</span>, and <span class="math inline">\(n^{1/4}\)</span>, indicating that these functions increase faster than the empirical weighted-diameter growth. In contrast, normalization by <span class="math inline">\(\sqrt{\log n}\)</span> produces an increasing trend, suggesting that this rate is too slow. The <span class="math inline">\(n^{1/5}\)</span> and <span class="math inline">\(\log n\)</span> normalizations give the flattest curves, with <span class="math inline">\(\log n\)</span> appearing particularly stable at larger sample sizes. Since these comparisons are empirical, the next step is to quantify stability rather than selecting a rate only by visual inspection.</p>
+</blockquote>
+</section>
+<section id="compare-slopes-after-n1000" class="level3">
+<h3 class="anchored" data-anchor-id="compare-slopes-after-n1000">1. Compare slopes after <span class="math inline">\(n=1000\)</span></h3>
+<p>A good candidate should have a slope close to zero.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>rate_slopes <span class="ot">&lt;-</span> diameter_rate_summary <span class="sc">|&gt;</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(normalization) <span class="sc">|&gt;</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">slope =</span> <span class="fu">coef</span>(</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(mean_normalized_diameter <span class="sc">~</span> n)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    )[<span class="dv">2</span>],</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">abs_slope =</span> <span class="fu">abs</span>(slope)</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(abs_slope)</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>rate_slopes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  normalization       slope  abs_slope
+  &lt;fct&gt;               &lt;dbl&gt;      &lt;dbl&gt;
+1 log(n)        -0.00000240 0.00000240
+2 sqrt(n)       -0.0000143  0.0000143 
+3 n^(1/3)       -0.0000290  0.0000290 
+4 n^(1/5)       -0.0000308  0.0000308 
+5 n^(1/4)       -0.0000338  0.0000338 
+6 sqrt(log(n))   0.0000350  0.0000350 </code></pre>
+</div>
+</div>
+<p>The smallest <code>abs_slope</code> (<span class="math inline">\(log(n)\)</span>) is the flattest candidate.</p>
+</section>
+<section id="compare-relative-change-over-large-n" class="level3">
+<h3 class="anchored" data-anchor-id="compare-relative-change-over-large-n">2. Compare relative change over large <span class="math inline">\(n\)</span></h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>rate_stability <span class="ot">&lt;-</span> diameter_rate_summary <span class="sc">|&gt;</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(normalization) <span class="sc">|&gt;</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_value =</span> <span class="fu">min</span>(mean_normalized_diameter),</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_value =</span> <span class="fu">max</span>(mean_normalized_diameter),</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_value =</span> <span class="fu">mean</span>(mean_normalized_diameter),</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">relative_range =</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>      (max_value <span class="sc">-</span> min_value) <span class="sc">/</span> mean_value,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(relative_range)</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>rate_stability</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  normalization min_value max_value mean_value relative_range
+  &lt;fct&gt;             &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
+1 log(n)           0.575      0.606      0.587         0.0524
+2 sqrt(log(n))     1.55       1.71       1.61          0.105 
+3 n^(1/5)          0.908      1.04       0.982         0.130 
+4 n^(1/4)          0.595      0.733      0.675         0.205 
+5 n^(1/3)          0.292      0.412      0.363         0.330 
+6 sqrt(n)          0.0707     0.130      0.105         0.569 </code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Among the candidate functions considered, <span class="math inline">\(\log n\)</span> provides the most stable empirical normalization over <span class="math inline">\(n\ge1000\)</span>.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>The previous analysis suggested that <span class="math inline">\(\log n\)</span> provides the most stable empirical normalization for the weighted MST diameter <span class="math inline">\(D_n\)</span>, while the total MST length <span class="math inline">\(L_n\)</span> has a theoretically established <span class="math inline">\(\sqrt n\)</span> scaling. We therefore normalize the numerator and denominator separately using these two rates.</p>
+</blockquote>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize numerator by log(n)</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and denominator by sqrt(n)</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>normalized_ratio_results <span class="ot">&lt;-</span> uniform_results <span class="sc">|&gt;</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">diameter_over_logn =</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>      stringy_diameter <span class="sc">/</span> <span class="fu">log</span>(n),</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">length_over_sqrtn =</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>      total_mst_length <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">normalized_ratio =</span></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>      diameter_over_logn <span class="sc">/</span> length_over_sqrtn</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Summarise after calculating the ratio for each simulation:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>normalized_ratio_summary <span class="ot">&lt;-</span> normalized_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_normalized_ratio =</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_normalized_ratio =</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">median</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> normalized_ratio_results,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> normalized_ratio,</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Simulation values"</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.6</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> normalized_ratio_summary,</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized_ratio,</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> normalized_ratio_summary,</span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> n,</span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized_ratio,</span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Empirical mean"</span></span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.2</span></span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simulation values"</span> <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Empirical mean"</span> <span class="ot">=</span> <span class="st">"steelblue"</span></span>
+<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb53-37"><a href="#cb53-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb53-38"><a href="#cb53-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb53-39"><a href="#cb53-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(</span>
+<span id="cb53-40"><a href="#cb53-40" aria-hidden="true" tabindex="-1"></a>      (D[n] <span class="sc">/</span> <span class="fu">log</span>(n)) <span class="sc">/</span></span>
+<span id="cb53-41"><a href="#cb53-41" aria-hidden="true" tabindex="-1"></a>        (L[n] <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb53-42"><a href="#cb53-42" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb53-43"><a href="#cb53-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Stringy05 after normalization"</span>,</span>
+<span id="cb53-44"><a href="#cb53-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">expression</span>(</span>
+<span id="cb53-45"><a href="#cb53-45" aria-hidden="true" tabindex="-1"></a>      D[n] <span class="sc">/</span> <span class="fu">log</span>(n) <span class="sc">~</span> <span class="st">"and"</span> <span class="sc">~</span> L[n] <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb53-46"><a href="#cb53-46" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb53-47"><a href="#cb53-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb53-48"><a href="#cb53-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb53-49"><a href="#cb53-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb53-50"><a href="#cb53-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb53-51"><a href="#cb53-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb53-52"><a href="#cb53-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb53-53"><a href="#cb53-53" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>After applying the separate normalizations <span class="math inline">\(D_n/\log n\)</span> for the weighted diameter and <span class="math inline">\(L_n/\sqrt n\)</span> for the total MST length, the resulting ratio appears much more stable across sample size. This suggests that the empirical <span class="math inline">\(\log n\)</span> scaling for the numerator, together with the theoretical <span class="math inline">\(\sqrt n\)</span> scaling for the denominator, removes most of the observed sample-size trend in the ratio over the simulated range. However, the simulation values still show noticeable spread, so the next step is to examine whether the variance, upper quantiles, and overall distributional shape also stabilize.</p>
+</blockquote>
+</section>
+</section>
+<section id="distributional-behaviour-of-the-normalized-ratio" class="level2">
+<h2 class="anchored" data-anchor-id="distributional-behaviour-of-the-normalized-ratio">Distributional behaviour of the normalized ratio</h2>
+<p>The previous empirical comparison suggested that <span class="math inline">\(\log n\)</span> provides the most stable normalization for the weighted MST diameter among the candidate functions considered. However, stabilization of the empirical mean alone is not sufficient to conclude that the statistic has become sample-size invariant. The variance, upper tail, and overall shape of the distribution may still change with <span class="math inline">\(n\)</span>. This is particularly important for <code>stringy05</code>, since the practical calibration of the index is based on the 95th percentile of its noise distribution rather than its mean. We therefore examine how the location, spread, upper quantiles, and distributional shape of the normalized <code>stringy05</code> ratio change with sample size.</p>
+<section id="summarise-the-distribution-of-the-normalized-ratio" class="level3">
+<h3 class="anchored" data-anchor-id="summarise-the-distribution-of-the-normalized-ratio">Summarise the distribution of the normalized ratio</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># before normalization</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>original_distribution_summary <span class="ot">&lt;-</span> uniform_results <span class="sc">|&gt;</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">original_ratio =</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>      stringy_diameter <span class="sc">/</span> total_mst_length</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(original_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95 =</span> <span class="fu">quantile</span>(original_ratio, <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(original_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="co"># after normalization</span></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>normalized_distribution_summary <span class="ot">&lt;-</span> normalized_ratio_results <span class="sc">|&gt;</span></span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">median</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">variance =</span> <span class="fu">var</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">iqr =</span> <span class="fu">IQR</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">mad =</span> <span class="fu">mad</span>(normalized_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-27"><a href="#cb54-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">q90 =</span> <span class="fu">quantile</span>(normalized_ratio, <span class="fl">0.90</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-28"><a href="#cb54-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95 =</span> <span class="fu">quantile</span>(normalized_ratio, <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-29"><a href="#cb54-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">q99 =</span> <span class="fu">quantile</span>(normalized_ratio, <span class="fl">0.99</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb54-30"><a href="#cb54-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-31"><a href="#cb54-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb54-32"><a href="#cb54-32" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>For the proposed normalization to remove most of the sample-size dependence, we would expect the mean, median, spread measures, and upper quantiles to become approximately stable for sufficiently large <span class="math inline">\(n\)</span>.</p>
+</section>
+</section>
+<section id="examine-whether-the-spread-stabilizes" class="level2">
+<h2 class="anchored" data-anchor-id="examine-whether-the-spread-stabilizes">Examine whether the spread stabilizes</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Before normalization</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>p_sd_original <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  original_distribution_summary,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> sd)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"steelblue"</span></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Standard deviation"</span>,</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"SD before normalization"</span></span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a><span class="co"># After normalization</span></span>
+<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a>p_sd_normalized <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>  normalized_distribution_summary,</span>
+<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> sd)</span>
+<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb55-31"><a href="#cb55-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb55-32"><a href="#cb55-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb55-33"><a href="#cb55-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb55-34"><a href="#cb55-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb55-35"><a href="#cb55-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"steelblue"</span></span>
+<span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Standard deviation"</span>,</span>
+<span id="cb55-40"><a href="#cb55-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"SD after normalization"</span></span>
+<span id="cb55-41"><a href="#cb55-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb55-43"><a href="#cb55-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb55-44"><a href="#cb55-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb55-46"><a href="#cb55-46" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb55-47"><a href="#cb55-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a>p_sd_original <span class="sc">+</span> p_sd_normalized</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The standard deviation is larger after normalization because the normalized statistic is on a different scale, so the two SD values are not directly comparable. What matters more is how the SD changes with sample size. Before normalization, the SD decreases strongly as <span class="math inline">\(n\)</span> increases, while after normalization it stays within a much narrower range. This suggests that the normalization reduces the sample-size dependence of the spread, although some variation across <span class="math inline">\(n\)</span> still remains.</p>
+</section>
+<section id="compare-the-centre-and-the-95th-percentile" class="level2">
+<h2 class="anchored" data-anchor-id="compare-the-centre-and-the-95th-percentile">Compare the centre and the 95th percentile</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary before normalization</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>original_distribution_summary <span class="ot">&lt;-</span> uniform_results <span class="sc">|&gt;</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">original_ratio =</span> stringy_diameter <span class="sc">/</span> total_mst_length</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_original =</span> <span class="fu">mean</span>(original_ratio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95_original =</span> <span class="fu">quantile</span>(original_ratio, <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Join with normalized summary</span></span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>comparison_summary <span class="ot">&lt;-</span> original_distribution_summary <span class="sc">|&gt;</span></span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    normalized_distribution_summary <span class="sc">|&gt;</span></span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(</span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>        n,</span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">mean_normalized =</span> mean,</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">q95_normalized =</span> q95</span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"n"</span></span>
+<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-25"><a href="#cb56-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot all four together</span></span>
+<span id="cb56-26"><a href="#cb56-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(comparison_summary, <span class="fu">aes</span>(<span class="at">x =</span> n)) <span class="sc">+</span></span>
+<span id="cb56-27"><a href="#cb56-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb56-28"><a href="#cb56-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-29"><a href="#cb56-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_original,</span>
+<span id="cb56-30"><a href="#cb56-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Mean before normalization"</span></span>
+<span id="cb56-31"><a href="#cb56-31" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb56-32"><a href="#cb56-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb56-33"><a href="#cb56-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-34"><a href="#cb56-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb56-35"><a href="#cb56-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-36"><a href="#cb56-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_original,</span>
+<span id="cb56-37"><a href="#cb56-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Mean before normalization"</span></span>
+<span id="cb56-38"><a href="#cb56-38" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-39"><a href="#cb56-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-40"><a href="#cb56-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb56-41"><a href="#cb56-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-42"><a href="#cb56-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized,</span>
+<span id="cb56-43"><a href="#cb56-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Mean after normalization"</span></span>
+<span id="cb56-44"><a href="#cb56-44" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb56-45"><a href="#cb56-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb56-46"><a href="#cb56-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-47"><a href="#cb56-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb56-48"><a href="#cb56-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-49"><a href="#cb56-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> mean_normalized,</span>
+<span id="cb56-50"><a href="#cb56-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"Mean after normalization"</span></span>
+<span id="cb56-51"><a href="#cb56-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-52"><a href="#cb56-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-53"><a href="#cb56-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb56-54"><a href="#cb56-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-55"><a href="#cb56-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> q95_original,</span>
+<span id="cb56-56"><a href="#cb56-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"95th percentile before normalization"</span></span>
+<span id="cb56-57"><a href="#cb56-57" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb56-58"><a href="#cb56-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb56-59"><a href="#cb56-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-60"><a href="#cb56-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb56-61"><a href="#cb56-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-62"><a href="#cb56-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> q95_original,</span>
+<span id="cb56-63"><a href="#cb56-63" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"95th percentile before normalization"</span></span>
+<span id="cb56-64"><a href="#cb56-64" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-65"><a href="#cb56-65" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-66"><a href="#cb56-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb56-67"><a href="#cb56-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-68"><a href="#cb56-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> q95_normalized,</span>
+<span id="cb56-69"><a href="#cb56-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"95th percentile after normalization"</span></span>
+<span id="cb56-70"><a href="#cb56-70" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb56-71"><a href="#cb56-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb56-72"><a href="#cb56-72" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-73"><a href="#cb56-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb56-74"><a href="#cb56-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb56-75"><a href="#cb56-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> q95_normalized,</span>
+<span id="cb56-76"><a href="#cb56-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"95th percentile after normalization"</span></span>
+<span id="cb56-77"><a href="#cb56-77" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-78"><a href="#cb56-78" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-79"><a href="#cb56-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
+<span id="cb56-80"><a href="#cb56-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>,</span>
+<span id="cb56-81"><a href="#cb56-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb56-82"><a href="#cb56-82" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Mean before normalization"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb56-83"><a href="#cb56-83" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Mean after normalization"</span> <span class="ot">=</span> <span class="st">"darkorange"</span>,</span>
+<span id="cb56-84"><a href="#cb56-84" aria-hidden="true" tabindex="-1"></a>      <span class="st">"95th percentile before normalization"</span> <span class="ot">=</span> <span class="st">"violetred"</span>,</span>
+<span id="cb56-85"><a href="#cb56-85" aria-hidden="true" tabindex="-1"></a>      <span class="st">"95th percentile after normalization"</span> <span class="ot">=</span> <span class="st">"darkgreen"</span></span>
+<span id="cb56-86"><a href="#cb56-86" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-87"><a href="#cb56-87" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-88"><a href="#cb56-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb56-89"><a href="#cb56-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sample size n"</span>,</span>
+<span id="cb56-90"><a href="#cb56-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Ratio value"</span>,</span>
+<span id="cb56-91"><a href="#cb56-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean and 95th percentile before and after normalization"</span></span>
+<span id="cb56-92"><a href="#cb56-92" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-93"><a href="#cb56-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb56-94"><a href="#cb56-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb56-95"><a href="#cb56-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb56-96"><a href="#cb56-96" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stringy05_growth_rate_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The normalized ratio appears more stable across sample sizes; however, the 95th percentile of the normalized statistic can exceed 1. This is an important limitation because scagnostic indices are intended to lie between 0 and 1. The normalization therefore removes the natural upper bound of the original <code>stringy05</code> definition. Using this normalized ratio directly as a new scagnostic would require an additional transformation or rescaling to return the values to <span class="math inline">\([0,1]\)</span>, which adds another layer of complexity to the definition.</p>
+</blockquote>
+</section>
+<section id="appendix" class="level1">
+<h1>Appendix</h1>
+<section id="alternative-way" class="level2">
+<h2 class="anchored" data-anchor-id="alternative-way">Alternative way</h2>
+<section id="scaling-limits-of-the-euclidean-minimum-spanning-tree" class="level3">
+<h3 class="anchored" data-anchor-id="scaling-limits-of-the-euclidean-minimum-spanning-tree">Scaling limits of the Euclidean minimum spanning tree</h3>
+<p>A potentially useful theoretical connection for understanding the sample-size behaviour of the Stringy index is provided by <span class="citation" data-cites="aizenman1999scaling">Aizenman et al. (<a href="#ref-aizenman1999scaling" role="doc-biblioref">1999</a>)</span>.</p>
+<p>Aizenman et al.&nbsp;study continuum scaling limits of several random spanning-tree models in two dimensions. Of particular relevance here is their <strong>Euclidean minimal spanning tree (EST)</strong>. The vertices of the EST are generated from a homogeneous Poisson point process in <span class="math inline">\(\mathbb{R}^2\)</span> with intensity <span class="math inline">\(\delta^{-2}\)</span>. Every pair of points can be connected, the weight of an edge is its ordinary Euclidean distance, and the Euclidean MST is the spanning tree that minimises the sum of these Euclidean edge lengths <span class="citation" data-cites="aizenman1999scaling">(<a href="#ref-aizenman1999scaling" role="doc-biblioref">Aizenman et al. 1999</a>)</span>.</p>
+<p>Thus, if <span class="math inline">\(X_i\)</span> and <span class="math inline">\(X_j\)</span> denote two points, the edge weight is</p>
+<p><span class="math display">\[
+w_{ij} = \lVert X_i-X_j\rVert_2.
+\]</span></p>
+<p>This setup is important because the edge weights are generated by Euclidean geometry rather than being independent random edge weights. It is therefore substantially closer to the MST used in the Stringy index than random complete-graph MST models based on independent Uniform<span class="math inline">\((0,1)\)</span> edge weights.</p>
+<p>Aizenman et al.&nbsp;investigate what happens as</p>
+<p><span class="math display">\[
+\delta \rightarrow 0,
+\]</span> so that the Poisson point process becomes increasingly dense. This can be viewed of studying an increasingly large number of points in a fixed two-dimensional region.</p>
+</section>
+<section id="main-findings" class="level3">
+<h3 class="anchored" data-anchor-id="main-findings">Main findings</h3>
+<p>Aizenman et al.&nbsp;establish tightness of the distributions of these spanning trees and show that subsequential continuum scaling limits exist <span class="citation" data-cites="aizenman1999scaling">(<a href="#ref-aizenman1999scaling" role="doc-biblioref">Aizenman et al. 1999</a>)</span>. Their main geometric finding is that the branches of the limiting Euclidean MST are random curves with non-trivial fractal geometry.</p>
+<p>In particular, the Hausdorff dimension of the limiting branches is bounded by</p>
+<p><span class="math display">\[
+1 &lt; d_{\min}
+\leq
+\dim_H(C)
+\leq
+d_{\max} &lt; 2,
+\]</span></p>
+<p>for non-random constants <span class="math inline">\(d_{\min}\)</span> and <span class="math inline">\(d_{\max}\)</span> <span class="citation" data-cites="aizenman1999scaling">(<a href="#ref-aizenman1999scaling" role="doc-biblioref">Aizenman et al. 1999</a>)</span>.</p>
+<p>The fact that the dimension is strictly greater than one means that these branches are substantially rougher than ordinary smooth curves. Aizenman et al.&nbsp;prove, more strongly, that the limiting branches are <strong>nonrectifiable</strong> <span class="citation" data-cites="aizenman1999scaling aizenman1999holder">(<a href="#ref-aizenman1999scaling" role="doc-biblioref">Aizenman et al. 1999</a>; <a href="#ref-aizenman1999holder" role="doc-biblioref">Aizenman and Burchard 1999</a>)</span>.</p>
+<p>A rectifiable curve has finite ordinary arc length. For example, a straight line, circle, or sufficiently smooth curve has a finite length that is approached as the curve is measured at increasingly fine resolutions. A nonrectifiable curve does not have finite ordinary arc length. Increasingly fine resolution reveals additional geometric detail, so the polygonal length does not settle to a finite limiting value <span class="citation" data-cites="aizenman1999holder mandelbrot1967coast">(<a href="#ref-aizenman1999holder" role="doc-biblioref">Aizenman and Burchard 1999</a>; <a href="#ref-mandelbrot1967coast" role="doc-biblioref">Mandelbrot 1967</a>)</span>.</p>
+
 
 
 </section>
+</section>
+</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div>All Rights Reserved</div></div></section><section class="quarto-appendix-contents" id="quarto-copyright"><h2 class="anchored quarto-appendix-heading">Copyright</h2><div class="quarto-appendix-contents"><div>Copyright © 2026 Tina Rashid Jafari. All rights reserved.</div></div></section></div></main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-addarioberry2006diameter" class="csl-entry" role="listitem">
+Addario-Berry, Louigi, Nicolas Broutin, and Bruce Reed. 2006. <span>“The Diameter of the Minimum Spanning Tree of a Complete Graph.”</span> <em>Discrete Mathematics &amp; Theoretical Computer Science Proceedings</em> AG: 237–48. <a href="https://doi.org/10.46298/dmtcs.3513">https://doi.org/10.46298/dmtcs.3513</a>.
+</div>
+<div id="ref-aizenman1999holder" class="csl-entry" role="listitem">
+Aizenman, Michael, and Almut Burchard. 1999. <span>“H<span>ö</span>lder Regularity and Dimension Bounds for Random Curves.”</span> <em>Duke Mathematical Journal</em> 99 (3): 419–53. <a href="https://doi.org/10.1215/S0012-7094-99-09914-3">https://doi.org/10.1215/S0012-7094-99-09914-3</a>.
+</div>
+<div id="ref-aizenman1999scaling" class="csl-entry" role="listitem">
+Aizenman, Michael, Almut Burchard, Charles M. Newman, and David B. Wilson. 1999. <span>“Scaling Limits for Minimal and Random Spanning Trees in Two Dimensions.”</span> <em>Random Structures &amp; Algorithms</em> 15 (3–4): 319–67. <a href="https://doi.org/10.1002/(SICI)1098-2418(199910/12)15:3/4<319::AID-RSA8>3.0.CO;2-G">https://doi.org/10.1002/(SICI)1098-2418(199910/12)15:3/4&lt;319::AID-RSA8&gt;3.0.CO;2-G</a>.
+</div>
+<div id="ref-mandelbrot1967coast" class="csl-entry" role="listitem">
+Mandelbrot, Benoit B. 1967. <span>“How Long Is the Coast of Britain? Statistical Self-Similarity and Fractional Dimension.”</span> <em>Science</em> 156 (3775): 636–38. <a href="https://doi.org/10.1126/science.156.3775.636">https://doi.org/10.1126/science.156.3775.636</a>.
+</div>
+<div id="ref-penrose1997longest" class="csl-entry" role="listitem">
+Penrose, Mathew D. 1997. <span>“The Longest Edge of the Random Minimal Spanning Tree.”</span> <em>The Annals of Applied Probability</em> 7 (2): 340–61.
+</div>
+<div id="ref-steele1988growth" class="csl-entry" role="listitem">
+Steele, J. Michael. 1988. <span>“Growth Rates of Euclidean Minimal Spanning Trees with Power Weighted Edges.”</span> <em>The Annals of Probability</em> 16 (4): 1767–87. <a href="https://doi.org/10.1214/aop/1176991596">https://doi.org/10.1214/aop/1176991596</a>.
+</div>
+</div></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div>All Rights Reserved</div></div></section><section class="quarto-appendix-contents" id="quarto-copyright"><h2 class="anchored quarto-appendix-heading">Copyright</h2><div class="quarto-appendix-contents"><div>Copyright © 2026 Tina Rashid Jafari. All rights reserved.</div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

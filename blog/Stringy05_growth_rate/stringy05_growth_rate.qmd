@@ -1,10 +1,11 @@
 ---
 title: "Exploring the Growth Rate of the stringy05 Index"
-date: 2026-07-30
+date: 2026-08-30
 categories: [scagnostics, minimum spanning tree, stringy05, asymptotic analysis, R]
 description: "A theoretical and empirical exploration of the stringy05 scagnostic index."
 license: "All Rights Reserved"
 copyright: "Copyright © 2026 Tina Rashid Jafari. All rights reserved."
+bibliography: references.bib
 format:
   html:
     toc: true
@@ -72,7 +73,7 @@ Empirically, previous simulations suggested that the ratio does not rapidly deca
 
 The denominator $L_n$ is the part of the problem for which we do have strong theoretical guidance.
 
-Steele studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points $x_1,\dots,x_n$, the MST functional is
+@steele1988growth studies Euclidean minimal spanning trees with power-weighted edges. In his notation, for points $x_1,\dots,x_n$, the MST functional is
 
 $$
 M(x_1,\dots,x_n)
@@ -80,7 +81,7 @@ M(x_1,\dots,x_n)
 \min_T \sum_{e\in T}\psi(|e|),
 $$
 
-where the minimum is over spanning trees $T$, and $\psi$ is an edge-weighting function [Steele, 1988].
+where the minimum is over spanning trees $T$, and $\psi$ is an edge-weighting function [@steele1988growth].
 
 For the ordinary Euclidean MST length, we take
 
@@ -98,11 +99,11 @@ M(X_1,\dots,X_n)
 L_n.
 $$
 
-So Steele's $M_n$ is exactly the denominator of the stringy05 index.
+So Steele's $M_n$ [@steele1988growth] is exactly the denominator of the stringy05 index.
 
 ## Steele's growth theorem
 
-Steele considers weight functions satisfying
+@steele1988growth considers weight functions satisfying
 
 $$
 \psi(t)\sim t^\alpha
@@ -175,7 +176,7 @@ L_n= O(\sqrt n).
 }
 $$
 
-Steele first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. Steele then extends the result beyond the uniform case by adding a density correction. For a more general distribution with density $f$, the limiting constant is modified by a factor of the form
+@steele1988growth first proves the MST growth-rate result in the uniform setting, where the sample points are distributed in the unit cube. The result is then extended beyond the uniform case by adding a density correction. For a more general distribution with density $f$, the limiting constant is modified by a factor of the form
 
 $$
 \int f(x)^{(d-\alpha)/d}\,dx.
@@ -189,7 +190,7 @@ $$
 
 This extension is important for my project because the simulations are based on bivariate noise distributions rather than only uniform samples.
 
-However, there is one important technical caveat. Steele's theorem is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use Steele's$\sqrt n$ scaling as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work. 
+However, there is one important technical caveat. The theorem in @steele1988growth is stated under compact-support assumptions. A standard bivariate normal distribution has unbounded support, so it falls outside the direct assumptions of the theorem. Therefore, for Gaussian samples, I use the $\sqrt n$ scaling from @steele1988growth as a theoretically motivated benchmark for the denominator, not as a theorem that applies directly without further work. 
 
 
 ## Numerator: what is known about the MST diameter?
@@ -206,12 +207,12 @@ This is the weighted longest shortest path in the MST. It is a global path funct
 
 This is different from the total MST length $L_n$, which is a sum over all edges. It is also different from the longest single edge of the MST.
 
-At this point, the exact theoretical growth rate of $D_n$ is not given by the Steele MST length theorem.
+At this point, the exact theoretical growth rate of $D_n$ is not given by the MST length theorem in @steele1988growth.
 
 
 ## Penrose's longest-edge theorem and its limitation
 
-Penrose studies the longest edge of the random Euclidean MST. Let
+@penrose1997longest studies the longest edge of the random Euclidean MST. Let
 
 $$
 E_n
@@ -219,18 +220,18 @@ E_n
 \max_{e\in T_n}|e|.
 $$
 
-For uniform random points in the unit square, Penrose shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension $2$, the result implies that
+For uniform random points in the unit square, @penrose1997longest shows that the longest MST edge has the same asymptotic extreme-value behavior as the longest nearest-neighbor edge. In dimension $2$, the result implies that
 
 $$
 n\pi E_n^2-\log n
 $$
 
-converges in distribution to a double-exponential limiting law [Penrose, 1997].
+converges in distribution to a double-exponential limiting law [@penrose1997longest].
 
 
-Penrose also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.
+@penrose1997longest also shows that very long MST edges usually behave like nearest-neighbor edges. In other words, the longest edges are typically attached to leaf vertices, or endpoints, of the MST.
 
-This matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So Penrose's result suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.
+This matters for the stringy05 index because the MST diameter is not just the longest single edge. The diameter is the length of a whole path through the tree. So the result in @penrose1997longest suggests that the longest individual edges are often at the outside of the tree, rather than forming the main interior path that determines the MST diameter.
 
 
 The longest edge scale is therefore approximately
@@ -249,7 +250,7 @@ D_n =
 \max_{u,v} d_{T_n}(u,v),
 $$
 
-which is the length of an entire path. This path may contain many MST edges. Therefore, Penrose's theorem does not give the growth rate of $D_n$. It only gives the scale of the largest individual edge.
+which is the length of an entire path. This path may contain many MST edges. Therefore, the theorem in @penrose1997longest does not give the growth rate of $D_n$. It only gives the scale of the largest individual edge.
 
 
 ## A simple example: longest edge versus MST diameter
@@ -454,7 +455,7 @@ p_stringy + p_penrose +
 ```
 
 
-This shows why Penrose's result is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:
+This shows why the result in @penrose1997longest is useful only as a weak lower bound. The longest single edge is always less than or equal to the weighted MST diameter, but it is not the same quantity:
 
 $$
 E_n\le D_n.
@@ -463,7 +464,7 @@ $$
 
 ## Upper and lower bound for the MST diameter
 
-Even though Penrose's longest-edge theorem does not solve the diameter problem, it provides a weak lower bound.
+Even though the longest-edge theorem in @penrose1997longest does not solve the diameter problem, it provides a weak lower bound.
 
 For every weighted tree,
 
@@ -476,7 +477,7 @@ $$
 The first inequality holds because the longest edge is itself the path between its endpoints in the tree. The second inequality holds because any path in the tree uses only a subset of the edges of the tree. 
 
 
-Combining Penrose's longest-edge scale with Steele's total-length scale gives
+Combining the longest-edge scale from @penrose1997longest with the total-length scale from @steele1988growth gives
 
 $$
 \sqrt{\frac{\log n}{n}}
@@ -535,7 +536,7 @@ $$
 R_n=\frac{D_n}{L_n}.
 $$
 
-For the denominator, Steele's theorem suggests checking whether
+For the denominator, the theorem in @steele1988growth suggests checking whether
 
 $$
 \frac{L_n}{\sqrt n}
@@ -569,7 +570,7 @@ This would support the empirical observation that stringy05 converges to a posit
 
 ## Empirical check of the denominator growth rate
 
-To check the theoretical growth rate of the denominator, I simulated independent bivariate observations from the uniform distribution on the unit square, which matches the setting used in Steele's theoretical result. For each sample size, I repeated the simulation 100 times (just for testing), constructed the Euclidean minimum spanning tree, and recorded its total edge length,
+To check the theoretical growth rate of the denominator, I simulated independent bivariate observations from the uniform distribution on the unit square, which matches the setting used in @steele1988growth. For each sample size, I repeated the simulation 100 times (just for testing), constructed the Euclidean minimum spanning tree, and recorded its total edge length,
 
 $$
 L_n = \sum_{e\in T_n}|e|.
@@ -599,7 +600,7 @@ combined_results <- map_dfr(
   arrange(n, simulation_run)
 ```
 
-Steele's result implies that, for bivariate uniform data, the total MST length grows at rate
+The result in @steele1988growth implies that, for bivariate uniform data, the total MST length grows at rate
 
 $$
 L_n \sim C\sqrt n,
@@ -818,7 +819,7 @@ ggplot() +
 
 ## Empirical check of the longest MST edge
 
-The theoretical result for the numerator is not directly available for the weighted MST diameter used by `stringy05`. However, Penrose studies the longest **single edge** of the Euclidean minimum spanning tree. Let
+The theoretical result for the numerator is not directly available for the weighted MST diameter used by `stringy05`. However, @penrose1997longest studies the longest **single edge** of the Euclidean minimum spanning tree. Let
 
 $$
 E_n = \max_{e \in T_n} |e|.
@@ -830,7 +831,7 @@ $$
 E_n \asymp \sqrt{\frac{\log n}{n}}.
 $$
 
-This is different from the actual `stringy05` numerator, which is the weighted length of an entire path through the MST. Therefore, in the simulations I use the stored `penrose_diameter` variable to check Penrose's longest-edge result separately.
+This is different from the actual `stringy05` numerator, which is the weighted length of an entire path through the MST. Therefore, in the simulations I use the stored `penrose_diameter` variable to check the longest-edge result in @penrose1997longest separately.
 
 For each sample size, the simulation was repeated 100 times. I first calculate the empirical mean longest-edge length for each value of $n$.
 
@@ -843,7 +844,7 @@ penrose_summary <- combined_results |>
   )
 ```
 
-Penrose's result suggests a relationship of the form
+The result in @penrose1997longest suggests a relationship of the form
 
 $$
 E_n \approx A
@@ -893,7 +894,7 @@ $$
 \sqrt{\frac{\log n}{n}}.
 $$
 
-If the simulations are consistent with Penrose's result, the empirical longest-edge values should decrease with approximately the same shape as the theoretical curve.
+If the simulations are consistent with @penrose1997longest, the empirical longest-edge values should decrease with approximately the same shape as the theoretical curve.
 
 ```{r}
 ggplot() +
@@ -987,7 +988,7 @@ stringy_diameter_summary <- combined_results |>
   )
 ```
 
-To compare the weighted diameter with the Penrose functional form, I fit
+To compare the weighted diameter with the functional form from @penrose1997longest, I fit
 
 $$
 D_n
@@ -995,7 +996,7 @@ D_n
 B\sqrt{\frac{\log n}{n}}
 $$
 
- The purpose is to test whether the **shape and rate** of the weighted diameter are consistent with the Penrose rate.
+ The purpose is to test whether the **shape and rate** of the weighted diameter are consistent with the rate from @penrose1997longest.
 
 ```{r}
 stringy_diameter_fit <- lm(
@@ -1022,7 +1023,7 @@ stringy_theoretical_curve <- data.frame(
   )
 ```
 
-The following plot compares all simulated weighted MST diameters with the Penrose's theoretical boundary.
+The following plot compares all simulated weighted MST diameters with the theoretical boundary from @penrose1997longest.
 
 ```{r}
 ggplot() +
@@ -1092,7 +1093,7 @@ ggplot() +
 
 ## Addario-Berry, Broutin and Reed: an $n^{1/3}$ MST-diameter benchmark
 
-Addario-Berry, Broutin and Reed study a different random minimum-spanning-tree model. They begin with the complete graph $K_n$, assign independent and identically distributed continuous weights to all edges, and construct the minimum-weight spanning tree. Their main result is
+@addarioberry2006diameter study a different random minimum-spanning-tree model. They begin with the complete graph $K_n$, assign independent and identically distributed continuous weights to all edges, and construct the minimum-weight spanning tree. Their main result is
 
 $$
 \mathbb{E}\{\operatorname{diam}(T_n)\}
@@ -1102,7 +1103,7 @@ $$
 
 There are two important differences from my setting:
 
-1. **Randomness of the edge weights.** In Addario-Berry et al., the edge weights of $K_n$ are i.i.d. In my Euclidean MST, the edge weights are distances between random points in $\mathbb{R}^2$, so the pairwise edge weights are geometrically constrained and are not independent.
+1. **Randomness of the edge weights.** In @addarioberry2006diameter, the edge weights of $K_n$ are i.i.d. In my Euclidean MST, the edge weights are distances between random points in $\mathbb{R}^2$, so the pairwise edge weights are geometrically constrained and are not independent.
 2. **Definition of diameter.** Their diameter is the ordinary graph diameter, based on graph distance along the tree. My `stringy05` numerator is a **weighted Euclidean diameter**, where the Euclidean edge lengths are summed along the longest weighted path.
 
 To see whether the empirical weighted diameter has anything resembling the same growth shape, I fit the benchmark
@@ -1137,7 +1138,7 @@ abr_theoretical_curve <- data.frame(
   )
 ```
 
-The following plot shows the same simulated weighted MST diameters used in the previous section, but now compares them with the fitted $n^{1/3}$ benchmark from Addario-Berry et al.
+The following plot shows the same simulated weighted MST diameters used in the previous section, but now compares them with the fitted $n^{1/3}$ benchmark from @addarioberry2006diameter.
 
 ```{r}
 ggplot() +
@@ -1204,12 +1205,1190 @@ ggplot() +
   )
 ```
 
+## Empirical check of the Addario-Berry hop-diameter growth rate
+
+@addarioberry2006diameter study the graph diameter of a random minimum
+spanning tree, where distance is measured by the number of edges along a path.
+They show that the expected diameter grows at rate
+
+$$
+E(H_n) = \Theta(n^{1/3}),
+$$
+
+where $H_n$ denotes the hop diameter.
+
+Although their random-MST model differs from the Euclidean MST considered here,
+the $n^{1/3}$ rate can be used as a comparison benchmark.
+
+For each sample size, I simulated 100 independent bivariate uniform samples and
+recorded the unweighted hop diameter of the resulting Euclidean MST.
+
+```{r}
+
+addario_files <- c(
+  "addario_uniform_50_175.csv",
+  "addario_uniform_200_500.csv",
+  "addario_uniform_550_800.csv",
+  "addario_uniform_850_1000.csv",
+  "addario_uniform_1100_2000.csv",
+  "addario_uniform_3000_5000.csv"
+)
+
+addario_results <- map_dfr(
+  addario_files,
+  ~ read_csv(.x, show_col_types = FALSE)
+) |>
+  arrange(n, simulation_run)
+```
+
+For each value of $n$, the empirical mean hop diameter is
+
+$$
+\overline H_n
+=
+\frac{1}{100}
+\sum_{b=1}^{100} H_{n,b}.
+$$
+```{r}
+addario_summary <- addario_results |>
+  group_by(n) |>
+  summarise(
+    mean_hop_diameter = mean(addario_hop_diameter),
+    .groups = "drop"
+  )
+```
 
 
-## References
+### Fit the $n^{1/3}$ growth rate
 
-Steele, J. M. (1988). *Growth Rates of Euclidean Minimal Spanning Trees with Power Weighted Edges*. The Annals of Probability, 16(4), 1767--1787.
+The theorem specifies the growth rate but not an exact multiplicative constant.
+Therefore, I estimate the constant $C$ in
 
-Penrose, M. D. (1997). *The Longest Edge of the Random Minimal Spanning Tree*. The Annals of Applied Probability, 7(2), 340--361.
+$$
+E(H_n) \approx Cn^{1/3}
+$$
 
-Addario-Berry, L., Broutin, N., & Reed, B. (2006). *The Diameter of the Minimum Spanning Tree of a Complete Graph*. Discrete Mathematics & Theoretical Computer Science, DMTCS Proceedings vol. AG, 237--248. https://doi.org/10.46298/dmtcs.3513
+from the simulated mean diameters.
+
+```{r}
+addario_fit <- lm(
+  mean_hop_diameter ~ 0 + I(n^(1/3)),
+  data = addario_summary
+)
+
+C_addario <- unname(coef(addario_fit)[1])
+
+C_addario
+```
+
+Then create the theoretical curve:
+
+```{r}
+addario_curve <- data.frame(
+  n = seq(
+    min(addario_results$n),
+    max(addario_results$n),
+    length.out = 500
+  )
+) |>
+  mutate(
+    theoretical_hop_diameter =
+      C_addario * n^(1/3)
+  )
+```
+
+## Plotting hop diameter and $n^{1/3}$ growth
+
+
+```{r}
+ggplot() +
+  geom_point(
+    data = addario_results,
+    aes(
+      x = n,
+      y = addario_hop_diameter,
+      colour = "Simulation values"
+    ),
+    alpha = 0.35,
+    size = 0.6
+  ) +
+  
+  geom_line(
+    data = addario_summary,
+    aes(
+      x = n,
+      y = mean_hop_diameter,
+      colour = "Empirical mean"
+    ),
+    linewidth = 0.7
+  ) +
+  
+  geom_point(
+    data = addario_summary,
+    aes(
+      x = n,
+      y = mean_hop_diameter,
+      colour = "Empirical mean"
+    ),
+    size = 1.4
+  ) +
+  
+  geom_line(
+    data = addario_curve,
+    aes(
+      x = n,
+      y = theoretical_hop_diameter,
+      colour = "Fitted n^(1/3) rate"
+    ),
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Simulation values" = "black",
+      "Empirical mean" = "royalblue",
+      "Fitted n^(1/3) rate" = "violetred"
+    )
+  ) +
+  
+  labs(
+    x = "Sample size n",
+    y = "Hop diameter",
+    title = "Growth of the hop diameter",
+    subtitle = paste0(
+      "Dashed curve: ",
+      round(C_addario, 4),
+      " n^(1/3)"
+    )
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+## Combining the Penrose and Addario-Berry rates
+
+For a weighted tree,
+
+$$
+D_n \le H_n M_n,
+$$
+
+where $H_n$ is the hop diameter and $M_n$ is the largest edge weight.
+This motivates combining the $n^{1/3}$ rate from @addarioberry2006diameter with the
+Penrose rate $\sqrt{\log(n)/n}$:
+
+$$
+g(n)
+=
+n^{1/3}\sqrt{\frac{\log n}{n}}
+=
+n^{-1/6}\sqrt{\log n}.
+$$
+
+
+```{r}
+comparison_summary <- combined_results |>
+  group_by(n) |>
+  summarise(
+    mean_stringy_diameter = mean(stringy_diameter),
+    .groups = "drop"
+  ) |>
+  mutate(
+    combined_rate =
+      n^(1/3) * sqrt(log(n) / n)
+  )
+```
+
+Estimate one constant $C$ so that
+
+$$
+D_n \approx Cg(n).
+$$
+
+```{r}
+multiplied_fit <- lm(
+  mean_stringy_diameter ~ 0 + combined_rate,
+  data = comparison_summary
+)
+
+C_multiplied <- unname(coef(multiplied_fit)[1])
+
+C_multiplied
+```
+
+Create the smooth benchmark curve:
+
+```{r}
+multiplied_curve <- data.frame(
+  n = seq(
+    min(combined_results$n),
+    max(combined_results$n),
+    length.out = 500
+  )
+) |>
+  mutate(
+    theoretical_product =
+      C_multiplied *
+      n^(1/3) *
+      sqrt(log(n) / n)
+  )
+```
+
+Then plot only the simulations, their mean, and the combined rate:
+
+```{r}
+ggplot() +
+  
+  geom_point(
+    data = combined_results,
+    aes(
+      x = n,
+      y = stringy_diameter,
+      colour = "Simulation values"
+    ),
+    alpha = 0.3,
+    size = 0.5
+  ) +
+  
+  geom_line(
+    data = comparison_summary,
+    aes(
+      x = n,
+      y = mean_stringy_diameter,
+      colour = "Empirical mean"
+    ),
+    linewidth = 0.7
+  ) +
+  
+  geom_point(
+    data = comparison_summary,
+    aes(
+      x = n,
+      y = mean_stringy_diameter,
+      colour = "Empirical mean"
+    ),
+    size = 1.2
+  ) +
+  
+  geom_line(
+    data = multiplied_curve,
+    aes(
+      x = n,
+      y = theoretical_product,
+      colour = "Combined rate"
+    ),
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Simulation values" = "black",
+      "Empirical mean" = "royalblue",
+      "Combined rate" = "violetred"
+    )
+  ) +
+  
+  labs(
+    x = "Sample size n",
+    y = "Weighted MST diameter",
+    title = "Stringy diameter and combined growth rate",
+    subtitle = paste0(
+      "Dashed curve: ",
+      round(C_multiplied, 4),
+      " n^(-1/6) sqrt(log(n))"
+    )
+  ) +
+  
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+## Exploring the ratio after normalizing the denominator
+
+For bivariate uniform data, the total Euclidean MST length $L_n$, has a theoretically established $\sqrt{n}$ growth rate. More specifically, the result gives almost-sure convergence of $L_n/\sqrt{n}$ to a positive constant. We therefore use this known rate to remove the sample-size growth of the denominator while leaving the weighted MST diameter $D_n$ unchanged, since no corresponding theoretical growth rate is currently available for the numerator. For each individual simulation, we calculate
+
+$$
+R_n^*
+=
+\frac{D_n}{L_n/\sqrt{n}}.
+$$
+
+The purpose is to examine how the numerator behaves relative to the theoretically normalized denominator and whether the resulting empirical distribution shows any tendency to stabilize as $n$ increases. 
+
+```{r}
+uniform_files <- c(
+  "stringy05_uniform_50_175.csv",
+  "stringy05_uniform_200_500.csv",
+  "stringy05_uniform_550_800.csv",
+  "stringy05_uniform_850_1000.csv",
+  "stringy05_uniform_1100_2000.csv",
+  "stringy05_uniform_3000_5000.csv"
+)
+
+uniform_results <- map_dfr(
+  uniform_files,
+  ~ read_csv(.x, show_col_types = FALSE)
+) |>
+  arrange(n, simulation_run)
+
+
+uniform_ratio_results <- uniform_results |>
+  mutate(
+    # Theoretical normalization of denominator
+    normalized_mst_length = total_mst_length / sqrt(n),
+
+    # Numerator remains same
+    ratio_denominator_scaled =
+      stringy_diameter / normalized_mst_length
+  )
+
+ratio_summary <- uniform_ratio_results |>
+  group_by(n) |>
+  summarise(
+    mean_ratio = mean(
+      ratio_denominator_scaled,
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  )
+
+```
+
+```{r}
+# Normalize the denominator by sqrt(n)
+length_scaled_results <- uniform_ratio_results |>
+  mutate(
+    length_over_sqrtn = total_mst_length / sqrt(n)
+  )
+
+length_scaled_summary <- length_scaled_results |>
+  group_by(n) |>
+  summarise(
+    mean_length_sqrtn =
+      mean(length_over_sqrtn, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Plot L_n / sqrt(n)
+ggplot() +
+  geom_point(
+    data = length_scaled_results,
+    aes(
+      x = n,
+      y = length_over_sqrtn,
+      colour = "Simulation values"
+    ),
+    alpha = 0.3,
+    size = 0.6
+  ) +
+  geom_line(
+    data = length_scaled_summary,
+    aes(
+      x = n,
+      y = mean_length_sqrtn,
+      colour = "Empirical mean"
+    ),
+    linewidth = 0.7
+  ) +
+  geom_point(
+    data = length_scaled_summary,
+    aes(
+      x = n,
+      y = mean_length_sqrtn,
+      colour = "Empirical mean"
+    ),
+    size = 1.2
+  ) +
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Simulation values" = "black",
+      "Empirical mean" = "steelblue"
+    )
+  ) +
+  labs(
+    x = "Sample size n",
+    y = expression(L[n] / sqrt(n)),
+    title = expression(
+      "Total MST length normalized by " * sqrt(n)
+    )
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+
+## Plot the normalized ratio and the original ratio side by side
+
+
+```{r}
+
+# original Stringy05 ratio
+uniform_ratio_results <- uniform_ratio_results |>
+  mutate(
+    original_ratio = stringy_diameter / total_mst_length
+  )
+
+original_ratio_summary <- uniform_ratio_results |>
+  group_by(n) |>
+  summarise(
+    mean_original_ratio = mean(original_ratio, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# --------------------------------------------------
+# Left: ratio after normalizing denominator
+
+p_scaled <- ggplot() +
+  geom_point(
+    data = uniform_ratio_results,
+    aes(
+      x = n,
+      y = ratio_denominator_scaled,
+      colour = "Simulation values"
+    ),
+    alpha = 0.3,
+    size = 0.6
+  ) +
+  geom_line(
+    data = ratio_summary,
+    aes(
+      x = n,
+      y = mean_ratio,
+      colour = "Empirical mean"
+    ),
+    linewidth = 0.7
+  ) +
+  geom_point(
+    data = ratio_summary,
+    aes(
+      x = n,
+      y = mean_ratio,
+      colour = "Empirical mean"
+    ),
+    size = 1.2
+  ) +
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Simulation values" = "black",
+      "Empirical mean" = "steelblue"
+    )
+  ) +
+  labs(
+    x = "Sample size n",
+    y = expression(
+      D[n] / (L[n] / sqrt(n))
+    ),
+    title = "Ratio after normalizing denominator"
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+
+
+# --------------------------------------------------
+# Right: original Stringy05 ratio
+
+p_original <- ggplot() +
+  geom_point(
+    data = uniform_ratio_results,
+    aes(
+      x = n,
+      y = original_ratio,
+      colour = "Simulation values"
+    ),
+    alpha = 0.3,
+    size = 0.6
+  ) +
+  geom_line(
+    data = original_ratio_summary,
+    aes(
+      x = n,
+      y = mean_original_ratio,
+      colour = "Empirical mean"
+    ),
+    linewidth = 0.7
+  ) +
+  geom_point(
+    data = original_ratio_summary,
+    aes(
+      x = n,
+      y = mean_original_ratio,
+      colour = "Empirical mean"
+    ),
+    size = 1.2
+  ) +
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Simulation values" = "black",
+      "Empirical mean" = "steelblue"
+    )
+  ) +
+  labs(
+    x = "Sample size n",
+    y = expression(D[n] / L[n]),
+    title = "Original Stringy05 ratio"
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+
+
+p_scaled + p_original +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+
+> Next, we examine the weighted MST diameter $D_n$, which forms the numerator of `stringy05`, relative to the same $\sqrt{n}$ scale used for the denominator. Since no theoretical growth rate is currently available for $D_n$, dividing it by $\sqrt{n}$ is used only as an empirical comparison to determine whether the numerator grows on the same scale as the total MST length.
+
+
+```{r}
+# Normalize the numerator by sqrt(n)
+
+uniform_ratio_results <- uniform_ratio_results |>
+  mutate(
+    normalized_diameter =
+      stringy_diameter / sqrt(n)
+  )
+
+diameter_scaled_summary <- uniform_ratio_results |>
+  group_by(n) |>
+  summarise(
+    mean_normalized_diameter =
+      mean(normalized_diameter, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+```
+
+### Normalized weighted diameter
+
+```{r}
+p_diameter_scaled <- ggplot() +
+  geom_point(
+    data = uniform_ratio_results,
+    aes(
+      x = n,
+      y = normalized_diameter,
+      colour = "Simulation values"
+    ),
+    alpha = 0.3,
+    size = 0.6
+  ) +
+  geom_line(
+    data = diameter_scaled_summary,
+    aes(
+      x = n,
+      y = mean_normalized_diameter,
+      colour = "Empirical mean"
+    ),
+    linewidth = 0.7
+  ) +
+  geom_point(
+    data = diameter_scaled_summary,
+    aes(
+      x = n,
+      y = mean_normalized_diameter,
+      colour = "Empirical mean"
+    ),
+    size = 1.2
+  ) +
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Simulation values" = "black",
+      "Empirical mean" = "steelblue"
+    )
+  ) +
+  labs(
+    x = "Sample size n",
+    y = expression(D[n] / sqrt(n)),
+    title = "Weighted diameter normalized by sqrt(n)"
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+
+p_diameter_scaled
+```
+> Since normalizing the weighted MST diameter by $\sqrt n$ produces a clear decreasing trend, the simulations suggest that the diameter grows more slowly than $\sqrt n$. We therefore compare several slower candidate functions of sample size. For each candidate rate $g(n)$, the weighted diameter is normalized as $D_n/g(n)$. A suitable empirical scaling should remove most of the sample-size trend, so that the normalized diameter becomes approximately stable for large $n$.
+
+
+```{r}
+library(tidyr)
+# Compare candidate growth rates for the diameter
+# --------------------------------------------------
+
+diameter_rate_results <- uniform_ratio_results |>
+  transmute(
+    n,
+    simulation_run,
+    stringy_diameter,
+
+    `sqrt(n)`      = stringy_diameter / sqrt(n),
+    `n^(1/3)`      = stringy_diameter / n^(1/3),
+    `n^(1/4)`      = stringy_diameter / n^(1/4),
+    `n^(1/5)`      = stringy_diameter / n^(1/5),
+    `log(n)`       = stringy_diameter / log(n),
+    `sqrt(log(n))` = stringy_diameter / sqrt(log(n))
+  ) |>
+  pivot_longer(
+    cols = -c(n, simulation_run, stringy_diameter),
+    names_to = "normalization",
+    values_to = "normalized_diameter"
+  )
+
+diameter_rate_results <- diameter_rate_results |>
+  mutate(
+    normalization = factor(
+      normalization,
+      levels = c(
+        "sqrt(n)",
+        "n^(1/3)",
+        "n^(1/4)",
+        "n^(1/5)",
+        "log(n)",
+        "sqrt(log(n))"
+      )
+    )
+  )
+```
+
+Calculate the mean after normalizing each individual simulation:
+
+```{r}
+diameter_rate_summary <- diameter_rate_results |>
+  group_by(n, normalization) |>
+  summarise(
+    mean_normalized_diameter =
+      mean(normalized_diameter, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+### Plot all candidate normalizations
+
+```{r}
+ggplot() +
+  geom_point(
+    data = diameter_rate_results,
+    aes(
+      x = n,
+      y = normalized_diameter
+    ),
+    alpha = 0.15,
+    size = 0.45
+  ) +
+  geom_line(
+    data = diameter_rate_summary,
+    aes(
+      x = n,
+      y = mean_normalized_diameter
+    ),
+    colour = "steelblue",
+    linewidth = 0.8
+  ) +
+  geom_point(
+    data = diameter_rate_summary,
+    aes(
+      x = n,
+      y = mean_normalized_diameter
+    ),
+    colour = "steelblue",
+    size = 1.1
+  ) +
+  facet_wrap(
+    ~ normalization,
+    scales = "free_y",
+    ncol = 3
+  ) +
+  labs(
+    x = "Sample size n",
+    y = expression(D[n] / g(n)),
+    title = "Candidate normalizations for the weighted MST diameter",
+    subtitle = "Blue line shows the empirical mean"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    strip.text = element_text(face = "bold")
+  )
+```
+
+
+
+>  The normalized diameter continues to decrease under $\sqrt{n}$, $n^{1/3}$, and $n^{1/4}$, indicating that these functions increase faster than the empirical weighted-diameter growth. In contrast, normalization by $\sqrt{\log n}$ produces an increasing trend, suggesting that this rate is too slow. The $n^{1/5}$ and $\log n$ normalizations give the flattest curves, with $\log n$ appearing particularly stable at larger sample sizes. Since these comparisons are empirical, the next step is to quantify stability rather than selecting a rate only by visual inspection.
+
+
+### 1. Compare slopes after $n=1000$
+
+A good candidate should have a slope close to zero.
+
+```{r}
+rate_slopes <- diameter_rate_summary |>
+  filter(n >= 1000) |>
+  group_by(normalization) |>
+  summarise(
+    slope = coef(
+      lm(mean_normalized_diameter ~ n)
+    )[2],
+    .groups = "drop"
+  ) |>
+  mutate(
+    abs_slope = abs(slope)
+  ) |>
+  arrange(abs_slope)
+
+rate_slopes
+```
+
+The smallest `abs_slope` ($log(n)$) is the flattest candidate.
+
+
+### 2. Compare relative change over large $n$
+
+
+```{r}
+rate_stability <- diameter_rate_summary |>
+  filter(n >= 1000) |>
+  group_by(normalization) |>
+  summarise(
+    min_value = min(mean_normalized_diameter),
+    max_value = max(mean_normalized_diameter),
+    mean_value = mean(mean_normalized_diameter),
+
+    relative_range =
+      (max_value - min_value) / mean_value,
+
+    .groups = "drop"
+  ) |>
+  arrange(relative_range)
+
+rate_stability
+```
+
+> Among the candidate functions considered, $\log n$ provides the most stable empirical normalization over $n\ge1000$.
+
+
+
+
+
+> The previous analysis suggested that $\log n$ provides the most stable empirical normalization for the weighted MST diameter $D_n$, while the total MST length $L_n$ has a theoretically established $\sqrt n$ scaling. We therefore normalize the numerator and denominator separately using these two rates. 
+
+
+```{r}
+# Normalize numerator by log(n)
+# and denominator by sqrt(n)
+
+normalized_ratio_results <- uniform_results |>
+  mutate(
+    diameter_over_logn =
+      stringy_diameter / log(n),
+
+    length_over_sqrtn =
+      total_mst_length / sqrt(n),
+
+    normalized_ratio =
+      diameter_over_logn / length_over_sqrtn
+  )
+```
+
+Summarise after calculating the ratio for each simulation:
+
+```{r}
+normalized_ratio_summary <- normalized_ratio_results |>
+  group_by(n) |>
+  summarise(
+    mean_normalized_ratio =
+      mean(normalized_ratio, na.rm = TRUE),
+
+    median_normalized_ratio =
+      median(normalized_ratio, na.rm = TRUE),
+
+    .groups = "drop"
+  )
+```
+
+
+```{r}
+ggplot() +
+  geom_point(
+    data = normalized_ratio_results,
+    aes(
+      x = n,
+      y = normalized_ratio,
+      colour = "Simulation values"
+    ),
+    alpha = 0.3,
+    size = 0.6
+  ) +
+  geom_line(
+    data = normalized_ratio_summary,
+    aes(
+      x = n,
+      y = mean_normalized_ratio,
+      colour = "Empirical mean"
+    ),
+    linewidth = 0.8
+  ) +
+  geom_point(
+    data = normalized_ratio_summary,
+    aes(
+      x = n,
+      y = mean_normalized_ratio,
+      colour = "Empirical mean"
+    ),
+    size = 1.2
+  ) +
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Simulation values" = "black",
+      "Empirical mean" = "steelblue"
+    )
+  ) +
+  labs(
+    x = "Sample size n",
+    y = expression(
+      (D[n] / log(n)) /
+        (L[n] / sqrt(n))
+    ),
+    title = "Stringy05 after normalization",
+    subtitle = expression(
+      D[n] / log(n) ~ "and" ~ L[n] / sqrt(n)
+    )
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+> After applying the separate normalizations $D_n/\log n$ for the weighted diameter and $L_n/\sqrt n$ for the total MST length, the resulting ratio appears much more stable across sample size. This suggests that the empirical $\log n$ scaling for the numerator, together with the theoretical $\sqrt n$ scaling for the denominator, removes most of the observed sample-size trend in the ratio over the simulated range. However, the simulation values still show noticeable spread, so the next step is to examine whether the variance, upper quantiles, and overall distributional shape also stabilize.
+
+
+
+## Distributional behaviour of the normalized ratio
+
+
+The previous empirical comparison suggested that $\log n$ provides the most stable normalization for the weighted MST diameter among the candidate functions considered. However, stabilization of the empirical mean alone is not sufficient to conclude that the statistic has become sample-size invariant. The variance, upper tail, and overall shape of the distribution may still change with $n$. This is particularly important for `stringy05`, since the practical calibration of the index is based on the 95th percentile of its noise distribution rather than its mean. We therefore examine how the location, spread, upper quantiles, and distributional shape of the normalized `stringy05` ratio change with sample size.
+
+
+### Summarise the distribution of the normalized ratio
+
+```{r}
+# before normalization
+original_distribution_summary <- uniform_results |>
+  mutate(
+    original_ratio =
+      stringy_diameter / total_mst_length
+  ) |>
+  group_by(n) |>
+  summarise(
+    mean = mean(original_ratio, na.rm = TRUE),
+    q95 = quantile(original_ratio, 0.95, na.rm = TRUE),
+    sd = sd(original_ratio, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# after normalization
+normalized_distribution_summary <- normalized_ratio_results |>
+  group_by(n) |>
+  summarise(
+    mean = mean(normalized_ratio, na.rm = TRUE),
+    median = median(normalized_ratio, na.rm = TRUE),
+
+    variance = var(normalized_ratio, na.rm = TRUE),
+    sd = sd(normalized_ratio, na.rm = TRUE),
+    iqr = IQR(normalized_ratio, na.rm = TRUE),
+    mad = mad(normalized_ratio, na.rm = TRUE),
+
+    q90 = quantile(normalized_ratio, 0.90, na.rm = TRUE),
+    q95 = quantile(normalized_ratio, 0.95, na.rm = TRUE),
+    q99 = quantile(normalized_ratio, 0.99, na.rm = TRUE),
+
+    .groups = "drop"
+  )
+```
+
+
+For the proposed normalization to remove most of the sample-size dependence,
+we would expect the mean, median, spread measures, and upper quantiles to become
+approximately stable for sufficiently large $n$.
+
+
+## Examine whether the spread stabilizes
+
+```{r}
+
+# Before normalization
+p_sd_original <- ggplot(
+  original_distribution_summary,
+  aes(x = n, y = sd)
+) +
+  geom_line(
+    colour = "steelblue",
+    linewidth = 0.8
+  ) +
+  geom_point(
+    colour = "steelblue"
+  ) +
+  labs(
+    x = "Sample size n",
+    y = "Standard deviation",
+    title = "SD before normalization"
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold")
+  )
+
+
+# After normalization
+p_sd_normalized <- ggplot(
+  normalized_distribution_summary,
+  aes(x = n, y = sd)
+) +
+  geom_line(
+    colour = "steelblue",
+    linewidth = 0.8
+  ) +
+  geom_point(
+    colour = "steelblue"
+  ) +
+  labs(
+    x = "Sample size n",
+    y = "Standard deviation",
+    title = "SD after normalization"
+  ) +
+  theme_bw() +
+  theme(
+    aspect.ratio = 1,
+    plot.title = element_text(face = "bold")
+  )
+
+p_sd_original + p_sd_normalized
+```
+
+The standard deviation is larger after normalization because the normalized statistic is on a different scale, so the two SD values are not directly comparable. What matters more is how the SD changes with sample size. Before normalization, the SD decreases strongly as $n$ increases, while after normalization it stays within a much narrower range. This suggests that the normalization reduces the sample-size dependence of the spread, although some variation across $n$ still remains.
+
+
+## Compare the centre and the 95th percentile
+
+```{r}
+# Summary before normalization
+original_distribution_summary <- uniform_results |>
+  mutate(
+    original_ratio = stringy_diameter / total_mst_length
+  ) |>
+  group_by(n) |>
+  summarise(
+    mean_original = mean(original_ratio, na.rm = TRUE),
+    q95_original = quantile(original_ratio, 0.95, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Join with normalized summary
+comparison_summary <- original_distribution_summary |>
+  left_join(
+    normalized_distribution_summary |>
+      select(
+        n,
+        mean_normalized = mean,
+        q95_normalized = q95
+      ),
+    by = "n"
+  )
+
+# Plot all four together
+ggplot(comparison_summary, aes(x = n)) +
+  geom_line(
+    aes(
+      y = mean_original,
+      colour = "Mean before normalization"
+    ),
+    linewidth = 0.8
+  ) +
+  geom_point(
+    aes(
+      y = mean_original,
+      colour = "Mean before normalization"
+    )
+  ) +
+  geom_line(
+    aes(
+      y = mean_normalized,
+      colour = "Mean after normalization"
+    ),
+    linewidth = 0.8
+  ) +
+  geom_point(
+    aes(
+      y = mean_normalized,
+      colour = "Mean after normalization"
+    )
+  ) +
+  geom_line(
+    aes(
+      y = q95_original,
+      colour = "95th percentile before normalization"
+    ),
+    linewidth = 0.8
+  ) +
+  geom_point(
+    aes(
+      y = q95_original,
+      colour = "95th percentile before normalization"
+    )
+  ) +
+  geom_line(
+    aes(
+      y = q95_normalized,
+      colour = "95th percentile after normalization"
+    ),
+    linewidth = 0.8
+  ) +
+  geom_point(
+    aes(
+      y = q95_normalized,
+      colour = "95th percentile after normalization"
+    )
+  ) +
+  scale_colour_manual(
+    name = NULL,
+    values = c(
+      "Mean before normalization" = "steelblue",
+      "Mean after normalization" = "darkorange",
+      "95th percentile before normalization" = "violetred",
+      "95th percentile after normalization" = "darkgreen"
+    )
+  ) +
+  labs(
+    x = "Sample size n",
+    y = "Ratio value",
+    title = "Mean and 95th percentile before and after normalization"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+
+> The normalized ratio appears more stable across sample sizes; however, the 95th percentile of the normalized statistic can exceed 1. This is an important limitation because scagnostic indices are intended to lie between 0 and 1. The normalization therefore removes the natural upper bound of the original `stringy05` definition. Using this normalized ratio directly as a new scagnostic would require an additional transformation or rescaling to return the values to $[0,1]$, which adds another layer of complexity to the definition.
+
+
+
+
+
+
+
+
+
+
+# Appendix
+
+## Alternative way
+
+### Scaling limits of the Euclidean minimum spanning tree
+
+A potentially useful theoretical connection for understanding the sample-size
+behaviour of the Stringy index is provided by
+@aizenman1999scaling.
+
+
+Aizenman et al. study continuum scaling limits of several random spanning-tree
+models in two dimensions. Of particular relevance here is their **Euclidean
+minimal spanning tree (EST)**. The vertices of the EST are generated from a
+homogeneous Poisson point process in $\mathbb{R}^2$ with intensity
+$\delta^{-2}$. Every pair of points can be connected, the weight of an edge is
+its ordinary Euclidean distance, and the Euclidean MST is the spanning tree
+that minimises the sum of these Euclidean edge lengths
+[@aizenman1999scaling].
+
+
+Thus, if $X_i$ and $X_j$ denote two points, the edge weight is
+
+$$
+w_{ij} = \lVert X_i-X_j\rVert_2.
+$$
+
+This setup is important because the edge weights are generated by Euclidean
+geometry rather than being independent random edge weights. It is therefore
+substantially closer to the MST used in the Stringy index than random
+complete-graph MST models based on independent Uniform$(0,1)$ edge weights.
+
+Aizenman et al. investigate what happens as
+
+$$
+\delta \rightarrow 0,
+$$
+so that the Poisson point process becomes increasingly dense. This can be viewed of studying an increasingly large number of
+points in a fixed two-dimensional region.
+
+### Main findings
+
+Aizenman et al. establish tightness of the distributions of these spanning
+trees and show that subsequential continuum scaling limits exist
+[@aizenman1999scaling]. Their main geometric finding is that the branches of
+the limiting Euclidean MST are random curves with non-trivial fractal
+geometry.
+
+
+In particular, the Hausdorff dimension of the limiting branches is bounded by
+
+$$
+1 < d_{\min}
+\leq
+\dim_H(C)
+\leq
+d_{\max} < 2,
+$$
+
+for non-random constants $d_{\min}$ and $d_{\max}$
+[@aizenman1999scaling].
+
+The fact that the dimension is strictly greater than one means that these
+branches are substantially rougher than ordinary smooth curves. Aizenman
+et al. prove, more strongly, that the limiting branches are
+**nonrectifiable** [@aizenman1999scaling; @aizenman1999holder].
+
+A rectifiable curve has finite ordinary arc length. For example, a straight
+line, circle, or sufficiently smooth curve has a finite length that is
+approached as the curve is measured at increasingly fine resolutions.
+A nonrectifiable curve does not have finite ordinary arc length. Increasingly
+fine resolution reveals additional geometric detail, so the polygonal length
+does not settle to a finite limiting value
+[@aizenman1999holder; @mandelbrot1967coast].
+
